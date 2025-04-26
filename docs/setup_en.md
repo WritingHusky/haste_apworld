@@ -68,7 +68,7 @@ It is recommended that you open a text client along side the game, as the chat l
 4. Chose an new / empty save (So you don't override old saves)
 5. In the Archiplego Tab enable the Archipelgo mod
 6. Fill out the data to connect to the server (Server name, port, username, password).
-7. Start the game.
+7. Start the game. The game may
 
 ## Troubleshooting
 

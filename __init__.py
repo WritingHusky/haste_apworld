@@ -5,7 +5,14 @@ import os
 from typing import Any, ClassVar, Optional
 
 from Fill import fill_restrictive
-from BaseClasses import CollectionState, Item, Location, LocationProgressType, Region
+from BaseClasses import (
+    CollectionState,
+    Item,
+    ItemClassification,
+    Location,
+    LocationProgressType,
+    Region,
+)
 from BaseClasses import ItemClassification as IC
 from BaseClasses import Tutorial
 from Options import OptionError, Toggle
@@ -15,9 +22,10 @@ from worlds.AutoWorld import WebWorld, World
 from .Items import (
     ITEM_TABLE,
     HasteItem,
+    HasteItemData,
     item_factory,
 )
-from .Locations import LOCATION_TABLE, HasteLocation, HasteFlag
+from .Locations import LOCATION_TABLE, HasteLocation, HasteFlag, HasteLocationData
 from .options import haste_option_groups, HasteOptions
 
 
@@ -145,6 +153,15 @@ class HasteWorld(World):
             location = HasteLocation(self.player, location_name, menu_region, data)
             menu_region.locations.append(location)
 
+        self.get_location("Shard 10 Boss").place_locked_item(
+            HasteItem(
+                "Victory",
+                self.player,
+                HasteItemData("Victory", ItemClassification.progression, None, 1),
+                ItemClassification.progression,
+            )
+        )
+
     def create_items(self) -> None:
         """
         Create the items for the Twilight Princess world.
@@ -225,7 +242,28 @@ class HasteWorld(World):
 
         assert len(self.useful_pool) == 0
         assert len(self.filler_pool) == 0
-        assert False, "No more items to give"
+
+        # Use the same weights for filler items used in the base randomizer.
+        filler_consumables = [
+            "Anti-Spark 100 bundle",
+            "Anti-Spark 250 bundle",
+            "Anti-Spark 500 bundle",
+            "Anti-Spark 750 bundle",
+            "Anti-Spark 1k bundle",
+        ]
+        filler_weights = [
+            0,  # 100
+            0,  # 250
+            1,  # 500
+            4,  # 750
+            2,  # 1k
+        ]
+        assert len(filler_consumables) == len(
+            filler_weights
+        ), f"{len(filler_consumables)=}, {len(filler_weights)=}"
+        return self.multiworld.random.choices(
+            filler_consumables, weights=filler_weights, k=1
+        )[0]
 
     def get_pre_fill_items(self) -> list[Item]:
         """

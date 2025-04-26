@@ -2,13 +2,13 @@
 
 ## What does randomization do to this game?
 
-Shards are locked behind an unlock item. Abilites are shuffled into the item pool. Buy an item at a shop per shard will give a item into the ap world.
+Shards are locked behind an unlock item. Abilites are shuffled into the item pool. Buy an item at a shop and beat the boss per shard to check an item into the ap world.
 
 ## What are the Items in this ApWorld?
 
 - Progressive Shard: Unlocks the next shard
 - Ability (Slomo, Grapple, Fly): Give the player that ability.
-- Shard Shop Filler Item: Does Nothing. (Filler item that will get a use soon)
+- Anti-Spark Bundle: Give you an amount of anti-sparks
 
 ## What location are in the ApWorld?
 

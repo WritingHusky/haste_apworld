@@ -95,7 +95,15 @@ def item_factory(
 VERY_USEFUL = IC.progression | IC.useful
 ITEM_TABLE: dict[str, HasteItemData] = {
     "Progressive Shard": HasteItemData("Shard", IC.progression, 0, 10),
-    "Shard Shop Filler Item": HasteItemData("Item", IC.filler, 1, 10),
+    "Shard Shop Filler Item": HasteItemData("Filler", IC.filler, 1, 0),
+    "Slomo": HasteItemData("Ability", IC.useful, 2, 1),
+    "Grapple": HasteItemData("Ability", IC.useful, 3, 1),
+    "Fly": HasteItemData("Ability", IC.useful, 4, 1),
+    "Anti-Spark 100 bundle": HasteItemData("Anti-Spark Bundle", IC.filler, 5, 0),
+    "Anti-Spark 250 bundle": HasteItemData("Anti-Spark Bundle", IC.filler, 6, 0),
+    "Anti-Spark 500 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 7, 0),
+    "Anti-Spark 750 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 8, 0),
+    "Anti-Spark 1k bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 9, 0),
 }
 
 LOOKUP_ID_TO_NAME: dict[int, str] = {
