@@ -2,31 +2,39 @@
 
 ## Installation & Usage
 
-See the [setup guide](https://github.com/WritingHusky/Twilight_Princess_apworld/blob/main/docs/setup_en.md) for instructions.
+See the [setup guide](https://github.com/WritingHusky/haste_apworld/blob/main/docs/setup_en.md) for instructions.
 
 ## What does randomization do to this game?
 
-Items get shuffled between the different locations in the game, so each playthrough is unique. Randomized locations might include chests, items received from NPCs, Golden Bugs, Poes. The randomizer also includes quality-of-life features such as a fully-opened world, removing many cutscenes, transform anywhere, and more.
+Shards are locked behind an unlock item. Abilites are shuffled into the item pool. Buy an item at a shop and beat the boss per shard to check an item into the ap world.
 
-## Which locations get shuffled?
+## What are the Items in this ApWorld?
 
-Currently all possible locations get shuffled into the pool and get an item. New versions plan to expand this functionality
+- Progressive Shard: Unlocks the next shard
+- Ability (Slomo, Grapple, Fly): Give the player that ability.
+- Anti-Spark Bundle: Give you an amount of anti-sparks
 
-## What is the goal of Twilight Princess?
+## What location are in the ApWorld?
 
-Reach and defeat Ganondorf in Hyrule Castle. This will require the Master Sword (Light filled is not needed), and any other items necessary to reach Ganondorf.
+- Shard x Boss: Defeating the boss in shard x.
+- Shard x Shop Item: Buy any item in a shop in shard x. (1 per shard)
+- Ability Slomo, Grapple, Fly: Getting the ability from the respective character in the hub.
 
-## What does another world's item look like in TP?
+## What is the goal of Haste?
 
-Currently all items are a green rupee, if the item is part of your world you will be given it after closing the text box.
+The goal of Haste is to beat the end boss of the final shard.
 
 ## When the player receives an item, what happens?
 
-When the player receives an item, it will be added to a queue, where link will get the items one by one. Like many other Zelda randomizers, Link **will** hold the item out causing him to pause so be ready.
+The item will imdeitaly come into affect. If force reload is enabled and you are in the hub, getting a progressive shard will reload the hub to unlock the next shard.
 
 ## I need help! What do I do?
 
-Refer to the [Base Randomizer Website](https://tprandomizer.com/) first. Then, try the troubleshooting steps in the [setup guide](https://github.com/WritingHusky/Twilight_Princess_apworld/blob/main/docs/setup_en.md). If you are still stuck, please ask in the Twilight Princess thread (under `future-game-design`) in the Archipelago server.
+Refer to the troubleshooting steps in the [setup guide](https://github.com/WritingHusky/haste_apworld/blob/main/docs/setup_en.md)/ Then, if you are still stuck, please ask in the Haste thread (under `future-game-design`) in the Archipelago server.
+
+## State of the rando
+
+See [state of the world](https://github.com/WritingHusky/haste_apworld/blob/main/docs/CurrentState.md) for more information about the current state (as i understand it) about this randomizer.
 
 ## Running from source
 
@@ -36,7 +44,7 @@ Download and install git from here: https://git-scm.com/downloads
 Then clone this repository with git by running this in a command prompt:
 
 ```
-git clone https://github.com/WritingHusky/Twilight_Princess_apworld.git
+git clone https://github.com/WritingHusky/haste_apworld.git
 ```
 
 ### Installing Python
@@ -61,6 +69,5 @@ pyenv global 3.12
 
 This randomizer would not be possible without the help from:
 
-- LunarSoap and the TPRandomizer community
-- Tanjo3 and the Wind Waker AP (Heavy Inspriation code wise)
-- Every one who has reported bugs and requested features
+- Landfall games: for making the game with modding in mind
+- People in the Haste Discord mod-developer-chat: for helping me learn to mod games

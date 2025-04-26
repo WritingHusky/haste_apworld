@@ -3,6 +3,7 @@
 ## What does randomization do to this game?
 
 Shards are locked behind an unlock item. Abilites are shuffled into the item pool. Buy an item at a shop and beat the boss per shard to check an item into the ap world.
+You will need the [Archipelgo randomizer mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3462307025) on steam.
 
 ## What are the Items in this ApWorld?
 
@@ -26,11 +27,11 @@ The item will imdeitaly come into affect. If force reload is enabled and you are
 
 ## I need help! What do I do?
 
-Refer to the troubleshooting steps in the [setup guide](https://github.com/WritingHusky/Twilight_Princess_apworld/blob/main/docs/setup_en.md)/ Then, if you are still stuck, please ask in the Haste thread (under `future-game-design`) in the Archipelago server.
+Refer to the troubleshooting steps in the [setup guide](https://github.com/WritingHusky/haste_apworld/blob/main/docs/setup_en.md)/ Then, if you are still stuck, please ask in the Haste thread (under `future-game-design`) in the Archipelago server.
 
 ## State of the rando
 
-See [state of the world](https://github.com/WritingHusky/Twilight_Princess_apworld/blob/main/docs/CurrentState.md) for more information about the current state (as i understand it) about this randomizer.
+See [state of the world](https://github.com/WritingHusky/haste_apworld/blob/main/docs/CurrentState.md) for more information about the current state (as i understand it) about this randomizer.
 
 ## Credits
 

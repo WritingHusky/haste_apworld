@@ -12,7 +12,7 @@ You'll need the following components to be able to play/generate with Haste:
 
 - Install [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) v0.5.1 or higher.\
    **Make sure to install the Generator if you intend to generate multiworlds.**
-- The latest version of the [Haste APWorld](https://github.com/WritingHusky/Twilight_Princess_apworld/releases/latest).
+- The latest version of the [Haste APWorld](https://github.com/WritingHusky/haste_apworld/releases/latest).
 
 If you intend to play under Linux, you will need to consider the following information.
 
@@ -62,7 +62,7 @@ the instructions for hosting on the website from a locally generated game or on 
 
 It is recommended that you open a text client along side the game, as the chat log is still in development.
 
-1. If you haven't already subscribe to the [Archipelgo randomizer mod]() on steam.
+1. If you haven't already subscribe to the [Archipelgo randomizer mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3462307025) on steam.
 2. Start Haste on steam.
 3. When the main menu appears go to settings.
 4. Chose an new / empty save (So you don't override old saves)
