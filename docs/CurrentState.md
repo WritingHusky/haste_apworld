@@ -9,7 +9,7 @@ Deathlink will only kill the player in a run.
 
 ## Client
 
-The client is limited on the player side. Currently there is no message log in game. The text client is reccomended to work around this.
+The message log is a non colourized text display on the side of the screen. This is where all the messages are displayed. This includes debug messages.
 
 # Message
 
