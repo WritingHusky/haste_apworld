@@ -1,4 +1,4 @@
-# Twilight Princess
+# Haste
 
 ## Installation & Usage
 
