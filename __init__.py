@@ -181,9 +181,7 @@ class HasteWorld(World):
         """
         Apply special fill rules before the fill stage.
         """
-        # Early Items (not working currently)
-        # self.multiworld.early_items[self.player]["Shadow Crystal"] = 1
-        # self.multiworld.early_items[self.player]["Progressive Master Sword"] = 1
+        pass
 
     def generate_output(self, output_directory: str) -> None:
         """
@@ -289,6 +287,7 @@ class HasteWorld(World):
         slot_data = {
             "DeathLink": self.options.death_link.value,
             "ForceReload": self.options.force_reload.value,
+            "ForceUnlock": self.options.force_unlock.value,
         }
 
         return slot_data
