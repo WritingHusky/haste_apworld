@@ -287,7 +287,6 @@ class HasteWorld(World):
         slot_data = {
             "DeathLink": self.options.death_link.value,
             "ForceReload": self.options.force_reload.value,
-            "ForceUnlock": self.options.force_unlock.value,
         }
 
         return slot_data
