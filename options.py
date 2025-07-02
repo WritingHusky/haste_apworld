@@ -7,6 +7,7 @@ from Options import (
     PerGameCommonOptions,
     StartInventoryPool,
     Toggle,
+    Range,
 )
 
 
@@ -21,6 +22,29 @@ class ForceReload(Toggle):
     display_name = "Force Reload"
     default = False
 
+class Shopsanity(Choice):
+    """
+    Determines how shops are handled, the number of checks per shop is determined by shopsanity_quantity
+    Per-Shard: Shops will contain shopsanity_quantity total checks per Shard
+    Global: Shops will contain shopsanity_quantity total checks for the entire game, regardless of which Shard you are in
+    """
+
+    display_name = "Shopsanity"
+    option_off = 0
+    option_per_shard = 1
+    option_global = 2
+    default = option_off
+
+
+class ShopsanityQuantity(Range):
+    """
+    Determines how many checks are in each shop.
+    """
+
+    display_name = "Shopsanity Quantity"
+    range_start = 1
+    range_end = 100
+    default = 25
 
 @dataclass
 class HasteOptions(PerGameCommonOptions):
@@ -33,6 +57,8 @@ class HasteOptions(PerGameCommonOptions):
 
     # Logic Settings
     force_reload: ForceReload
+    shopsanity: Shopsanity
+    shopsanity_quantity: ShopsanityQuantity
 
 
 haste_option_groups: list[OptionGroup] = [

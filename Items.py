@@ -8,7 +8,7 @@ from worlds.AutoWorld import World
 
 class HasteItemData(NamedTuple):
     """
-    This class represents the data for an item in Twilight Princess
+    This class represents the data for an item in Haste
 
     :param type: The type of the item (e.g., "Item", "Poe").
     :param classification: The item's classification (progression, useful, filler).
@@ -25,7 +25,7 @@ class HasteItemData(NamedTuple):
 
 class HasteItem(Item):
     """
-    This class represents an item in Twilight Princess
+    This class represents an item in Haste
 
     :param name: The item's name.
     :param player: The ID of the player who owns the item.
@@ -94,16 +94,16 @@ def item_factory(
 
 VERY_USEFUL = IC.progression | IC.useful
 ITEM_TABLE: dict[str, HasteItemData] = {
-    "Progressive Shard": HasteItemData("Shard", IC.progression, 0, 10),
-    "Shard Shop Filler Item": HasteItemData("Filler", IC.filler, 1, 0),
-    "Slomo": HasteItemData("Ability", IC.progression, 2, 1),
-    "Grapple": HasteItemData("Ability", IC.progression, 3, 1),
-    "Fly": HasteItemData("Ability", IC.progression, 4, 1),
-    "Anti-Spark 100 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 5, 0),
-    "Anti-Spark 250 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 6, 0),
-    "Anti-Spark 500 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 7, 0),
-    "Anti-Spark 750 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 8, 0),
-    "Anti-Spark 1k bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 9, 0),
+    "Progressive Shard": HasteItemData("Shard", IC.progression, 1, 9),
+    "Shard Shop Filler Item": HasteItemData("Filler", IC.filler, 2, 0),
+    "Slomo": HasteItemData("Ability", IC.progression, 3, 1),
+    "Grapple": HasteItemData("Ability", IC.progression, 4, 1),
+    "Fly": HasteItemData("Ability", IC.progression, 5, 1),
+    "Anti-Spark 100 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 6, 0),
+    "Anti-Spark 250 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 7, 0),
+    "Anti-Spark 500 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 8, 0),
+    "Anti-Spark 750 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 9, 0),
+    "Anti-Spark 1k bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 10, 0),
 }
 
 LOOKUP_ID_TO_NAME: dict[int, str] = {

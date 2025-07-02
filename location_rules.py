@@ -14,7 +14,6 @@ def set_location_access_rules(world: "World"):
         # Only worry about logic if the location can be a progress item (and location_name not in world.nonprogress_locations) do not worry bout yet
         assert location_name in LOCATION_TABLE, f"{location_name=}"
         location = world.get_location(location_name)
-
         set_rule(location, rule)
 
     player = world.player
@@ -51,34 +50,31 @@ def set_location_access_rules(world: "World"):
     set_rule_if_exists(
         "Shard 10 Boss", lambda state: state.has("Progressive Shard", player, 9)
     )
-    set_rule_if_exists("Shard 1 Shop Item", lambda state: (True))
-    set_rule_if_exists(
-        "Shard 2 Shop Item", lambda state: state.has("Progressive Shard", player, 1)
-    )
-    set_rule_if_exists(
-        "Shard 3 Shop Item", lambda state: state.has("Progressive Shard", player, 2)
-    )
-    set_rule_if_exists(
-        "Shard 4 Shop Item", lambda state: state.has("Progressive Shard", player, 3)
-    )
-    set_rule_if_exists(
-        "Shard 5 Shop Item", lambda state: state.has("Progressive Shard", player, 4)
-    )
-    set_rule_if_exists(
-        "Shard 6 Shop Item", lambda state: state.has("Progressive Shard", player, 5)
-    )
-    set_rule_if_exists(
-        "Shard 7 Shop Item", lambda state: state.has("Progressive Shard", player, 6)
-    )
-    set_rule_if_exists(
-        "Shard 8 Shop Item", lambda state: state.has("Progressive Shard", player, 7)
-    )
-    set_rule_if_exists(
-        "Shard 9 Shop Item", lambda state: state.has("Progressive Shard", player, 8)
-    )
-    set_rule_if_exists(
-        "Shard 10 Shop Item", lambda state: state.has("Progressive Shard", player, 9)
-    )
+
+
+
+    # TODO: once i figure out regions, make the shops unlock in chunks of 5 (so everything isnt considered sphere 0)
+    # also regions will probably fix the Stupid Python Bug where non-Shard1 shops only become in-logic once all shards are collected
+    if world.options.shopsanity == 1:
+        # pershard;
+        for i in range(1,11):
+            for j in range(1, world.options.shopsanity_quantity+1):
+                if i == 1:
+                    set_rule_if_exists(
+                        f"Shard {i} Shop Item {j}", lambda state: (True)
+                    )
+                else:
+                    set_rule_if_exists(
+                        f"Shard {i} Shop Item {j}", lambda state: state.has("Progressive Shard", player, i-1)
+                    )
+
+    elif world.options.shopsanity == 2:
+        # global
+        for j in range(1, world.options.shopsanity_quantity+1):
+            set_rule_if_exists(
+                f"Global Shop Item {j}", lambda state: (True)
+            )
+
     set_rule_if_exists(
         "Ability Slomo", lambda state: state.has("Progressive Shard", player, 1)
     )

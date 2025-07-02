@@ -140,7 +140,7 @@ class HasteWorld(World):
 
     def create_regions(self) -> None:
         """
-        Create and connect regions for the Twilight Princess world.
+        Create and connect regions for the Haste world.
 
         This method first creates all the regions and adds the locations to them.
         Then it connects the regions to each other.
@@ -149,22 +149,20 @@ class HasteWorld(World):
         # There are no regions yet
         menu_region = Region(self.origin_region_name, self.player, self.multiworld)
         self.multiworld.regions.append(menu_region)
-        for location_name, data in LOCATION_TABLE.items():
-            location = HasteLocation(self.player, location_name, menu_region, data)
-            menu_region.locations.append(location)
+        Locations.create_locations(self, menu_region)
 
         self.get_location("Shard 10 Boss").place_locked_item(
             HasteItem(
                 "Victory",
                 self.player,
-                HasteItemData("Victory", ItemClassification.progression, None, 1),
+                HasteItemData("Victory", ItemClassification.progression, 0, 1),
                 ItemClassification.progression,
             )
         )
 
     def create_items(self) -> None:
         """
-        Create the items for the Twilight Princess world.
+        Create the items for the Haste world.
         """
         generate_itempool(self)
 
@@ -173,7 +171,7 @@ class HasteWorld(World):
     # set_rules() this is where access rules are set
     def set_rules(self) -> None:
         """
-        Set the access rules for the Twilight Princess world.
+        Set the access rules for the Haste world.
         """
         set_location_access_rules(self)
 
@@ -287,6 +285,8 @@ class HasteWorld(World):
         slot_data = {
             "DeathLink": self.options.death_link.value,
             "ForceReload": self.options.force_reload.value,
+            "Shopsanity": self.options.shopsanity.value,
+            "Shopsanity Quantity": self.options.shopsanity_quantity.value
         }
 
         return slot_data
