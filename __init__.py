@@ -27,6 +27,7 @@ from .Items import (
 )
 from .Locations import LOCATION_TABLE, HasteLocation, HasteFlag, HasteLocationData
 from .options import haste_option_groups, HasteOptions
+from .Regions import create_regions
 
 
 class HasteWeb(WebWorld):
@@ -146,10 +147,9 @@ class HasteWorld(World):
         Then it connects the regions to each other.
         """
 
-        # There are no regions yet
-        menu_region = Region(self.origin_region_name, self.player, self.multiworld)
-        self.multiworld.regions.append(menu_region)
-        Locations.create_locations(self, menu_region)
+        regions = Regions.create_regions(self)
+        Locations.create_locations(self, regions)
+        self.multiworld.regions.extend(regions.values())
 
         self.get_location("Shard 10 Boss").place_locked_item(
             HasteItem(
