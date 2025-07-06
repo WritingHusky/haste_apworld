@@ -66,6 +66,28 @@ class RemovePostVictoryLocations(Toggle):
     display_name = "Remove Post-Victory Locaitons"
     default = False
 
+
+
+class DefaultOutfitBody(Range):
+    """
+    Sets Zoe's default costume when loading into the game.
+    """
+
+    display_name = "Default Outfit Body"
+    range_start = 0
+    range_end = 9
+    default = 0
+
+class DefaultOutfitHat(Range):
+    """
+    Sets Zoe's default hat when loading into the game.
+    """
+
+    display_name = "Default Outfit Hat"
+    range_start = 0
+    range_end = 9
+    default = 0
+
 @dataclass
 class HasteOptions(PerGameCommonOptions):
     """
@@ -81,6 +103,8 @@ class HasteOptions(PerGameCommonOptions):
     shopsanity_quantity: ShopsanityQuantity
     shard_goal: ShardGoal
     remove_post_victory_locations: RemovePostVictoryLocations
+    default_outfit_body: DefaultOutfitBody
+    default_outfit_hat: DefaultOutfitHat
 
 
 haste_option_groups: list[OptionGroup] = [
@@ -91,4 +115,12 @@ haste_option_groups: list[OptionGroup] = [
         ],
         start_collapsed=True,
     ),
+    OptionGroup(
+        "Cosmetic Settings",
+        [
+            DefaultOutfitBody,
+            DefaultOutfitHat
+        ],
+        start_collapsed=True,
+    )
 ]

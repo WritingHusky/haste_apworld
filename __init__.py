@@ -291,6 +291,8 @@ class HasteWorld(World):
             "Shopsanity Quantity": self.options.shopsanity_quantity.value,
             "Shard Goal": self.options.shard_goal.value,
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
+            "Default Outfit Body": self.options.default_outfit_body.value,
+            "Default Outfit Hat": self.options.default_outfit_hat.value
         }
 
         return slot_data
