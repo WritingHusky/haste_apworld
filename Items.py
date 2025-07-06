@@ -94,16 +94,18 @@ def item_factory(
 
 VERY_USEFUL = IC.progression | IC.useful
 ITEM_TABLE: dict[str, HasteItemData] = {
+    "Victory": HasteItemData("Victory", IC.progression, 0, 0),
     "Progressive Shard": HasteItemData("Shard", IC.progression, 1, 9),
     "Shard Shop Filler Item": HasteItemData("Filler", IC.filler, 2, 0),
     "Slomo": HasteItemData("Ability", IC.progression, 3, 1),
     "Grapple": HasteItemData("Ability", IC.progression, 4, 1),
     "Fly": HasteItemData("Ability", IC.progression, 5, 1),
-    "Anti-Spark 100 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 6, 0),
-    "Anti-Spark 250 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 7, 0),
-    "Anti-Spark 500 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 8, 0),
-    "Anti-Spark 750 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 9, 0),
-    "Anti-Spark 1k bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 10, 0),
+    "Anti-Spark 10 bundle": HasteItemData("Anti-Spark Bundle", IC.filler, 6, 0),
+    "Anti-Spark 100 bundle": HasteItemData("Anti-Spark Bundle", IC.filler, 7, 0),
+    "Anti-Spark 250 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 8, 0),
+    "Anti-Spark 500 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 9, 0),
+    "Anti-Spark 750 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 10, 0),
+    "Anti-Spark 1k bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 11, 0),
 }
 
 LOOKUP_ID_TO_NAME: dict[int, str] = {

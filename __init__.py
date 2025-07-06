@@ -151,7 +151,7 @@ class HasteWorld(World):
         Locations.create_locations(self, regions)
         self.multiworld.regions.extend(regions.values())
 
-        self.get_location("Shard 10 Boss").place_locked_item(
+        self.get_location(f"Shard {self.options.shard_goal} Boss").place_locked_item(
             HasteItem(
                 "Victory",
                 self.player,
@@ -241,6 +241,7 @@ class HasteWorld(World):
 
         # Use the same weights for filler items used in the base randomizer.
         filler_consumables = [
+            "Anti-Spark 10 bundle",
             "Anti-Spark 100 bundle",
             "Anti-Spark 250 bundle",
             "Anti-Spark 500 bundle",
@@ -248,11 +249,12 @@ class HasteWorld(World):
             "Anti-Spark 1k bundle",
         ]
         filler_weights = [
-            0,  # 100
-            0,  # 250
-            1,  # 500
-            4,  # 750
-            2,  # 1k
+            10, #10
+            5,  # 100
+            3,  # 250
+            2,  # 500
+            2,  # 750
+            1,  # 1k
         ]
         assert len(filler_consumables) == len(
             filler_weights
@@ -286,7 +288,9 @@ class HasteWorld(World):
             "DeathLink": self.options.death_link.value,
             "ForceReload": self.options.force_reload.value,
             "Shopsanity": self.options.shopsanity.value,
-            "Shopsanity Quantity": self.options.shopsanity_quantity.value
+            "Shopsanity Quantity": self.options.shopsanity_quantity.value,
+            "Shard Goal": self.options.shard_goal.value,
+            "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
         }
 
         return slot_data

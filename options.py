@@ -46,6 +46,26 @@ class ShopsanityQuantity(Range):
     range_end = 100
     default = 25
 
+class ShardGoal(Range):
+    """
+    Determines which shard will be the one that contains your victory condition.
+    """
+
+    display_name = "Shard Goal"
+    range_start = 1
+    range_end = 10
+    default = 10
+
+
+class RemovePostVictoryLocations(Toggle):
+    """
+    Removes any locations in shards that happen after the goal set in Shard Goal.
+    ex: if Shard Goal is set to 7, this will remove any locations in shards 8, 9, and 10
+    """
+    
+    display_name = "Remove Post-Victory Locaitons"
+    default = False
+
 @dataclass
 class HasteOptions(PerGameCommonOptions):
     """
@@ -59,6 +79,8 @@ class HasteOptions(PerGameCommonOptions):
     force_reload: ForceReload
     shopsanity: Shopsanity
     shopsanity_quantity: ShopsanityQuantity
+    shard_goal: ShardGoal
+    remove_post_victory_locations: RemovePostVictoryLocations
 
 
 haste_option_groups: list[OptionGroup] = [
