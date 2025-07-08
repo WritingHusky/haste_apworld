@@ -29,10 +29,8 @@ def set_location_access_rules(world: "World"):
             f"Shard {i} Boss", lambda state, val=i: state.has("Progressive Shard", player, val-1)
         )
 
-
-    # TODO: once i figure out regions, make the shops unlock in chunks of 5 (so everything isnt considered sphere 0)
     if world.options.shopsanity == 1:
-        # pershard;
+        # per-shard;
         for i in range(1,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 11):
             for j in range(1, world.options.shopsanity_quantity+1):
                 set_rule_if_exists(

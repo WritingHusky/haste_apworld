@@ -1,7 +1,10 @@
 from enum import Flag, auto
 from typing import NamedTuple, Optional
-from BaseClasses import Location, Region
+from BaseClasses import Location, Region, ItemClassification
+from math import floor
 
+from .Items import HasteItem, HasteItemData
+from .Regions import SHOP_SEGMENTING
 
 class HasteFlag(Flag):
     # Define flag types for different categories of checks
@@ -23,12 +26,12 @@ class HasteLocation(Location):
 
     def __init__(self, player: int, name: str, parent: Region, data: HasteLocationData):
 
-        address = None if data.code is None else HasteLocation.get_apid(data.code)
+        address = None if data is None else HasteLocation.get_apid(data.code)
         super(HasteLocation, self).__init__(
             player, name, address=address, parent=parent
         )
 
-        self.code = data.code
+        self.code = None if data is None else data.code
 
     @staticmethod
     def get_apid(code: int) -> int:
@@ -82,14 +85,33 @@ def create_locations(world, regions):
                 location = HasteLocation(world.player, location_name, regions[f"Shard {data.shard}"], data)
                 regions[f"Shard {data.shard}"].locations.append(location)
 
-            if data.flags == HasteFlag.PerShardShop and world.options.shopsanity == 1:
+            if (data.flags == HasteFlag.PerShardShop and world.options.shopsanity == 1) or (data.flags == HasteFlag.GlobalShop and world.options.shopsanity == 2):
+                if data.flags == HasteFlag.PerShardShop:
+                    shardnum = data.shard
+                else:
+                    shardnum = 1
                 shopnum = int(location_name.split()[-1])
                 if shopnum <= world.options.shopsanity_quantity:
-                    location = HasteLocation(world.player, location_name, regions[f"Shard {data.shard}"], data)
-                    regions[f"Shard {data.shard}"].locations.append(location)
-
-            if data.flags == HasteFlag.GlobalShop and world.options.shopsanity == 2:
-                shopnum = int(location_name.split()[-1])
-                if shopnum <= world.options.shopsanity_quantity:
-                    location = HasteLocation(world.player, location_name, regions["Shard 1"], data)
-                    regions["Shard 1"].locations.append(location)       
+                    # the real item location
+                    if shopnum >SHOP_SEGMENTING:
+                        regionnum = floor((shopnum-1)/SHOP_SEGMENTING)
+                        location = HasteLocation(world.player, location_name, regions[f"Shard {shardnum} Shop {regionnum}"], data)
+                        regions[f"Shard {shardnum} Shop {regionnum}"].locations.append(location)
+                    else:
+                        location = HasteLocation(world.player, location_name, regions[f"Shard {shardnum}"], data)
+                        regions[f"Shard {shardnum}"].locations.append(location)
+                    # the event item location
+                    if shopnum % SHOP_SEGMENTING == 0:
+                        regionnum = floor((shopnum-1)/SHOP_SEGMENTING)
+                        if shopnum == SHOP_SEGMENTING:
+                            regionname = f"Shard {shardnum}"
+                        else:
+                            regionname = f"Shard {shardnum} Shop {regionnum}"
+                        location = HasteLocation(world.player, f"Shard{shardnum}Shop{regionnum}Event", regions[regionname], None)
+                        location.place_locked_item(HasteItem(
+                            f"Shard{shardnum}ShopRegion{regionnum}Unlock",
+                            world.player,
+                            HasteItemData(f"you cant see me", ItemClassification.progression, None, 1),
+                            ItemClassification.progression,
+                        ))
+                        regions[regionname].locations.append(location)

@@ -7,6 +7,7 @@ from Options import (
     PerGameCommonOptions,
     StartInventoryPool,
     Toggle,
+    DefaultOnToggle,
     Range,
 )
 
@@ -14,7 +15,7 @@ from Options import (
 # Logic Settings
 class ForceReload(Toggle):
     """
-    When enabled if you recieve an shard unlock in the hub world, the hub will be forced reloaded
+    When enabled if you receive an shard unlock in the hub world, the hub will be forced reloaded
     This includes if you are taking to the captain and other NPC's
     This may cause errors (this is still alpha)
     """
@@ -57,20 +58,22 @@ class ShardGoal(Range):
     default = 10
 
 
-class RemovePostVictoryLocations(Toggle):
+class RemovePostVictoryLocations(DefaultOnToggle):
     """
     Removes any locations in shards that happen after the goal set in Shard Goal.
     ex: if Shard Goal is set to 7, this will remove any locations in shards 8, 9, and 10
     """
     
-    display_name = "Remove Post-Victory Locaitons"
-    default = False
+    display_name = "Remove Post-Victory Locations"
 
 
 
 class DefaultOutfitBody(Range):
     """
     Sets Zoe's default costume when loading into the game.
+    This will not actually unlock the costume from the Fashion Weeboh, and if you change your costume you won't get the "default" back until you reload the game.
+    0 = Courier, 1 = Crispy, 2 = Little Sister, 3 = Supersonic Zoe, 4 = Zoe the Shadow
+    5 = Totally Accurate Zoe, 6 = Flopsy, 7 = Twisted Flopsy, 8 = Weeboh, 9 = Zoe 64 
     """
 
     display_name = "Default Outfit Body"
@@ -81,6 +84,9 @@ class DefaultOutfitBody(Range):
 class DefaultOutfitHat(Range):
     """
     Sets Zoe's default hat when loading into the game.
+    This will not actually unlock the hat from the Fashion Weeboh, and if you change your hat you won't get the "default" back until you reload the game.
+    0 = Courier, 1 = Crispy, 2 = Little Sister, 3 = Supersonic Zoe, 4 = Zoe the Shadow
+    5 = Totally Accurate Zoe, 6 = Flopsy, 7 = Twisted Flopsy, 8 = Weeboh, 9 = Zoe 64 
     """
 
     display_name = "Default Outfit Hat"
