@@ -27,6 +27,7 @@ from .Items import (
 )
 from .Locations import LOCATION_TABLE, HasteLocation, HasteFlag, HasteLocationData
 from .options import haste_option_groups, HasteOptions
+from .Regions import create_regions
 
 
 class HasteWeb(WebWorld):
@@ -140,31 +141,28 @@ class HasteWorld(World):
 
     def create_regions(self) -> None:
         """
-        Create and connect regions for the Twilight Princess world.
+        Create and connect regions for the Haste world.
 
         This method first creates all the regions and adds the locations to them.
         Then it connects the regions to each other.
         """
 
-        # There are no regions yet
-        menu_region = Region(self.origin_region_name, self.player, self.multiworld)
-        self.multiworld.regions.append(menu_region)
-        for location_name, data in LOCATION_TABLE.items():
-            location = HasteLocation(self.player, location_name, menu_region, data)
-            menu_region.locations.append(location)
+        regions = Regions.create_regions(self)
+        Locations.create_locations(self, regions)
+        self.multiworld.regions.extend(regions.values())
 
-        self.get_location("Shard 10 Boss").place_locked_item(
+        self.get_location(f"Shard {self.options.shard_goal} Boss").place_locked_item(
             HasteItem(
                 "Victory",
                 self.player,
-                HasteItemData("Victory", ItemClassification.progression, None, 1),
+                HasteItemData("Victory", ItemClassification.progression, 0, 1),
                 ItemClassification.progression,
             )
         )
 
     def create_items(self) -> None:
         """
-        Create the items for the Twilight Princess world.
+        Create the items for the Haste world.
         """
         generate_itempool(self)
 
@@ -173,7 +171,7 @@ class HasteWorld(World):
     # set_rules() this is where access rules are set
     def set_rules(self) -> None:
         """
-        Set the access rules for the Twilight Princess world.
+        Set the access rules for the Haste world.
         """
         set_location_access_rules(self)
 
@@ -243,6 +241,7 @@ class HasteWorld(World):
 
         # Use the same weights for filler items used in the base randomizer.
         filler_consumables = [
+            "Anti-Spark 10 bundle",
             "Anti-Spark 100 bundle",
             "Anti-Spark 250 bundle",
             "Anti-Spark 500 bundle",
@@ -250,11 +249,12 @@ class HasteWorld(World):
             "Anti-Spark 1k bundle",
         ]
         filler_weights = [
-            0,  # 100
-            0,  # 250
-            1,  # 500
-            4,  # 750
-            2,  # 1k
+            10, #10
+            5,  # 100
+            3,  # 250
+            2,  # 500
+            2,  # 750
+            1,  # 1k
         ]
         assert len(filler_consumables) == len(
             filler_weights
@@ -287,6 +287,12 @@ class HasteWorld(World):
         slot_data = {
             "DeathLink": self.options.death_link.value,
             "ForceReload": self.options.force_reload.value,
+            "Shopsanity": self.options.shopsanity.value,
+            "Shopsanity Quantity": self.options.shopsanity_quantity.value,
+            "Shard Goal": self.options.shard_goal.value,
+            "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
+            "Default Outfit Body": self.options.default_outfit_body.value,
+            "Default Outfit Hat": self.options.default_outfit_hat.value
         }
 
         return slot_data
