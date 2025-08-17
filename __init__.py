@@ -292,6 +292,7 @@ class HasteWorld(World):
             "Fragmentsanity": self.options.fragmentsanity.value,
             "Fragmentsanity Quantity": self.options.fragmentsanity_quantity.value,
             "Linear Fragmentsanity Rate": self.options.fragmentsanity_linear_rate.value,
+            "NPC Shuffle": self.options.npc_shuffle.value,
             "Shard Goal": self.options.shard_goal.value,
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,

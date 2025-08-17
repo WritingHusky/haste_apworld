@@ -101,7 +101,7 @@ def create_locations(world, regions):
                     shardnum = 1
                 shopnum = int(location_name.split()[-1])
                 if shopnum <= world.options.shopsanity_quantity:
-                    print(f"shopnum = {shopnum}")
+                    #print(f"shopnum = {shopnum}")
                     # the real item location
                     if shopnum >SHOP_SEGMENTING:
                         regionnum = floor((shopnum-1)/SHOP_SEGMENTING)
@@ -130,17 +130,17 @@ def create_locations(world, regions):
             if (data.flags == HasteFlag.Fragment and world.options.fragmentsanity >= 1):
                 fragnum = int(location_name.split()[-1])
                 if fragnum <= world.options.fragmentsanity_quantity:
-                    print(f"fragnum = {fragnum}")
+                    #print(f"fragnum = {fragnum}")
                      # the real item location
                     if fragnum > FRAGMENT_SEGMENTING:
                         regionnum = floor((fragnum-1)/FRAGMENT_SEGMENTING)
                         location = HasteLocation(world.player, location_name, regions[f"Fragmentsanity {regionnum}"], data)
                         regions[f"Fragmentsanity {regionnum}"].locations.append(location)
-                        print(f"    put in Fragmentsanity {regionnum}")
+                        #print(f"    put in Fragmentsanity {regionnum}")
                     else:
                         location = HasteLocation(world.player, location_name, regions[f"Shard 1"], data)
                         regions[f"Shard 1"].locations.append(location)
-                        print(f"    put in Shard 1")
+                        #print(f"    put in Shard 1")
                     # the event item location
                     if fragnum % FRAGMENT_SEGMENTING == 0:
                         regionnum = floor((fragnum-1)/FRAGMENT_SEGMENTING)
@@ -155,5 +155,5 @@ def create_locations(world, regions):
                             HasteItemData(f"you cant see me", ItemClassification.progression, None, 1),
                             ItemClassification.progression,
                         ))
-                        print(f"    unlock event put in {regionname}")
+                        #print(f"    unlock event put in {regionname}")
                         regions[regionname].locations.append(location)

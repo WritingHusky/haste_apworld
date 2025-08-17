@@ -41,12 +41,17 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
 
             # Can do fancy stuff here
 
+            additional_items = 0
+            # add NPCs into the pool
+            if data.type == "NPC" and world.options.npc_shuffle == 1:
+                additional_items = 1
+
             if classification & IC.progression:
-                progression_pool.extend([item] * data.quantity)
+                progression_pool.extend([item] * (data.quantity + additional_items))
             elif classification & IC.useful:
-                useful_pool.extend([item] * data.quantity)
+                useful_pool.extend([item] * (data.quantity + additional_items))
             else:
-                filler_pool.extend([item] * data.quantity)
+                filler_pool.extend([item] * (data.quantity + additional_items))
         else:
             assert False, f"{item=} does not have a code"
 

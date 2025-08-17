@@ -14,13 +14,13 @@ class HasteItemData(NamedTuple):
     :param classification: The item's classification (progression, useful, filler).
     :param code: The unique code identifier for the item.
     :param quantity: The number of this item available.
-    :param item_id: The ID used to represent the item in-game.
     """
 
     type: str
     classification: IC
-    code: Optional[int]
+    code: int
     quantity: int
+
 
 
 class HasteItem(Item):
@@ -106,6 +106,11 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "Anti-Spark 500 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 9, 0),
     "Anti-Spark 750 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 10, 0),
     "Anti-Spark 1k bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 11, 0),
+    "Wraith": HasteItemData("NPC", IC.progression, 12, 0),
+    "Niada": HasteItemData("NPC", IC.progression, 13, 0),
+    "Daro": HasteItemData("NPC", IC.progression, 14, 0),
+    "The Captain": HasteItemData("NPC", IC.useful, 15, 0),
+    "Fasion Weeboh": HasteItemData("NPC", IC.filler, 16, 0),
 }
 
 LOOKUP_ID_TO_NAME: dict[int, str] = {

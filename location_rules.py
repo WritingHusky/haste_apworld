@@ -16,6 +16,12 @@ def set_location_access_rules(world: "World"):
         location = world.get_location(location_name)
         set_rule(location, rule)
 
+    def has_NPC(state: CollectionState, npc) -> bool:
+        if world.options.npc_shuffle:
+            return state.has(npc, player, 1)
+        else:
+            return True
+
     player = world.player
 
     world.multiworld.completion_condition[player] = lambda state: state.has(
@@ -54,11 +60,11 @@ def set_location_access_rules(world: "World"):
 
 
     set_rule_if_exists(
-        "Ability Slomo", lambda state: state.has("Progressive Shard", player, 1)
+        "Ability Slomo", lambda state: state.has("Progressive Shard", player, 1) and has_NPC(state, "Wraith")
     )
     set_rule_if_exists(
-        "Ability Grapple", lambda state: state.has("Progressive Shard", player, 1)
+        "Ability Grapple", lambda state: state.has("Progressive Shard", player, 1) and has_NPC(state, "Niada")
     )
     set_rule_if_exists(
-        "Ability Fly", lambda state: state.has("Progressive Shard", player, 1)
+        "Ability Fly", lambda state: state.has("Progressive Shard", player, 1) and has_NPC(state, "Daro")
     )

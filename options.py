@@ -71,19 +71,20 @@ class Fragmentsanity(Choice):
     """
     Determines how checks are distributed when completing fragments
     Linear: Checks are given out every X checks as determined by linear_fragmentsanity_rate
-    Triangular Half: Checks are given out following a halved triangular distribution
-        Check 10: 26 clears -- Check 20: 101 clears -- Check 30: 226 clears -- Check 40: 401 clears -- check 50: 626 clears
-    Triangular Half Capped: Checks are given out following a halved triangular distribution, capped at 10 fragments between checks
+    Balanced Triangular: Checks are given out following a halved triangular distribution, capped at 10 fragments between checks
         Check 10: 26 clears -- Check 20: 101 clears -- Check 30: 205 clears -- Check 40: 305 clears -- check 50: 405 clears
-    Triangular: Checks are given out following a triangular distribution
+    Triangular: Checks are given out following a triangular distribution. NOT RECOMMENDED FOR SYNCS.
         Check 10: 55 clears -- Check 20: 210 clears -- Check 30: 465 clears -- Check 40: 820 clears -- check 50: 1275 clears
     """
+
+    # Triangular Half: Checks are given out following a halved triangular distribution
+    #   Check 10: 26 clears -- Check 20: 101 clears -- Check 30: 226 clears -- Check 40: 401 clears -- check 50: 626 clears
 
     display_name = "Fragmentsanity"
     option_off = 0
     option_linear = 1
-    option_triangular_half = 2
-    option_triangular_half_capped = 3
+    # option_triangular_half = 2
+    option_balanced_triangular = 3
     option_triangular = 4
     default = option_linear
 
@@ -107,6 +108,13 @@ class LinearFragmentsanityRate(Range):
     range_end = 10
     default = 5
 
+class NPCShuffle(Toggle):
+    """
+    Shuffles Daro, Niada, Wraith, The Captain, and Fashion Weeboh; requiring you to find them before they appear in the hub world.
+    """
+
+    display_name = "Hub NPCs"
+    default = False
 
 class DefaultOutfitBody(Range):
     """
@@ -137,7 +145,7 @@ class DefaultOutfitHat(Range):
 @dataclass
 class HasteOptions(PerGameCommonOptions):
     """
-    A data class that encapsulates all configuration options for The Wind Waker.
+    A data class that encapsulates all configuration options for Haste.
     """
 
     start_inventory_from_pool: StartInventoryPool
@@ -150,6 +158,7 @@ class HasteOptions(PerGameCommonOptions):
     fragmentsanity: Fragmentsanity
     fragmentsanity_quantity: FragmentsanityQuantity
     fragmentsanity_linear_rate: LinearFragmentsanityRate
+    npc_shuffle: NPCShuffle
     shard_goal: ShardGoal
     remove_post_victory_locations: RemovePostVictoryLocations
     default_outfit_body: DefaultOutfitBody
