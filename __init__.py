@@ -153,9 +153,9 @@ class HasteWorld(World):
 
         self.get_location(f"Shard {self.options.shard_goal} Boss").place_locked_item(
             HasteItem(
-                "Victory",
+                "A New Future",
                 self.player,
-                HasteItemData("Victory", ItemClassification.progression, 0, 1),
+                HasteItemData("A New Future", ItemClassification.progression, 0, 1),
                 ItemClassification.progression,
             )
         )
@@ -249,9 +249,9 @@ class HasteWorld(World):
             "Anti-Spark 1k bundle",
         ]
         filler_weights = [
-            10, #10
-            5,  # 100
-            3,  # 250
+            15, #10
+            10,  # 100
+            5,  # 250
             2,  # 500
             2,  # 750
             1,  # 1k
@@ -289,6 +289,9 @@ class HasteWorld(World):
             "ForceReload": self.options.force_reload.value,
             "Shopsanity": self.options.shopsanity.value,
             "Shopsanity Quantity": self.options.shopsanity_quantity.value,
+            "Fragmentsanity": self.options.fragmentsanity.value,
+            "Fragmentsanity Quantity": self.options.fragmentsanity_quantity.value,
+            "Linear Fragmentsanity Rate": self.options.fragmentsanity_linear_rate.value,
             "Shard Goal": self.options.shard_goal.value,
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,

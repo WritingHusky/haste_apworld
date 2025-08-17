@@ -19,7 +19,7 @@ def set_location_access_rules(world: "World"):
     player = world.player
 
     world.multiworld.completion_condition[player] = lambda state: state.has(
-        "Victory", player
+        "A New Future", player
     )
 
     set_rule_if_exists("Shard 1 Boss", lambda state: (True))
@@ -36,13 +36,22 @@ def set_location_access_rules(world: "World"):
                 set_rule_if_exists(
                     f"Shard {i} Shop Item {j}", lambda state: (True)
                 )
-
     elif world.options.shopsanity == 2:
         # global
         for j in range(1, world.options.shopsanity_quantity+1):
             set_rule_if_exists(
                 f"Global Shop Item {j}", lambda state: (True)
             )
+            # add_item_rule for shops to not contain local items if the setting is enabled
+            # add_item_rule(location, lambda item: not (item.player == player and item.name in ["Cranky", "Funky", "Candy", "Snide"]))
+
+    if world.options.fragmentsanity >= 1:
+        # fragment clears
+        for j in range(1, world.options.fragmentsanity_quantity+1):
+            set_rule_if_exists(
+                f"Fragment Clear {j}", lambda state: (True)
+            )
+
 
     set_rule_if_exists(
         "Ability Slomo", lambda state: state.has("Progressive Shard", player, 1)

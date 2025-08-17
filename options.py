@@ -67,6 +67,46 @@ class RemovePostVictoryLocations(DefaultOnToggle):
     display_name = "Remove Post-Victory Locations"
 
 
+class Fragmentsanity(Choice):
+    """
+    Determines how checks are distributed when completing fragments
+    Linear: Checks are given out every X checks as determined by linear_fragmentsanity_rate
+    Triangular Half: Checks are given out following a halved triangular distribution
+        Check 10: 26 clears -- Check 20: 101 clears -- Check 30: 226 clears -- Check 40: 401 clears -- check 50: 626 clears
+    Triangular Half Capped: Checks are given out following a halved triangular distribution, capped at 10 fragments between checks
+        Check 10: 26 clears -- Check 20: 101 clears -- Check 30: 205 clears -- Check 40: 305 clears -- check 50: 405 clears
+    Triangular: Checks are given out following a triangular distribution
+        Check 10: 55 clears -- Check 20: 210 clears -- Check 30: 465 clears -- Check 40: 820 clears -- check 50: 1275 clears
+    """
+
+    display_name = "Fragmentsanity"
+    option_off = 0
+    option_linear = 1
+    option_triangular_half = 2
+    option_triangular_half_capped = 3
+    option_triangular = 4
+    default = option_linear
+
+class FragmentsanityQuantity(Range):
+    """
+    Determines how many checks are tied to completing fragments.
+    """
+
+    display_name = "Fragmentsanity Quantity"
+    range_start = 1
+    range_end = 50
+    default = 30
+
+class LinearFragmentsanityRate(Range):
+    """
+    For linear Fragmentsanity distribution, determines how many fragments must be cleared to send a check
+    """
+
+    display_name = "Linear Fragmentsanity Rate"
+    range_start = 1
+    range_end = 10
+    default = 5
+
 
 class DefaultOutfitBody(Range):
     """
@@ -107,6 +147,9 @@ class HasteOptions(PerGameCommonOptions):
     force_reload: ForceReload
     shopsanity: Shopsanity
     shopsanity_quantity: ShopsanityQuantity
+    fragmentsanity: Fragmentsanity
+    fragmentsanity_quantity: FragmentsanityQuantity
+    fragmentsanity_linear_rate: LinearFragmentsanityRate
     shard_goal: ShardGoal
     remove_post_victory_locations: RemovePostVictoryLocations
     default_outfit_body: DefaultOutfitBody

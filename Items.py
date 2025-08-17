@@ -94,7 +94,7 @@ def item_factory(
 
 VERY_USEFUL = IC.progression | IC.useful
 ITEM_TABLE: dict[str, HasteItemData] = {
-    "Victory": HasteItemData("Victory", IC.progression, 0, 0),
+    "A New Future": HasteItemData("Victory", IC.progression, 0, 0),
     "Progressive Shard": HasteItemData("Shard", IC.progression, 1, 9),
     "Shard Shop Filler Item": HasteItemData("Filler", IC.filler, 2, 0),
     "Slomo": HasteItemData("Ability", IC.progression, 3, 1),
