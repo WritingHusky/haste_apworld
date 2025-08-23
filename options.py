@@ -26,8 +26,8 @@ class ForceReload(Toggle):
 class Shopsanity(Choice):
     """
     Determines how shops are handled, the number of checks per shop is determined by shopsanity_quantity
-    Per-Shard: Shops will contain shopsanity_quantity total checks per Shard
-    Global: Shops will contain shopsanity_quantity total checks for the entire game, regardless of which Shard you are in
+    Per-Shard: Shops will contain checks that are specific to each Shard
+    Global: Shops will contain checks for the entire game, regardless of which Shard you are in
     """
 
     display_name = "Shopsanity"
@@ -37,15 +37,26 @@ class Shopsanity(Choice):
     default = option_off
 
 
-class ShopsanityQuantity(Range):
+class PerShardShopQuantity(Range):
     """
-    Determines how many checks are in each shop.
+    Determines how many checks are tied to shop purchases for each available Shard.
     """
 
-    display_name = "Shopsanity Quantity"
+    display_name = "Per-Shard Shopsanity Quantity"
+    range_start = 1
+    range_end = 25
+    default = 10
+
+
+class GlobalShopQuantity(Range):
+    """
+    Determines how many checks are tied to any shop purchase.
+    """
+
+    display_name = "Global Shopsanity Quantity"
     range_start = 1
     range_end = 100
-    default = 25
+    default = 50
 
 class ShardGoal(Range):
     """
@@ -106,14 +117,29 @@ class LinearFragmentsanityRate(Range):
     display_name = "Linear Fragmentsanity Rate"
     range_start = 1
     range_end = 10
-    default = 5
+    default = 3
 
 class NPCShuffle(Toggle):
     """
-    Shuffles Daro, Niada, Wraith, The Captain, and Fashion Weeboh; requiring you to find them before they appear in the hub world.
+    Shuffles Daro, Niada, Wraith, The Captain, and Fashion Weeboh; requiring you to find them before they can be talked to in the hub world.
     """
 
     display_name = "Hub NPCs"
+    default = False
+
+class PermanentSpeedUpgrades(Toggle):
+    """
+    Reduces Zoe's base run speed to 60%, and adds 6 Speed Upgrades that increase her base run speed by 10% each (totalling 120% run speed with all 6 upgrades)
+    Zoe's TOTAL speed includes more than just her BASE run speed; so liberal use of Boost-increasing items, abilities, and good landings will be needed to compensate for this initial reduction
+    Shards will require a certain number of speed upgrades to logically complete:
+        Shards 1-2: No speed upgrades
+        Shards 3-4: 1 speed upgrade
+        Shards 5-7: 2 speed upgrades
+        Shards 7-8: 3 speed upgrades
+        Shards 9-10: 4 speed upgrades
+    """
+
+    display_name = "Permanent Speed Upgrades"
     default = False
 
 class DefaultOutfitBody(Range):
@@ -154,12 +180,14 @@ class HasteOptions(PerGameCommonOptions):
     # Logic Settings
     force_reload: ForceReload
     shopsanity: Shopsanity
-    shopsanity_quantity: ShopsanityQuantity
+    pershard_shopsanity_quantity: PerShardShopQuantity
+    global_shopsanity_quantity: GlobalShopQuantity
     fragmentsanity: Fragmentsanity
     fragmentsanity_quantity: FragmentsanityQuantity
     fragmentsanity_linear_rate: LinearFragmentsanityRate
     npc_shuffle: NPCShuffle
     shard_goal: ShardGoal
+    speed_upgrade: PermanentSpeedUpgrades
     remove_post_victory_locations: RemovePostVictoryLocations
     default_outfit_body: DefaultOutfitBody
     default_outfit_hat: DefaultOutfitHat
@@ -167,7 +195,7 @@ class HasteOptions(PerGameCommonOptions):
 
 haste_option_groups: list[OptionGroup] = [
     OptionGroup(
-        "thing Settings",
+        "Other Settings",
         [
             ForceReload,
         ],

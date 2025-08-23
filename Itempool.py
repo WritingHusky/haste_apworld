@@ -42,9 +42,12 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
             # Can do fancy stuff here
 
             additional_items = 0
-            # add NPCs into the pool
             if data.type == "NPC" and world.options.npc_shuffle == 1:
+                # add NPCs into the pool
                 additional_items = 1
+            elif data.type == "Speed" and world.options.speed_upgrade == 1:
+                # add 6 speed upgrades into the pool
+                additional_items = 6
 
             if classification & IC.progression:
                 progression_pool.extend([item] * (data.quantity + additional_items))

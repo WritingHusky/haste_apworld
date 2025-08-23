@@ -97,9 +97,9 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "A New Future": HasteItemData("Victory", IC.progression, 0, 0),
     "Progressive Shard": HasteItemData("Shard", IC.progression, 1, 9),
     "Shard Shop Filler Item": HasteItemData("Filler", IC.filler, 2, 0),
-    "Slomo": HasteItemData("Ability", IC.progression, 3, 1),
-    "Grapple": HasteItemData("Ability", IC.progression, 4, 1),
-    "Fly": HasteItemData("Ability", IC.progression, 5, 1),
+    "Wraith's Hourglass": HasteItemData("Ability", IC.progression, 3, 1),
+    "Heir's Javelin": HasteItemData("Ability", IC.progression, 4, 1),
+    "Sage's Cowl": HasteItemData("Ability", IC.progression, 5, 1),
     "Anti-Spark 10 bundle": HasteItemData("Anti-Spark Bundle", IC.filler, 6, 0),
     "Anti-Spark 100 bundle": HasteItemData("Anti-Spark Bundle", IC.filler, 7, 0),
     "Anti-Spark 250 bundle": HasteItemData("Anti-Spark Bundle", IC.useful, 8, 0),
@@ -110,7 +110,8 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "Niada": HasteItemData("NPC", IC.progression, 13, 0),
     "Daro": HasteItemData("NPC", IC.progression, 14, 0),
     "The Captain": HasteItemData("NPC", IC.useful, 15, 0),
-    "Fasion Weeboh": HasteItemData("NPC", IC.filler, 16, 0),
+    "Fashion Weeboh": HasteItemData("NPC", IC.filler, 16, 0),
+    "Progressive Speed Upgrade": HasteItemData("Speed", IC.progression, 17, 0)
 }
 
 LOOKUP_ID_TO_NAME: dict[int, str] = {

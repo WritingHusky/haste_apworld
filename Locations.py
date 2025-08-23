@@ -41,9 +41,9 @@ class HasteLocation(Location):
 
 
 LOCATION_TABLE = {
-    "Ability Slomo": HasteLocationData(code=1, flags=HasteFlag.Always),
-    "Ability Grapple": HasteLocationData(code=2, flags=HasteFlag.Always),
-    "Ability Fly": HasteLocationData(code=3, flags=HasteFlag.Always),
+    "Wraith's Hourglass Purchase": HasteLocationData(code=1, flags=HasteFlag.Always),
+    "Heir's Javelin Purchase": HasteLocationData(code=2, flags=HasteFlag.Always),
+    "Sage's Cowl Purchase": HasteLocationData(code=3, flags=HasteFlag.Always),
 }
 
 # Per Shard locations
@@ -61,18 +61,18 @@ for j in range(1, 101):
     )
 
 # per-shard shop locations
-# IDs 201-1200
+# IDs 201-450
 for i in range(1,11):
-    for j in range(1, 101):
+    for j in range(1, 26):
         LOCATION_TABLE[f"Shard {i} Shop Item {j}"] = HasteLocationData(
-            code=100 + i*100 + j, flags=HasteFlag.PerShardShop, shard=i
+            code=200 + (i-1)*25 + j, flags=HasteFlag.PerShardShop, shard=i
         )
 
 # fragment locations
-# IDs 1201-1250
+# IDs 451-500
 for j in range(1, 51):
     LOCATION_TABLE[f"Fragment Clear {j}"] = HasteLocationData(
-        code=1200 + j, flags=HasteFlag.Fragment, shard=1
+        code=450 + j, flags=HasteFlag.Fragment, shard=1
     )
 
 def none_or_within_shard(goal, rpvl, shard) -> bool:
@@ -100,7 +100,8 @@ def create_locations(world, regions):
                 else:
                     shardnum = 1
                 shopnum = int(location_name.split()[-1])
-                if shopnum <= world.options.shopsanity_quantity:
+                shoplim = world.options.pershard_shopsanity_quantity if data.flags == HasteFlag.PerShardShop else world.options.global_shopsanity_quantity
+                if shopnum <= shoplim:
                     #print(f"shopnum = {shopnum}")
                     # the real item location
                     if shopnum >SHOP_SEGMENTING:
