@@ -83,13 +83,13 @@ class Fragmentsanity(Choice):
     Determines how checks are distributed when completing fragments
     Linear: Checks are given out every X checks as determined by linear_fragmentsanity_rate
     Balanced Triangular: Checks are given out following a halved triangular distribution, capped at 10 fragments between checks
-        Check 10: 26 clears -- Check 20: 101 clears -- Check 30: 205 clears -- Check 40: 305 clears -- check 50: 405 clears
+        Check 10: 30 clears -- Check 20: 110 clears -- Check 30: 210 clears -- Check 40: 310 clears -- check 50: 410 clears
     Triangular: Checks are given out following a triangular distribution. NOT RECOMMENDED FOR SYNCS.
         Check 10: 55 clears -- Check 20: 210 clears -- Check 30: 465 clears -- Check 40: 820 clears -- check 50: 1275 clears
     """
 
     # Triangular Half: Checks are given out following a halved triangular distribution
-    #   Check 10: 26 clears -- Check 20: 101 clears -- Check 30: 226 clears -- Check 40: 401 clears -- check 50: 626 clears
+    #   Check 10: 30 clears -- Check 20: 110 clears -- Check 30: 240 clears -- Check 40: 420 clears -- check 50: 650 clears
 
     display_name = "Fragmentsanity"
     option_off = 0
@@ -142,32 +142,45 @@ class PermanentSpeedUpgrades(Toggle):
     display_name = "Permanent Speed Upgrades"
     default = False
 
-class DefaultOutfitBody(Range):
+class DefaultOutfitBody(Choice):
     """
     Sets Zoe's default costume when loading into the game.
     This will not actually unlock the costume from the Fashion Weeboh, and if you change your costume you won't get the "default" back until you reload the game.
-    0 = Courier, 1 = Crispy, 2 = Little Sister, 3 = Supersonic Zoe, 4 = Zoe the Shadow
-    5 = Totally Accurate Zoe, 6 = Flopsy, 7 = Twisted Flopsy, 8 = Weeboh, 9 = Zoe 64 
     """
 
     display_name = "Default Outfit Body"
-    range_start = 0
-    range_end = 9
-    default = 0
+    option_default = 0
+    option_cripsy = 1
+    option_little_sister = 2
+    option_supersonic_zoe = 3
+    option_zoe_the_shadow = 4
+    option_totally_accurate_zoe = 5
+    option_flopsy = 6
+    option_twisted_flopsy = 7
+    option_weeboh = 10
+    option_zoe_64 = 64
+    default = option_default
 
-class DefaultOutfitHat(Range):
+class DefaultOutfitHat(Choice):
     """
     Sets Zoe's default hat when loading into the game.
     This will not actually unlock the hat from the Fashion Weeboh, and if you change your hat you won't get the "default" back until you reload the game.
-    0 = Courier, 1 = Crispy, 2 = Little Sister, 3 = Supersonic Zoe, 4 = Zoe the Shadow
-    5 = Totally Accurate Zoe, 6 = Flopsy, 7 = Twisted Flopsy, 8 = Weeboh, 9 = Zoe 64 
     """
 
     display_name = "Default Outfit Hat"
-    range_start = 0
-    range_end = 9
-    default = 0
+    option_default = 0
+    option_cripsy = 1
+    option_little_sister = 2
+    option_supersonic_zoe = 3
+    option_zoe_the_shadow = 4
+    option_totally_accurate_zoe = 5
+    option_flopsy = 6
+    option_twisted_flopsy = 7
+    option_weeboh = 10
+    option_zoe_64 = 64
+    default = option_default
 
+    
 @dataclass
 class HasteOptions(PerGameCommonOptions):
     """
