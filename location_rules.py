@@ -40,7 +40,7 @@ def set_location_access_rules(world: "World"):
         for i in range(1,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 11):
             for j in range(1, world.options.pershard_shopsanity_quantity+1):
                 set_rule_if_exists(
-                    f"Shard {i} Shop Item {j}", lambda state: (True)
+                    f"Shard {i} Shop Item {j}", lambda state, val=i: state.has("Progressive Shard", player, val-1)
                 )
     elif world.options.shopsanity == 2:
         # global
