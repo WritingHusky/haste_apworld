@@ -80,7 +80,19 @@ class RemovePostVictoryLocations(DefaultOnToggle):
 
 class Fragmentsanity(Choice):
     """
-    Determines how checks are distributed when completing fragments
+    Determines how fragment clears are handled.
+    Per-Shard: Fragment clears will have checks that are specific to each Shard
+    Global: Fragment clears will have checks for the entire game, regardless of which Shard you are in
+    """
+    option_off = 0
+    option_per_shard = 1
+    option_global = 2
+    default = option_off
+
+
+class FragmentsanityDistribution(Choice):
+    """
+    Determines how fragmentsanity checks are distributed
     Linear: Checks are given out every X checks as determined by linear_fragmentsanity_rate
     Balanced Triangular: Checks are given out following a halved triangular distribution, capped at 10 fragments between checks
         Check 10: 30 clears -- Check 20: 110 clears -- Check 30: 210 clears -- Check 40: 310 clears -- check 50: 410 clears
@@ -91,20 +103,30 @@ class Fragmentsanity(Choice):
     # Triangular Half: Checks are given out following a halved triangular distribution
     #   Check 10: 30 clears -- Check 20: 110 clears -- Check 30: 240 clears -- Check 40: 420 clears -- check 50: 650 clears
 
-    display_name = "Fragmentsanity"
-    option_off = 0
+    display_name = "Fragmentsanity Distribution"
     option_linear = 1
     # option_triangular_half = 2
     option_balanced_triangular = 3
     option_triangular = 4
     default = option_linear
 
-class FragmentsanityQuantity(Range):
+class PerShardFragmentQuantity(Range):
     """
-    Determines how many checks are tied to completing fragments.
+    Determines how many checks are tied to fragment clears for each available Shard.
     """
 
-    display_name = "Fragmentsanity Quantity"
+    display_name = "Per-Shard Fragmentsanity Quantity"
+    range_start = 1
+    range_end = 25
+    default = 10
+
+
+class GlobalFragmentQuantity(Range):
+    """
+    Determines how many checks are tied to any fragment clears.
+    """
+
+    display_name = "Global Fragmentsanity Quantity"
     range_start = 1
     range_end = 50
     default = 30
@@ -196,7 +218,9 @@ class HasteOptions(PerGameCommonOptions):
     pershard_shopsanity_quantity: PerShardShopQuantity
     global_shopsanity_quantity: GlobalShopQuantity
     fragmentsanity: Fragmentsanity
-    fragmentsanity_quantity: FragmentsanityQuantity
+    fragmentsanity_distribution: FragmentsanityDistribution
+    pershard_fragmentsanity_quantity: PerShardFragmentQuantity
+    global_fragmentsanity_quantity: GlobalFragmentQuantity
     fragmentsanity_linear_rate: LinearFragmentsanityRate
     npc_shuffle: NPCShuffle
     shard_goal: ShardGoal

@@ -12,7 +12,8 @@ class HasteFlag(Flag):
     Boss = auto()
     PerShardShop = auto()
     GlobalShop = auto()
-    Fragment = auto()
+    PerShardFragment = auto()
+    GlobalFragment = auto()
     Unknown = auto()
 
 
@@ -56,7 +57,7 @@ for i in range(1, 11):
 # global shop locations
 # IDs 101-200
 for j in range(1, 101):
-    LOCATION_TABLE[f"Global Shop Item {j}"] = HasteLocationData(
+    LOCATION_TABLE[f"Global Shop Item {j:03}"] = HasteLocationData(
         code=100 + j, flags=HasteFlag.GlobalShop, shard=1
     )
 
@@ -64,16 +65,24 @@ for j in range(1, 101):
 # IDs 201-450
 for i in range(1,11):
     for j in range(1, 26):
-        LOCATION_TABLE[f"Shard {i} Shop Item {j}"] = HasteLocationData(
+        LOCATION_TABLE[f"Shard {i} Shop Item {j:02}"] = HasteLocationData(
             code=200 + (i-1)*25 + j, flags=HasteFlag.PerShardShop, shard=i
         )
 
-# fragment locations
+# global fragment locations
 # IDs 451-500
 for j in range(1, 51):
-    LOCATION_TABLE[f"Fragment Clear {j}"] = HasteLocationData(
-        code=450 + j, flags=HasteFlag.Fragment, shard=1
+    LOCATION_TABLE[f"Global Fragment Clear {j:02}"] = HasteLocationData(
+        code=450 + j, flags=HasteFlag.GlobalFragment, shard=1
     )
+
+# per-shard shop locations
+# IDs 451-700
+for i in range(1,11):
+    for j in range(1, 26):
+        LOCATION_TABLE[f"Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
+            code=450 + (i-1)*25 + j, flags=HasteFlag.PerShardFragment, shard=i
+        )
 
 def none_or_within_shard(goal, rpvl, shard) -> bool:
     if shard is None: return True
@@ -127,31 +136,35 @@ def create_locations(world, regions):
                         ))
                         regions[regionname].locations.append(location)
 
-
-            if (data.flags == HasteFlag.Fragment and world.options.fragmentsanity >= 1):
+            if (data.flags == HasteFlag.PerShardFragment and world.options.fragmentsanity == 1) or (data.flags == HasteFlag.GlobalFragment and world.options.fragmentsanity == 2):
+                if data.flags == HasteFlag.PerShardFragment:
+                    shardnum = data.shard
+                else:
+                    shardnum = 1
                 fragnum = int(location_name.split()[-1])
-                if fragnum <= world.options.fragmentsanity_quantity:
+                fraglim = world.options.pershard_fragmentsanity_quantity if data.flags == HasteFlag.PerShardFragment else world.options.global_fragmentsanity_quantity
+                if fragnum <= fraglim:
                     #print(f"fragnum = {fragnum}")
-                     # the real item location
+                    # the real item location
                     if fragnum > FRAGMENT_SEGMENTING:
                         regionnum = floor((fragnum-1)/FRAGMENT_SEGMENTING)
-                        location = HasteLocation(world.player, location_name, regions[f"Fragmentsanity {regionnum}"], data)
-                        regions[f"Fragmentsanity {regionnum}"].locations.append(location)
+                        location = HasteLocation(world.player, location_name, regions[f"Shard {shardnum} Fragmentsanity {regionnum}"], data)
+                        regions[f"Shard {shardnum} Fragmentsanity {regionnum}"].locations.append(location)
                         #print(f"    put in Fragmentsanity {regionnum}")
                     else:
-                        location = HasteLocation(world.player, location_name, regions[f"Shard 1"], data)
-                        regions[f"Shard 1"].locations.append(location)
+                        location = HasteLocation(world.player, location_name, regions[f"Shard {shardnum}"], data)
+                        regions[f"Shard {shardnum}"].locations.append(location)
                         #print(f"    put in Shard 1")
                     # the event item location
                     if fragnum % FRAGMENT_SEGMENTING == 0:
                         regionnum = floor((fragnum-1)/FRAGMENT_SEGMENTING)
                         if fragnum == FRAGMENT_SEGMENTING:
-                            regionname = f"Shard 1"
+                            regionname = f"Shard {shardnum}"
                         else:
-                            regionname = f"Fragmentsanity {regionnum}"
-                        location = HasteLocation(world.player, f"Fragmentsanity{regionnum}Event", regions[regionname], None)
+                            regionname = f"Shard {shardnum} Fragmentsanity {regionnum}"
+                        location = HasteLocation(world.player, f"Shard{shardnum}Fragmentsanity{regionnum}Event", regions[regionname], None)
                         location.place_locked_item(HasteItem(
-                            f"Fragmentsanity{regionnum+1}Unlock",
+                            f"Shard{shardnum}Fragmentsanity{regionnum+1}Unlock",
                             world.player,
                             HasteItemData(f"you cant see me", ItemClassification.progression, None, 1),
                             ItemClassification.progression,

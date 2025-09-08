@@ -49,19 +49,13 @@ def create_regions(world) -> Dict[str, Region]:
         #subregions for shops, unlocking at SHOP_SEGMENTING-purchase intervals
         for j in range(1,floor(100/SHOP_SEGMENTING)):
             shop_region = Region(f"Shard {i} Shop {j}", player, world.multiworld)
-            # if j == 1:
-            #     connect(player, f"Shard {i} Shop Region {j} Entrance", shard_region, shop_region, lambda state: (True))
-            # else:
             connect(player, f"Shard {i} Shop Region {j} Entrance", shard_region, shop_region, lambda state, vali=i, valj=j: state.has(f"Shard{vali}ShopRegion{valj}Unlock", player))
             regions[f"Shard {i} Shop {j}"] = shop_region
 
-    for i in range(1, floor(50/FRAGMENT_SEGMENTING)):
-        fragment_region = Region(f"Fragmentsanity {i}", player, world.multiworld)
-        # if i == 1:
-        #     connect(player, f"Fragmentsanity Region {i} Entrance", regions["Shard 1"], fragment_region, lambda state: (True))
-        # else:
-        connect(player, f"Fragmentsanity Region {i} Entrance", regions["Shard 1"], fragment_region, lambda state, vali=i: state.has(f"Fragmentsanity{vali}Unlock", player))
-        regions[f"Fragmentsanity {i}"] = fragment_region
+        for j in range(1, floor(50/FRAGMENT_SEGMENTING)):
+            fragment_region = Region(f"Shard {i} Fragmentsanity {j}", player, world.multiworld)
+            connect(player, f"Shard {i} Fragmentsanity Region {j} Entrance", regions["Shard 1"], fragment_region, lambda state, vali=i, valj=j: state.has(f"Shard{vali}Fragmentsanity{valj}Unlock", player))
+            regions[f"Shard {i} Fragmentsanity {j}"] = fragment_region
     
     return regions
 

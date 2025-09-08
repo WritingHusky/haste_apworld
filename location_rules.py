@@ -36,26 +36,33 @@ def set_location_access_rules(world: "World"):
         )
 
     if world.options.shopsanity == 1:
-        # per-shard;
+        # per-shard
         for i in range(1,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 11):
             for j in range(1, world.options.pershard_shopsanity_quantity+1):
                 set_rule_if_exists(
-                    f"Shard {i} Shop Item {j}", lambda state: (True)
+                    f"Shard {i} Shop Item {j:02}", lambda state: (True)
                 )
     elif world.options.shopsanity == 2:
         # global
         for j in range(1, world.options.global_shopsanity_quantity+1):
             set_rule_if_exists(
-                f"Global Shop Item {j}", lambda state: (True)
+                f"Global Shop Item {j:03}", lambda state: (True)
             )
             # add_item_rule for shops to not contain local items if the setting is enabled
             # add_item_rule(location, lambda item: not (item.player == player and item.name in ["Cranky", "Funky", "Candy", "Snide"]))
 
-    if world.options.fragmentsanity >= 1:
-        # fragment clears
-        for j in range(1, world.options.fragmentsanity_quantity+1):
+    if world.options.fragmentsanity == 1:
+        # per-shard fragment clears
+        for i in range(1,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 11):
+            for j in range(1, world.options.pershard_fragmentsanity_quantity+1):
+                set_rule_if_exists(
+                    f"Shard {i} Fragment Clear {j:02}", lambda state: (True)
+                )
+    elif world.options.fragmentsanity == 2:
+        # global fragment clears
+        for j in range(1, world.options.global_fragmentsanity_quantity+1):
             set_rule_if_exists(
-                f"Fragment Clear {j}", lambda state: (True)
+                f"Global Fragment Clear {j:02}", lambda state: (True)
             )
 
 

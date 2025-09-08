@@ -64,6 +64,7 @@ class HasteWorld(World):
     options: HasteOptions
 
     game: ClassVar[str] = "Haste"
+    version = "0.2.1"
     topology_present: bool = True
 
     item_name_to_id: ClassVar[dict[str, int]] = {
@@ -285,20 +286,23 @@ class HasteWorld(World):
         :return: A dictionary to be sent to the client when it connects to the server.
         """
         slot_data = {
+            "Version": self.version,
             "DeathLink": self.options.death_link.value,
             "ForceReload": self.options.force_reload.value,
             "Shopsanity": self.options.shopsanity.value,
             "Per-Shard Shopsanity Quantity": self.options.pershard_shopsanity_quantity.value,
             "Global Shopsanity Quantity": self.options.global_shopsanity_quantity.value,
             "Fragmentsanity": self.options.fragmentsanity.value,
-            "Fragmentsanity Quantity": self.options.fragmentsanity_quantity.value,
+            "Fragmentsanity Distribution": self.options.fragmentsanity_distribution.value,
+            "Per-Shard Fragmentsanity Quantity": self.options.pershard_fragmentsanity_quantity.value,
+            "Global Fragmentsanity Quantity": self.options.global_fragmentsanity_quantity.value,
             "Linear Fragmentsanity Rate": self.options.fragmentsanity_linear_rate.value,
             "NPC Shuffle": self.options.npc_shuffle.value,
             "Shard Goal": self.options.shard_goal.value,
             "Speed Upgrades": self.options.speed_upgrade.value,
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,
-            "Default Outfit Hat": self.options.default_outfit_hat.value
+            "Default Outfit Hat": self.options.default_outfit_hat.value,
         }
 
         return slot_data
