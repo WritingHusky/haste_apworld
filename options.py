@@ -68,6 +68,16 @@ class ShardGoal(Range):
     range_end = 10
     default = 10
 
+class ShardUnlockOrder(Choice):
+    """
+    Determines how shards are unlocked when collecting Progressive Shard items.
+    Open: Shards will unlock immediately with the required number of Progressive Shards.
+    Bosses: Shards will unlock with Progressive Shards + having defeated the previously unlocked Shard's boss.
+    """
+    option_open = 0
+    option_bosses = 1
+    default = option_bosses
+
 
 class RemovePostVictoryLocations(DefaultOnToggle):
     """
@@ -213,7 +223,9 @@ class HasteOptions(PerGameCommonOptions):
     death_link: DeathLink
 
     # Logic Settings
-    force_reload: ForceReload
+    shard_goal: ShardGoal
+    shard_unlock_order: ShardUnlockOrder
+    remove_post_victory_locations: RemovePostVictoryLocations
     shopsanity: Shopsanity
     pershard_shopsanity_quantity: PerShardShopQuantity
     global_shopsanity_quantity: GlobalShopQuantity
@@ -223,9 +235,8 @@ class HasteOptions(PerGameCommonOptions):
     global_fragmentsanity_quantity: GlobalFragmentQuantity
     fragmentsanity_linear_rate: LinearFragmentsanityRate
     npc_shuffle: NPCShuffle
-    shard_goal: ShardGoal
     speed_upgrade: PermanentSpeedUpgrades
-    remove_post_victory_locations: RemovePostVictoryLocations
+    force_reload: ForceReload
     default_outfit_body: DefaultOutfitBody
     default_outfit_hat: DefaultOutfitHat
 
