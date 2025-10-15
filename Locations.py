@@ -14,6 +14,8 @@ class HasteFlag(Flag):
     GlobalShop = auto()
     PerShardFragment = auto()
     GlobalFragment = auto()
+    CaptainsUpgrade = auto()
+    Fashion = auto()
     Unknown = auto()
 
 
@@ -21,6 +23,7 @@ class HasteLocationData(NamedTuple):
     code: Optional[int]
     flags: HasteFlag
     shard: Optional[int] = None
+    skin: Optional[int] = None
 
 
 class HasteLocation(Location):
@@ -53,6 +56,44 @@ for i in range(1, 11):
     LOCATION_TABLE[f"Shard {i} Boss"] = HasteLocationData(
         code=9 + i, flags=HasteFlag.Boss, shard=i
     )
+
+# Captain's Upgrade locations
+# IDs 20-40
+for i in range(1, 5):
+    LOCATION_TABLE[f"Captain's Max Health Upgrade Purchase {i}"] = HasteLocationData(
+        code=20 + i, flags=HasteFlag.CaptainsUpgrade
+    )
+LOCATION_TABLE["Captain's Max Lives Upgrade Purchase"] = HasteLocationData(
+        code=24, flags=HasteFlag.CaptainsUpgrade
+    )
+for i in range(1, 5):
+    LOCATION_TABLE[f"Captain's Max Energy Upgrade Purchase {i}"] = HasteLocationData(
+        code=25 + i, flags=HasteFlag.CaptainsUpgrade
+    )
+for i in range(1, 7):
+    LOCATION_TABLE[f"Captain's Item Rarity Upgrade Purchase {i}"] = HasteLocationData(
+        code=29 + i, flags=HasteFlag.CaptainsUpgrade
+    )
+for i in range(1, 4):
+    LOCATION_TABLE[f"Captain's Sparks in Shard Upgrade Purchase {i}"] = HasteLocationData(
+        code=35 + i, flags=HasteFlag.CaptainsUpgrade
+    )
+for i in range(1, 4):
+    LOCATION_TABLE[f"Captain's Starting Sparks Upgrade Purchase {i}"] = HasteLocationData(
+        code=38 + i, flags=HasteFlag.CaptainsUpgrade
+    )
+
+# Fashion Weeboh Purchase locations
+# 41-49
+LOCATION_TABLE["Crispy Costume Purchase"] = HasteLocationData(code=41, flags=HasteFlag.Fashion, skin=1)
+LOCATION_TABLE["Little Sister Costume Purchase"] = HasteLocationData(code=42, flags=HasteFlag.Fashion, skin=2)
+LOCATION_TABLE["Supersonic Zoe Costume Purchase"] = HasteLocationData(code=43, flags=HasteFlag.Fashion, skin=3)
+LOCATION_TABLE["Zoe the Shadow Costume Purchase"] = HasteLocationData(code=44, flags=HasteFlag.Fashion, skin=4)
+LOCATION_TABLE["Totally Accurate Zoe Costume Purchase"] = HasteLocationData(code=45, flags=HasteFlag.Fashion, skin=5)
+LOCATION_TABLE["Flopsy Costume Purchase"] = HasteLocationData(code=46, flags=HasteFlag.Fashion, skin=6)
+LOCATION_TABLE["Twisted Flopsy Costume Purchase"] = HasteLocationData(code=47, flags=HasteFlag.Fashion, skin=7)
+LOCATION_TABLE["Weeboh Costume Purchase"] = HasteLocationData(code=48, flags=HasteFlag.Fashion, skin=10)
+LOCATION_TABLE["Zoe 64 Costume Purchase"] = HasteLocationData(code=49, flags=HasteFlag.Fashion, skin=64)
 
 # global shop locations
 # IDs 101-200
@@ -95,10 +136,21 @@ def create_locations(world, regions):
 
     for location_name, data in LOCATION_TABLE.items():
         if none_or_within_shard(world.options.shard_goal, world.options.remove_post_victory_locations, data.shard):
-            if data.flags == HasteFlag.Always:
+            if data.flags == HasteFlag.Always or (data.flags == HasteFlag.CaptainsUpgrade and world.options.captains_upgrades == 1):
                 location = HasteLocation(world.player, location_name, regions["Menu"], data)
                 regions["Menu"].locations.append(location)
             
+            if data.flags == HasteFlag.Fashion and world.options.weeboh_purchases >= 1 and world.options.default_outfit_body != data.skin and world.options.default_outfit_hat != data.skin:
+                # Crispy and Twisted Flopsy are unobtainable in the scope of AP with vanilla fashion unlocks
+                if world.options.weeboh_purchases == 1 and (data.skin == 1 or data.skin == 7):
+                    continue
+                # having a skin by default removes it as a purchase location
+                if data.skin == world.options.default_outfit_body or data.skin == world.options.default_outfit_hat:
+                    continue
+                # TODO: if vanilla unlocks, add weeboh and flopsy to their respective shard regions instead of menu (so i can piggyback off of the speed calcs)
+                location = HasteLocation(world.player, location_name, regions["Menu"], data)
+                regions["Menu"].locations.append(location)
+
             if data.flags == HasteFlag.Boss:
                 location = HasteLocation(world.player, location_name, regions[f"Shard {data.shard}"], data)
                 regions[f"Shard {data.shard}"].locations.append(location)

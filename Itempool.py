@@ -45,9 +45,27 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
             if data.type == "NPC" and world.options.npc_shuffle == 1:
                 # add NPCs into the pool
                 additional_items = 1
+                if world.options.captains_upgrades != 1 and item == "The Captain":
+                    # make Captain progression if he has checks
+                    classification = IC.useful
             elif data.type == "Speed" and world.options.speed_upgrade == 1:
                 # add 6 speed upgrades into the pool
                 additional_items = 6
+            elif data.type == "Upgrade" and world.options.captains_upgrades == 1:
+                match item:
+                    case "Max Health Upgrade":
+                        additional_items = 4
+                    case "Extra Lives Upgrade":
+                        additional_items = 1
+                    case "Max Engrgy Upgrade":
+                        additional_items = 4
+                    case "Item Rarity Upgrade":
+                        additional_items = 6
+                    case "Sparks in Shard Upgrade":
+                        additional_items = 3
+                    case "Starting Sparks Upgrade":
+                        additional_items = 3
+
 
             if classification & IC.progression:
                 progression_pool.extend([item] * (data.quantity + additional_items))

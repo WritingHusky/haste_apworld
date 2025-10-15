@@ -64,7 +64,7 @@ class HasteWorld(World):
     options: HasteOptions
 
     game: ClassVar[str] = "Haste"
-    version = "0.2.1"
+    version = "0.2.2"
     topology_present: bool = True
 
     item_name_to_id: ClassVar[dict[str, int]] = {
@@ -300,6 +300,7 @@ class HasteWorld(World):
             "Global Fragmentsanity Quantity": self.options.global_fragmentsanity_quantity.value,
             "Linear Fragmentsanity Rate": self.options.fragmentsanity_linear_rate.value,
             "NPC Shuffle": self.options.npc_shuffle.value,
+            "Captain's Upgrades": self.options.captains_upgrades.value,
             "Speed Upgrades": self.options.speed_upgrade.value,
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,

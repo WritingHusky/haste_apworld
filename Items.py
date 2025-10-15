@@ -109,9 +109,16 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "Wraith": HasteItemData("NPC", IC.progression, 12, 0),
     "Niada": HasteItemData("NPC", IC.progression, 13, 0),
     "Daro": HasteItemData("NPC", IC.progression, 14, 0),
-    "The Captain": HasteItemData("NPC", IC.useful, 15, 0),
+    "The Captain": HasteItemData("NPC", IC.progression, 15, 0),
     "Fashion Weeboh": HasteItemData("NPC", IC.filler, 16, 0),
-    "Progressive Speed Upgrade": HasteItemData("Speed", IC.progression, 17, 0)
+    "Progressive Speed Upgrade": HasteItemData("Speed", IC.progression, 17, 0),
+    "Max Health Upgrade": HasteItemData("Upgrade", IC.useful, 18, 0),
+    "Max Lives Upgrade": HasteItemData("Upgrade", IC.useful, 19, 0),
+    "Max Energy Upgrade": HasteItemData("Upgrade", IC.useful, 20, 0),
+    "Item Rarity Upgrade": HasteItemData("Upgrade", IC.useful, 21, 0),
+    "Sparks in Shard Upgrade": HasteItemData("Upgrade", IC.useful, 22, 0),
+    "Starting Sparks Upgrade": HasteItemData("Upgrade", IC.useful, 23, 0),
+    # TODO: put fashion here
 }
 
 LOOKUP_ID_TO_NAME: dict[int, str] = {

@@ -94,6 +94,7 @@ class Fragmentsanity(Choice):
     Per-Shard: Fragment clears will have checks that are specific to each Shard
     Global: Fragment clears will have checks for the entire game, regardless of which Shard you are in
     """
+    display_name = "Fragmentsanity"
     option_off = 0
     option_per_shard = 1
     option_global = 2
@@ -159,6 +160,33 @@ class NPCShuffle(Toggle):
     display_name = "Hub NPCs"
     default = False
 
+class CaptainsUpgrades(Toggle):
+    """
+    Shuffles The Captain's permanent upgrades, and adds their respective purchases from him in the hub as checks.
+    All purchases will require 33,250 Anti-Sparks total.
+    """
+
+    display_name = "Captain's Upgrades"
+    default = False
+
+class FashionWeebohPurchases(Choice):
+    """
+    Shuffles Fashion Weeboh's costume purchases, and adds their respective purchases from them in the hub as checks.
+    All purchases will require ??????? Anti-Sparks total.
+
+    Vanilla Unlocks: Costume purchases are only available as per their vanilla requirements:
+        Weeboh: Unlocks after unlocking Shard 4
+        Flopsy: Unlocks after unlocking Shard 6
+        Totally Accurate Zoe: Unlocks after obtaining all Abilities
+        Crispy and Twisted Flopsy: Unobtainable due to their post-game unlock requirements
+    All Unlocks: All costume purchases are available as soon as the Fashion Weeboh is available
+    """
+
+    display_name = "Fashion Weeboh Purchases"
+    option_off = 0
+    option_vanilla_unlocks = 1
+    option_all_unlocks = 2
+
 class PermanentSpeedUpgrades(Toggle):
     """
     Reduces Zoe's base run speed to 60%, and adds 6 Speed Upgrades that increase her base run speed by 10% each (totalling 120% run speed with all 6 upgrades)
@@ -177,7 +205,7 @@ class PermanentSpeedUpgrades(Toggle):
 class DefaultOutfitBody(Choice):
     """
     Sets Zoe's default costume when loading into the game.
-    This will not actually unlock the costume from the Fashion Weeboh, and if you change your costume you won't get the "default" back until you reload the game.
+    This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
     """
 
     display_name = "Default Outfit Body"
@@ -196,7 +224,7 @@ class DefaultOutfitBody(Choice):
 class DefaultOutfitHat(Choice):
     """
     Sets Zoe's default hat when loading into the game.
-    This will not actually unlock the hat from the Fashion Weeboh, and if you change your hat you won't get the "default" back until you reload the game.
+    This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
     """
 
     display_name = "Default Outfit Hat"
@@ -235,6 +263,8 @@ class HasteOptions(PerGameCommonOptions):
     global_fragmentsanity_quantity: GlobalFragmentQuantity
     fragmentsanity_linear_rate: LinearFragmentsanityRate
     npc_shuffle: NPCShuffle
+    captains_upgrades: CaptainsUpgrades
+    weeboh_purchases: FashionWeebohPurchases
     speed_upgrade: PermanentSpeedUpgrades
     force_reload: ForceReload
     default_outfit_body: DefaultOutfitBody
