@@ -32,10 +32,12 @@ description: Default Haste Template
 
 game: Haste
 requires:
-  version: 0.5.1 # Version of Archipelago required for this yaml to work as expected.
+  version: 0.6.3 # Version of Archipelago required for this yaml to work as expected.
 
 Haste:
-  # Game Options
+  ################
+  # Game Options #
+  ################
   progression_balancing:
     # A system that can move progression earlier, to try and prevent the player from getting stuck and bored early.
     # 
@@ -65,15 +67,227 @@ Haste:
     'false': 50
     'true': 0
 
-  # thing Settings
+  shard_goal:
+    # Determines which shard will be the one that contains your victory condition.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 10
+    10: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  shard_unlock_order:
+    # Determines how shards are unlocked when collecting Progressive Shard items.
+    # Open: Shards will unlock immediately with the required number of Progressive Shards.
+    # Bosses: Shards will unlock with Progressive Shards + having defeated the previously unlocked Shard's boss.
+    open: 0
+    bosses: 50
+
+  remove_post_victory_locations:
+    # Removes any locations in shards that happen after the goal set in Shard Goal.
+    # ex: if Shard Goal is set to 7, this will remove any locations in shards 8, 9, and 10
+    'false': 0
+    'true': 50
+
+  shopsanity:
+    # Determines how shops are handled, the number of checks per shop is determined by shopsanity_quantity
+    # Per-Shard: Shops will contain checks that are specific to each Shard
+    # Global: Shops will contain checks for the entire game, regardless of which Shard you are in
+    'off': 0
+    per_shard: 50
+    global: 0
+
+  pershard_shopsanity_quantity:
+    # Determines how many checks are tied to shop purchases for each available Shard.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 25
+    8: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  global_shopsanity_quantity:
+    # Determines how many checks are tied to any shop purchase.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 100
+    50: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  shopsanity_seperate:
+    # For Shopsanity, Archipelago Items will be seperate from normal Haste items bought in shops, purchasing them will send a check.
+    # If disabled, a check is sent when any item is purchased and dedicated Archipelago Items will not appear in shops.
+    'false': 0
+    'true': 50
+
+  shopsanity_seperate_rate:
+    # Determines the odds of a shop item being an Archipelago Item as a percentage. Each shop slot is calculated independently. 
+    # ex: If this value is set to 25, there will be a 25% chance that a single shop item will be an Archipelago Item, and a combined 58% there will be at least one AP item in a shop.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 100
+    25: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  fragmentsanity:
+    # Determines how fragment clears are handled.
+    # Per-Shard: Fragment clears will have checks that are specific to each Shard
+    # Global: Fragment clears will have checks for the entire game, regardless of which Shard you are in
+    'off': 50
+    per_shard: 0
+    global: 0
+
+  fragmentsanity_distribution:
+    # Determines how fragmentsanity checks are distributed
+    # Linear: Checks are given out every X checks as determined by linear_fragmentsanity_rate
+    # Balanced Triangular: Checks are given out following a halved triangular distribution, capped at 10 fragments between checks
+    #     Check 10: 30 clears -- Check 20: 110 clears -- Check 30: 210 clears -- Check 40: 310 clears -- check 50: 410 clears
+    # Triangular: Checks are given out following a triangular distribution. NOT RECOMMENDED FOR SYNCS.
+    #     Check 10: 55 clears -- Check 20: 210 clears -- Check 30: 465 clears -- Check 40: 820 clears -- check 50: 1275 clears
+    linear: 50
+    balanced_triangular: 0
+    triangular: 0
+
+  pershard_fragmentsanity_quantity:
+    # Determines how many checks are tied to fragment clears for each available Shard.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 25
+    15: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  global_fragmentsanity_quantity:
+    # Determines how many checks are tied to any fragment clears.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 50
+    30: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  fragmentsanity_linear_rate:
+    # For linear Fragmentsanity distribution, determines how many fragments must be cleared to send a check
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 10
+    1: 50
+    random: 0
+    random-low: 0
+    random-high: 0
+
+  npc_shuffle:
+    # Shuffles Daro, Niada, Wraith, The Captain, and Fashion Weeboh; requiring you to find them before they can be talked to in the hub world.
+    'false': 50
+    'true': 0
+
+  captains_upgrades:
+    # Shuffles The Captain's permanent upgrades, and adds their respective purchases from him in the hub as checks.
+    # All purchases will require 33,250 Anti-Sparks total.
+    'false': 50
+    'true': 0
+
+  weeboh_purchases:
+    # Shuffles Fashion Weeboh's costume purchases as checks. Currently does NOT add the costumes themselves as items into the pool.
+    # All purchases will require 16,500 Anti-Sparks total for Vanilla, or 22,700 for Vanilla Plus or All Unlocks.
+    # 
+    # Vanilla: Costume purchases are only available as per their vanilla requirements:
+    #     Little Sister and Supersonic Zoe: Unlocked by default and do not need to be purchased
+    #     Zoe the Shadow and Zoe 64: Available as soon as the Fashion Weeboh is available
+    #     Weeboh: Unlocks after unlocking Shard 5
+    #     Flopsy: Unlocks after unlocking Shard 7
+    #     Totally Accurate Zoe: Unlocks after obtaining all Abilities
+    #     Crispy and Twisted Flopsy: Unobtainable due to their post-game unlock requirements, which are not yet implemented in AP
+    # Vanilla Plus: The same conditions as above, plus Crispy, Twisted Flopsy, Little Sister, and Supersonic Zoe's purchases are available as soon as the Fashion Weeboh is available.
+    # All Unlocks: All costume purchases are available as soon as the Fashion Weeboh is available
+    'off': 50
+    vanilla: 0
+    vanilla_plus: 0
+    all_unlocks: 0
+
+  speed_upgrade:
+    # Reduces Zoe's base run speed to 60%, and adds 6 Speed Upgrades that increase her base run speed by 10% each (totalling 120% run speed with all 6 upgrades)
+    # Zoe's TOTAL speed includes more than just her BASE run speed; so liberal use of Boost-increasing items, abilities, and good landings will be needed to compensate for this initial reduction
+    # Shards will require a certain number of speed upgrades to logically complete:
+    #     Shards 1-2: No speed upgrades
+    #     Shards 3-4: 1 speed upgrade
+    #     Shards 5-6: 2 speed upgrades
+    #     Shards 7-8: 3 speed upgrades
+    #     Shards 9-10: 4 speed upgrades
+    'false': 50
+    'true': 0
+
+  antispark_filler:
+    # Determines the average value of the Anti-Spark Bundle filler items added into the pool.
+    # 
+    # Sparse: Approximately 9,200 Anti-Sparks per 100 filler items
+    # Standard: Approximately 16,800 Anti-Sparks per 100 filler items
+    # Plentiful: Approximately 24,500 Anti-Sparks per 100 filler items
+    # Excessive: Approximately 35,600 Anti-Sparks per 100 filler items
+    sparse: 0
+    standard: 50
+    plentiful: 0
+    excessive: 0
+
+  ##################
+  # Other Settings #
+  ##################
   force_reload:
-    # When enabled if you recieve an shard unlock in the hub world, the hub will be forced reloaded
+    # When enabled if you receive an shard unlock in the hub world, the hub will be forced reloaded
     # This includes if you are taking to the captain and other NPC's
     # This may cause errors (this is still alpha)
     'false': 50
     'true': 0
 
-  # Item & Location Options
+  #####################
+  # Cosmetic Settings #
+  #####################
+  default_outfit_body:
+    # Sets Zoe's default costume when loading into the game.
+    # This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
+    default: 50
+    cripsy: 0
+    little_sister: 0
+    supersonic_zoe: 0
+    zoe_the_shadow: 0
+    totally_accurate_zoe: 0
+    flopsy: 0
+    twisted_flopsy: 0
+    weeboh: 0
+    zoe_64: 0
+
+  default_outfit_hat:
+    # Sets Zoe's default hat when loading into the game.
+    # This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
+    default: 50
+    cripsy: 0
+    little_sister: 0
+    supersonic_zoe: 0
+    zoe_the_shadow: 0
+    totally_accurate_zoe: 0
+    flopsy: 0
+    twisted_flopsy: 0
+    weeboh: 0
+    zoe_64: 0
+
+  ###########################
+  # Item & Location Options #
+  ###########################
   local_items:
     # Forces these items to be in their native world.
     []
@@ -84,6 +298,12 @@ Haste:
 
   start_inventory:
     # Start with these items.
+    {}
+
+  start_inventory_from_pool:
+    # Start with these items and don't place them in the world.
+    # 
+    # The game decides what the replacement items will be.
     {}
 
   start_hints:
@@ -106,8 +326,6 @@ Haste:
     # Share part of your item pool with other players.
     []
 
-  start_inventory_from_pool:
-    # Start with these items and don't place them in the world.
-    # 
-    # The game decides what the replacement items will be.
-    {}
+  plando_items:
+    # Generic items plando.
+    []

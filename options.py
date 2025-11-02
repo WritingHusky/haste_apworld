@@ -234,7 +234,7 @@ class PermanentSpeedUpgrades(Toggle):
     Shards will require a certain number of speed upgrades to logically complete:
         Shards 1-2: No speed upgrades
         Shards 3-4: 1 speed upgrade
-        Shards 5-7: 2 speed upgrades
+        Shards 5-6: 2 speed upgrades
         Shards 7-8: 3 speed upgrades
         Shards 9-10: 4 speed upgrades
     """
@@ -245,7 +245,7 @@ class PermanentSpeedUpgrades(Toggle):
 class DefaultOutfitBody(Choice):
     """
     Sets Zoe's default costume when loading into the game.
-    This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
+    This will not actually unlock the costume from the Fashion Weeboh, and if you change your costume you won't get the "default" back until you reload the game.
     """
 
     display_name = "Default Outfit Body"
@@ -264,8 +264,9 @@ class DefaultOutfitBody(Choice):
 class DefaultOutfitHat(Choice):
     """
     Sets Zoe's default hat when loading into the game.
-    This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
+    This will not actually unlock the hat from the Fashion Weeboh, and if you change your hat you won't get the "default" back until you reload the game.
     """
+    # This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
 
     display_name = "Default Outfit Hat"
     option_default = 0
