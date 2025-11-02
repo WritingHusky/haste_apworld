@@ -64,7 +64,7 @@ class HasteWorld(World):
     options: HasteOptions
 
     game: ClassVar[str] = "Haste"
-    version = "0.2.2"
+    version = "0.3.0"
     topology_present: bool = True
 
     item_name_to_id: ClassVar[dict[str, int]] = {
@@ -249,14 +249,42 @@ class HasteWorld(World):
             "Anti-Spark 750 bundle",
             "Anti-Spark 1k bundle",
         ]
-        filler_weights = [
-            15, #10
-            10,  # 100
-            5,  # 250
-            2,  # 500
-            2,  # 750
-            1,  # 1k
-        ]
+        if (self.options.antispark_filler == 0):
+            filler_weights = [
+                35, # 10
+                20, # 100
+                2,  # 250
+                2,  # 500
+                1,  # 750
+                1,  # 1k
+            ]
+        elif (self.options.antispark_filler == 1):
+            filler_weights = [
+                15, # 10
+                10, # 100
+                5,  # 250
+                2,  # 500
+                2,  # 750
+                1,  # 1k
+            ]
+        elif (self.options.antispark_filler == 2):
+            filler_weights = [
+                10, # 10
+                5,  # 100
+                5,  # 250
+                2,  # 500
+                2,  # 750
+                2,  # 1k
+            ]
+        else:
+            filler_weights = [
+                5,  #10
+                5,  # 100
+                5,  # 250
+                3,  # 500
+                3,  # 750
+                3,  # 1k
+            ]
         assert len(filler_consumables) == len(
             filler_weights
         ), f"{len(filler_consumables)=}, {len(filler_weights)=}"
@@ -294,6 +322,8 @@ class HasteWorld(World):
             "Shopsanity": self.options.shopsanity.value,
             "Per-Shard Shopsanity Quantity": self.options.pershard_shopsanity_quantity.value,
             "Global Shopsanity Quantity": self.options.global_shopsanity_quantity.value,
+            "Shopsanity Seperate": self.options.shopsanity_seperate.value,
+            "Shopsanity Seperate Rate": self.options.shopsanity_seperate_rate.value,
             "Fragmentsanity": self.options.fragmentsanity.value,
             "Fragmentsanity Distribution": self.options.fragmentsanity_distribution.value,
             "Per-Shard Fragmentsanity Quantity": self.options.pershard_fragmentsanity_quantity.value,
@@ -301,10 +331,12 @@ class HasteWorld(World):
             "Linear Fragmentsanity Rate": self.options.fragmentsanity_linear_rate.value,
             "NPC Shuffle": self.options.npc_shuffle.value,
             "Captain's Upgrades": self.options.captains_upgrades.value,
+            "Fashion Weeboh's Purchases": self.options.weeboh_purchases.value,
             "Speed Upgrades": self.options.speed_upgrade.value,
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,
             "Default Outfit Hat": self.options.default_outfit_hat.value,
+            "Anti-Spark Filler": self.options.antispark_filler.value
         }
 
         return slot_data

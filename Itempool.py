@@ -46,8 +46,11 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                 # add NPCs into the pool
                 additional_items = 1
                 if world.options.captains_upgrades != 1 and item == "The Captain":
-                    # make Captain progression if he has checks
+                    # make Captain non-progression if he doesnt have checks
                     classification = IC.useful
+                if world.options.fashion_purchases != 1 and item == "Fashion Weeboh":
+                    # make Fashion Weeboh non-progression if they dont have checks
+                    classification = IC.filler
             elif data.type == "Speed" and world.options.speed_upgrade == 1:
                 # add 6 speed upgrades into the pool
                 additional_items = 6

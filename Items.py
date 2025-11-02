@@ -110,7 +110,7 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "Niada": HasteItemData("NPC", IC.progression, 13, 0),
     "Daro": HasteItemData("NPC", IC.progression, 14, 0),
     "The Captain": HasteItemData("NPC", IC.progression, 15, 0),
-    "Fashion Weeboh": HasteItemData("NPC", IC.filler, 16, 0),
+    "Fashion Weeboh": HasteItemData("NPC", IC.progression, 16, 0),
     "Progressive Speed Upgrade": HasteItemData("Speed", IC.progression, 17, 0),
     "Max Health Upgrade": HasteItemData("Upgrade", IC.useful, 18, 0),
     "Max Lives Upgrade": HasteItemData("Upgrade", IC.useful, 19, 0),

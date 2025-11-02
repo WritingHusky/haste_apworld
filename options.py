@@ -34,7 +34,7 @@ class Shopsanity(Choice):
     option_off = 0
     option_per_shard = 1
     option_global = 2
-    default = option_off
+    default = option_per_shard
 
 
 class PerShardShopQuantity(Range):
@@ -45,7 +45,7 @@ class PerShardShopQuantity(Range):
     display_name = "Per-Shard Shopsanity Quantity"
     range_start = 1
     range_end = 25
-    default = 10
+    default = 8
 
 
 class GlobalShopQuantity(Range):
@@ -57,6 +57,25 @@ class GlobalShopQuantity(Range):
     range_start = 1
     range_end = 100
     default = 50
+
+class ShopsanitySeperate(DefaultOnToggle):
+    """
+    For Shopsanity, Archipelago Items will be seperate from normal Haste items bought in shops, purchasing them will send a check.
+    If disabled, a check is sent when any item is purchased and dedicated Archipelago Items will not appear in shops.
+    """
+
+    display_name = "Shopsanity Items"
+
+class ShopsanitySeperateRate(Range):
+    """
+    Determines the odds of a shop item being an Archipelago Item as a percentage. Each shop slot is calculated independently. 
+    ex: If this value is set to 25, there will be a 25% chance that a single shop item will be an Archipelago Item, and a combined 58% there will be at least one AP item in a shop.
+    """
+
+    display_name = "Shopsanity Item Chance"
+    range_start = 1
+    range_end = 100
+    default = 25
 
 class ShardGoal(Range):
     """
@@ -129,7 +148,7 @@ class PerShardFragmentQuantity(Range):
     display_name = "Per-Shard Fragmentsanity Quantity"
     range_start = 1
     range_end = 25
-    default = 10
+    default = 15
 
 
 class GlobalFragmentQuantity(Range):
@@ -150,7 +169,7 @@ class LinearFragmentsanityRate(Range):
     display_name = "Linear Fragmentsanity Rate"
     range_start = 1
     range_end = 10
-    default = 3
+    default = 1
 
 class NPCShuffle(Toggle):
     """
@@ -171,21 +190,42 @@ class CaptainsUpgrades(Toggle):
 
 class FashionWeebohPurchases(Choice):
     """
-    Shuffles Fashion Weeboh's costume purchases, and adds their respective purchases from them in the hub as checks.
-    All purchases will require ??????? Anti-Sparks total.
+    Shuffles Fashion Weeboh's costume purchases as checks. Currently does NOT add the costumes themselves as items into the pool.
+    All purchases will require 16,500 Anti-Sparks total for Vanilla, or 22,700 for Vanilla Plus or All Unlocks.
 
-    Vanilla Unlocks: Costume purchases are only available as per their vanilla requirements:
-        Weeboh: Unlocks after unlocking Shard 4
-        Flopsy: Unlocks after unlocking Shard 6
+    Vanilla: Costume purchases are only available as per their vanilla requirements:
+        Little Sister and Supersonic Zoe: Unlocked by default and do not need to be purchased
+        Zoe the Shadow and Zoe 64: Available as soon as the Fashion Weeboh is available
+        Weeboh: Unlocks after unlocking Shard 5
+        Flopsy: Unlocks after unlocking Shard 7
         Totally Accurate Zoe: Unlocks after obtaining all Abilities
-        Crispy and Twisted Flopsy: Unobtainable due to their post-game unlock requirements
+        Crispy and Twisted Flopsy: Unobtainable due to their post-game unlock requirements, which are not yet implemented in AP
+    Vanilla Plus: The same conditions as above, plus Crispy, Twisted Flopsy, Little Sister, and Supersonic Zoe's purchases are available as soon as the Fashion Weeboh is available.
     All Unlocks: All costume purchases are available as soon as the Fashion Weeboh is available
     """
 
     display_name = "Fashion Weeboh Purchases"
     option_off = 0
-    option_vanilla_unlocks = 1
-    option_all_unlocks = 2
+    option_vanilla = 1
+    option_vanilla_plus = 2
+    option_all_unlocks = 3
+
+class AntisparkFiller(Choice):
+    """
+    Determines the average value of the Anti-Spark Bundle filler items added into the pool.
+
+    Sparse: Approximately 9,200 Anti-Sparks per 100 filler items
+    Standard: Approximately 16,800 Anti-Sparks per 100 filler items
+    Plentiful: Approximately 24,500 Anti-Sparks per 100 filler items
+    Excessive: Approximately 35,600 Anti-Sparks per 100 filler items
+    """
+
+    display_name = "Anti-Spark Filler"
+    option_sparse = 0
+    option_standard = 1
+    option_plentiful = 2
+    option_excessive = 3
+    default = option_standard
 
 class PermanentSpeedUpgrades(Toggle):
     """
@@ -257,6 +297,8 @@ class HasteOptions(PerGameCommonOptions):
     shopsanity: Shopsanity
     pershard_shopsanity_quantity: PerShardShopQuantity
     global_shopsanity_quantity: GlobalShopQuantity
+    shopsanity_seperate: ShopsanitySeperate
+    shopsanity_seperate_rate: ShopsanitySeperateRate
     fragmentsanity: Fragmentsanity
     fragmentsanity_distribution: FragmentsanityDistribution
     pershard_fragmentsanity_quantity: PerShardFragmentQuantity
@@ -267,6 +309,7 @@ class HasteOptions(PerGameCommonOptions):
     weeboh_purchases: FashionWeebohPurchases
     speed_upgrade: PermanentSpeedUpgrades
     force_reload: ForceReload
+    antispark_filler: AntisparkFiller
     default_outfit_body: DefaultOutfitBody
     default_outfit_hat: DefaultOutfitHat
 

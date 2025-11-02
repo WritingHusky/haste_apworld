@@ -61,26 +61,26 @@ for i in range(1, 11):
 # IDs 20-40
 for i in range(1, 5):
     LOCATION_TABLE[f"Captain's Max Health Upgrade Purchase {i}"] = HasteLocationData(
-        code=20 + i, flags=HasteFlag.CaptainsUpgrade
+        code=19 + i, flags=HasteFlag.CaptainsUpgrade
     )
 LOCATION_TABLE["Captain's Max Lives Upgrade Purchase"] = HasteLocationData(
         code=24, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 5):
     LOCATION_TABLE[f"Captain's Max Energy Upgrade Purchase {i}"] = HasteLocationData(
-        code=25 + i, flags=HasteFlag.CaptainsUpgrade
+        code=24 + i, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 7):
     LOCATION_TABLE[f"Captain's Item Rarity Upgrade Purchase {i}"] = HasteLocationData(
-        code=29 + i, flags=HasteFlag.CaptainsUpgrade
+        code=30 + i, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 4):
     LOCATION_TABLE[f"Captain's Sparks in Shard Upgrade Purchase {i}"] = HasteLocationData(
-        code=35 + i, flags=HasteFlag.CaptainsUpgrade
+        code=34 + i, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 4):
     LOCATION_TABLE[f"Captain's Starting Sparks Upgrade Purchase {i}"] = HasteLocationData(
-        code=38 + i, flags=HasteFlag.CaptainsUpgrade
+        code=37 + i, flags=HasteFlag.CaptainsUpgrade
     )
 
 # Fashion Weeboh Purchase locations
@@ -140,15 +140,19 @@ def create_locations(world, regions):
                 location = HasteLocation(world.player, location_name, regions["Menu"], data)
                 regions["Menu"].locations.append(location)
             
-            if data.flags == HasteFlag.Fashion and world.options.weeboh_purchases >= 1 and world.options.default_outfit_body != data.skin and world.options.default_outfit_hat != data.skin:
-                # Crispy and Twisted Flopsy are unobtainable in the scope of AP with vanilla fashion unlocks
-                if world.options.weeboh_purchases == 1 and (data.skin == 1 or data.skin == 7):
-                    continue
-                # having a skin by default removes it as a purchase location
-                if data.skin == world.options.default_outfit_body or data.skin == world.options.default_outfit_hat:
-                    continue
-                # TODO: if vanilla unlocks, add weeboh and flopsy to their respective shard regions instead of menu (so i can piggyback off of the speed calcs)
+            # if data.flags == HasteFlag.Fashion and world.options.weeboh_purchases >= 1 and world.options.default_outfit_body != data.skin and world.options.default_outfit_hat != data.skin:
+            if data.flags == HasteFlag.Fashion and world.options.weeboh_purchases >= 1:
                 location = HasteLocation(world.player, location_name, regions["Menu"], data)
+                # Crispy and Twisted Flopsy are unobtainable in the scope of AP with vanilla fashion unlocks
+                if world.options.weeboh_purchases == 1:
+                    if (data.skin == 1 or data.skin == 7 or data.skin == 2 or data.skin == 3):
+                        continue
+                    elif data.skin == 10:
+                        # adding Weeboh to Shard 5 to piggyback speed calcs
+                        location = HasteLocation(world.player, location_name, regions["Shard 5"], data)
+                    elif data.skin == 6:
+                        # adding Twisted to Shard 7 to piggyback speed calcs
+                        location = HasteLocation(world.player, location_name, regions["Shard 7"], data)
                 regions["Menu"].locations.append(location)
 
             if data.flags == HasteFlag.Boss:
