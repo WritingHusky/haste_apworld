@@ -116,7 +116,7 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "Max Lives Upgrade": HasteItemData("Upgrade", IC.useful, 19, 0),
     "Max Energy Upgrade": HasteItemData("Upgrade", IC.useful, 20, 0),
     "Item Rarity Upgrade": HasteItemData("Upgrade", IC.useful, 21, 0),
-    "Sparks in Shard Upgrade": HasteItemData("Upgrade", IC.useful, 22, 0),
+    "Sparks in Fragments Upgrade": HasteItemData("Upgrade", IC.useful, 22, 0),
     "Starting Sparks Upgrade": HasteItemData("Upgrade", IC.useful, 23, 0),
     # TODO: put fashion here
 }

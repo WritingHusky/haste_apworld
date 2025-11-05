@@ -25,9 +25,9 @@ def set_location_access_rules(world: "World"):
     def fashion_unlock(state: CollectionState, skin) -> bool:
         if world.options.weeboh_purchases < 3:
             if skin == 10:
-                return state.has("Progressive Shard", player, 4)
+                return state.has("Progressive Shard", player, 5)
             elif skin == 6:
-                return state.has("Progressive Shard", player, 6)
+                return state.has("Progressive Shard", player, 7)
             elif skin == 5:
                 return state.has("Sage's Cowl", player, 1) and state.has("Wraith's Hourglass", player, 1) and state.has("Heir's Javelin", player, 1)
         return True
@@ -85,7 +85,7 @@ def set_location_access_rules(world: "World"):
         for i in range(1, 7):
             set_rule_if_exists(f"Captain's Item Rarity Upgrade Purchase {i}", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
         for i in range(1, 4):
-            set_rule_if_exists(f"Captain's Sparks in Shard Upgrade Purchase {i}", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
+            set_rule_if_exists(f"Captain's Sparks in Fragments Upgrade Purchase {i}", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
         for i in range(1, 4):
             set_rule_if_exists(f"Captain's Starting Sparks Upgrade Purchase {i}", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
 
@@ -93,15 +93,15 @@ def set_location_access_rules(world: "World"):
         # i feel like this could be simplified but idc
         if world.options.weeboh_purchases >= 2:
             # Cripsy/Clown/Green/Blue are unobtainable in the scope of AP with vanilla fashion unlocks
-            set_rule_if_exists("Crispy Costume Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-            set_rule_if_exists("Twisted Flopsy Costume Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-            set_rule_if_exists("Little Sister Costume Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-            set_rule_if_exists("Supersonic Zoe Costume Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-        set_rule_if_exists("Zoe the Shadow Costume Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-        set_rule_if_exists("Zoe 64 Costume Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-        set_rule_if_exists("Totally Accurate Zoe Costume Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 5))
-        set_rule_if_exists("Flopsy Costume Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 6))
-        set_rule_if_exists("Weeboh Costume Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 10))
+            set_rule_if_exists("Costume Purchase: Crispy", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
+            set_rule_if_exists("Costume Purchase: Twisted Flopsy", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
+            set_rule_if_exists("Costume Purchase: Little Sister", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
+            set_rule_if_exists("Costume Purchase: Supersonic Zoe", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
+        set_rule_if_exists("Costume Purchase: Zoe the Shadow", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
+        set_rule_if_exists("Costume Purchase: Zoe 64", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
+        set_rule_if_exists("Costume Purchase: Totally Accurate Zoe", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 5))
+        set_rule_if_exists("Costume Purchase: Flopsy", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 6))
+        set_rule_if_exists("Costume Purchase: Weeboh", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 10))
 
 
     set_rule_if_exists(

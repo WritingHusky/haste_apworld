@@ -75,7 +75,7 @@ for i in range(1, 7):
         code=30 + i, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 4):
-    LOCATION_TABLE[f"Captain's Sparks in Shard Upgrade Purchase {i}"] = HasteLocationData(
+    LOCATION_TABLE[f"Captain's Sparks in Fragments Upgrade Purchase {i}"] = HasteLocationData(
         code=34 + i, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 4):
@@ -85,15 +85,15 @@ for i in range(1, 4):
 
 # Fashion Weeboh Purchase locations
 # 41-49
-LOCATION_TABLE["Crispy Costume Purchase"] = HasteLocationData(code=41, flags=HasteFlag.Fashion, skin=1)
-LOCATION_TABLE["Little Sister Costume Purchase"] = HasteLocationData(code=42, flags=HasteFlag.Fashion, skin=2)
-LOCATION_TABLE["Supersonic Zoe Costume Purchase"] = HasteLocationData(code=43, flags=HasteFlag.Fashion, skin=3)
-LOCATION_TABLE["Zoe the Shadow Costume Purchase"] = HasteLocationData(code=44, flags=HasteFlag.Fashion, skin=4)
-LOCATION_TABLE["Totally Accurate Zoe Costume Purchase"] = HasteLocationData(code=45, flags=HasteFlag.Fashion, skin=5)
-LOCATION_TABLE["Flopsy Costume Purchase"] = HasteLocationData(code=46, flags=HasteFlag.Fashion, skin=6)
-LOCATION_TABLE["Twisted Flopsy Costume Purchase"] = HasteLocationData(code=47, flags=HasteFlag.Fashion, skin=7)
-LOCATION_TABLE["Weeboh Costume Purchase"] = HasteLocationData(code=48, flags=HasteFlag.Fashion, skin=10)
-LOCATION_TABLE["Zoe 64 Costume Purchase"] = HasteLocationData(code=49, flags=HasteFlag.Fashion, skin=64)
+LOCATION_TABLE["Costume Purchase: Crispy"] = HasteLocationData(code=41, flags=HasteFlag.Fashion, skin=1)
+LOCATION_TABLE["Costume Purchase: Little Sister"] = HasteLocationData(code=42, flags=HasteFlag.Fashion, skin=2)
+LOCATION_TABLE["Costume Purchase: Supersonic Zoe"] = HasteLocationData(code=43, flags=HasteFlag.Fashion, skin=3)
+LOCATION_TABLE["Costume Purchase: Zoe the Shadow"] = HasteLocationData(code=44, flags=HasteFlag.Fashion, skin=4)
+LOCATION_TABLE["Costume Purchase: Totally Accurate Zoe"] = HasteLocationData(code=45, flags=HasteFlag.Fashion, skin=5)
+LOCATION_TABLE["Costume Purchase: Flopsy"] = HasteLocationData(code=46, flags=HasteFlag.Fashion, skin=6)
+LOCATION_TABLE["Costume Purchase: Twisted Flopsy"] = HasteLocationData(code=47, flags=HasteFlag.Fashion, skin=7)
+LOCATION_TABLE["Costume Purchase: Weeboh"] = HasteLocationData(code=48, flags=HasteFlag.Fashion, skin=10)
+LOCATION_TABLE["Costume Purchase: Zoe 64"] = HasteLocationData(code=49, flags=HasteFlag.Fashion, skin=64)
 
 # global shop locations
 # IDs 101-200

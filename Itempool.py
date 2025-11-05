@@ -58,13 +58,13 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                 match item:
                     case "Max Health Upgrade":
                         additional_items = 4
-                    case "Extra Lives Upgrade":
+                    case "Max Lives Upgrade":
                         additional_items = 1
-                    case "Max Engrgy Upgrade":
+                    case "Max Energy Upgrade":
                         additional_items = 4
                     case "Item Rarity Upgrade":
                         additional_items = 6
-                    case "Sparks in Shard Upgrade":
+                    case "Sparks in Fragments Upgrade":
                         additional_items = 3
                     case "Starting Sparks Upgrade":
                         additional_items = 3

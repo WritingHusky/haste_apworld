@@ -80,6 +80,59 @@ class HasteWorld(World):
 
     # item_name_groups: ClassVar[dict[str, set[str]]] = item_name_groups
 
+    def get_shard_locations(shardnum) -> str:
+        res = set()
+        for location_name in LOCATION_TABLE.items():
+            if location_name[0].startswith(f"Shard {shardnum}"):
+                res.add(location_name[0])
+        return res
+    
+    def get_global_locations() -> str:
+        res = set()
+        for location_name in LOCATION_TABLE.items():
+            if location_name[0].startswith("Global "):
+                res.add(location_name[0])
+        return res
+    
+    def get_captain_locations() -> str:
+        res = set()
+        for location_name in LOCATION_TABLE.items():
+            if location_name[0].startswith("Captain's "):
+                res.add(location_name[0])
+        return res
+    
+    def get_costume_locations() -> str:
+        res = set()
+        for location_name in LOCATION_TABLE.items():
+            if location_name[0].startswith("Costume Purchase:"):
+                res.add(location_name[0])
+        return res
+    
+    def get_ability_locations() -> str:
+        res = set()
+        abilities = ["Wraith's Hourglass Purchase","Heir's Javelin Purchase","Sage's Cowl Purchase"]
+        for location_name in abilities:
+            if location_name[0] in LOCATION_TABLE:
+                res.add(location_name[0])
+        return res
+
+    location_name_groups = {
+        "Shard 1": get_shard_locations(1),
+        "Shard 2": get_shard_locations(2),
+        "Shard 3": get_shard_locations(3),
+        "Shard 4": get_shard_locations(4),
+        "Shard 5": get_shard_locations(5),
+        "Shard 6": get_shard_locations(6),
+        "Shard 7": get_shard_locations(7),
+        "Shard 8": get_shard_locations(8),
+        "Shard 9": get_shard_locations(9),
+        "Shard 10": get_shard_locations(10),
+        "Global Locations": get_global_locations(),
+        "Captain's Purchases": get_captain_locations(),
+        "Costume Purchases": get_costume_locations(),
+        "Ability Purchases": get_ability_locations(),
+    }
+
     required_client_version: tuple[int, int, int] = (0, 5, 0)
 
     web: ClassVar[HasteWeb] = HasteWeb()
