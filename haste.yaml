@@ -129,12 +129,12 @@ Haste:
 
   shopsanity_seperate_rate:
     # Determines the odds of a shop item being an Archipelago Item as a percentage. Each shop slot is calculated independently. 
-    # ex: If this value is set to 25, there will be a 25% chance that a single shop item will be an Archipelago Item, and a combined 58% there will be at least one AP item in a shop.
+    # ex: If this value is set to 30, there will be a 30% chance that a single shop item will be an Archipelago Item, and a combined 65% that there will be at least one AP item in a shop.
     #
     # You can define additional values between the minimum and maximum values.
     # Minimum value is 1
     # Maximum value is 100
-    25: 50
+    30: 50
     random: 0
     random-low: 0
     random-high: 0
@@ -143,8 +143,8 @@ Haste:
     # Determines how fragment clears are handled.
     # Per-Shard: Fragment clears will have checks that are specific to each Shard
     # Global: Fragment clears will have checks for the entire game, regardless of which Shard you are in
-    'off': 50
-    per_shard: 0
+    'off': 0
+    per_shard: 50
     global: 0
 
   fragmentsanity_distribution:
@@ -232,6 +232,9 @@ Haste:
     'false': 50
     'true': 0
 
+  ################
+  # QoL Settings #
+  ################
   antispark_filler:
     # Determines the average value of the Anti-Spark Bundle filler items added into the pool.
     # 
@@ -244,13 +247,14 @@ Haste:
     plentiful: 0
     excessive: 0
 
-  ##################
-  # Other Settings #
-  ##################
+  unlock_all_items:
+    # Will unlock all mid-run items at the start of the game, instead of them unlocking gradually as you clear Shards.
+    'false': 50
+    'true': 0
+
   force_reload:
-    # When enabled if you receive an shard unlock in the hub world, the hub will be forced reloaded
-    # This includes if you are taking to the captain and other NPC's
-    # This may cause errors (this is still alpha)
+    # When enabled if you receive a Progressive Shard or hub NPC while in the hub world, the hub will be immediately reloaded.
+    # This may cause weird behaviour if it happens during dialogue with hub NPCs.
     'false': 50
     'true': 0
 
@@ -259,7 +263,7 @@ Haste:
   #####################
   default_outfit_body:
     # Sets Zoe's default costume when loading into the game.
-    # This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
+    # This will not actually unlock the costume from the Fashion Weeboh, and if you change your costume you won't get your chosen outfit back until you reload the game.
     default: 50
     cripsy: 0
     little_sister: 0
@@ -273,7 +277,7 @@ Haste:
 
   default_outfit_hat:
     # Sets Zoe's default hat when loading into the game.
-    # This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
+    # This will not actually unlock the hat from the Fashion Weeboh, and if you change your hat you won't get your chosen hat back until you reload the game.
     default: 50
     cripsy: 0
     little_sister: 0
