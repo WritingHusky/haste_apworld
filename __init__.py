@@ -389,7 +389,8 @@ class HasteWorld(World):
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,
             "Default Outfit Hat": self.options.default_outfit_hat.value,
-            "Anti-Spark Filler": self.options.antispark_filler.value
+            "Anti-Spark Filler": self.options.antispark_filler.value,
+            "Unlock All Items": self.options.unlock_all_items.value
         }
 
         return slot_data

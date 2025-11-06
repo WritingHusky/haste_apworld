@@ -15,9 +15,8 @@ from Options import (
 # Logic Settings
 class ForceReload(Toggle):
     """
-    When enabled if you receive an shard unlock in the hub world, the hub will be forced reloaded
-    This includes if you are taking to the captain and other NPC's
-    This may cause errors (this is still alpha)
+    When enabled if you receive a Progressive Shard or hub NPC while in the hub world, the hub will be immediately reloaded.
+    This may cause weird behaviour if it happens during dialogue with hub NPCs.
     """
 
     display_name = "Force Reload"
@@ -69,13 +68,13 @@ class ShopsanitySeperate(DefaultOnToggle):
 class ShopsanitySeperateRate(Range):
     """
     Determines the odds of a shop item being an Archipelago Item as a percentage. Each shop slot is calculated independently. 
-    ex: If this value is set to 25, there will be a 25% chance that a single shop item will be an Archipelago Item, and a combined 58% there will be at least one AP item in a shop.
+    ex: If this value is set to 30, there will be a 30% chance that a single shop item will be an Archipelago Item, and a combined 65% that there will be at least one AP item in a shop.
     """
 
     display_name = "Shopsanity Item Chance"
     range_start = 1
     range_end = 100
-    default = 25
+    default = 30
 
 class ShardGoal(Range):
     """
@@ -117,7 +116,7 @@ class Fragmentsanity(Choice):
     option_off = 0
     option_per_shard = 1
     option_global = 2
-    default = option_off
+    default = option_per_shard
 
 
 class FragmentsanityDistribution(Choice):
@@ -245,7 +244,7 @@ class PermanentSpeedUpgrades(Toggle):
 class DefaultOutfitBody(Choice):
     """
     Sets Zoe's default costume when loading into the game.
-    This will not actually unlock the costume from the Fashion Weeboh, and if you change your costume you won't get the "default" back until you reload the game.
+    This will not actually unlock the costume from the Fashion Weeboh, and if you change your costume you won't get your chosen outfit back until you reload the game.
     """
 
     display_name = "Default Outfit Body"
@@ -264,7 +263,7 @@ class DefaultOutfitBody(Choice):
 class DefaultOutfitHat(Choice):
     """
     Sets Zoe's default hat when loading into the game.
-    This will not actually unlock the hat from the Fashion Weeboh, and if you change your hat you won't get the "default" back until you reload the game.
+    This will not actually unlock the hat from the Fashion Weeboh, and if you change your hat you won't get your chosen hat back until you reload the game.
     """
     # This will unlock the costume from the Fashion Weeboh, removing its purchase as a location if playing with Fashion Weeboh Purchases.
 
@@ -281,6 +280,13 @@ class DefaultOutfitHat(Choice):
     option_zoe_64 = 64
     default = option_default
 
+
+class UnlockAllItems(Toggle):
+    """
+    Will unlock all mid-run items at the start of the game, instead of them unlocking gradually as you clear Shards.
+    """
+
+    display_name = "Unlock All Items"
     
 @dataclass
 class HasteOptions(PerGameCommonOptions):
@@ -311,14 +317,17 @@ class HasteOptions(PerGameCommonOptions):
     speed_upgrade: PermanentSpeedUpgrades
     force_reload: ForceReload
     antispark_filler: AntisparkFiller
+    unlock_all_items: UnlockAllItems
     default_outfit_body: DefaultOutfitBody
     default_outfit_hat: DefaultOutfitHat
 
 
 haste_option_groups: list[OptionGroup] = [
     OptionGroup(
-        "Other Settings",
+        "QoL Settings",
         [
+            AntisparkFiller,
+            UnlockAllItems,
             ForceReload,
         ],
         start_collapsed=True,
