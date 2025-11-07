@@ -54,7 +54,6 @@ def create_regions(world) -> Dict[str, Region]:
             for j in range(1,floor(100/SHOP_SEGMENTING)):
                 if (j <= 1 + floor(shoplimit/SHOP_SEGMENTING)):
                     shop_region = Region(f"Shard {i} Shop {j}", player, world.multiworld)
-                    print(f"making {shop_region.name}")
                     connect(player, f"Shard {i} Shop Region {j} Entrance", shard_region, shop_region, lambda state, vali=i, valj=j: state.has(f"Shard{vali}ShopRegion{valj}Unlock", player))
                     regions[f"Shard {i} Shop {j}"] = shop_region
 
@@ -62,7 +61,6 @@ def create_regions(world) -> Dict[str, Region]:
             for j in range(1, floor(50/FRAGMENT_SEGMENTING)):
                 if (j <= 1 + floor(fraglimit/FRAGMENT_SEGMENTING)):
                     fragment_region = Region(f"Shard {i} Fragmentsanity {j}", player, world.multiworld)
-                    print(f"making {fragment_region.name}")
                     connect(player, f"Shard {i} Fragmentsanity Region {j} Entrance", regions["Shard 1"], fragment_region, lambda state, vali=i, valj=j: state.has(f"Shard{vali}Fragmentsanity{valj}Unlock", player))
                     regions[f"Shard {i} Fragmentsanity {j}"] = fragment_region
     
