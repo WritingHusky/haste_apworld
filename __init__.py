@@ -64,7 +64,7 @@ class HasteWorld(World):
     options: HasteOptions
 
     game: ClassVar[str] = "Haste"
-    version = "0.3.0"
+    version = "0.3.1"
     topology_present: bool = True
 
     item_name_to_id: ClassVar[dict[str, int]] = {
@@ -77,6 +77,12 @@ class HasteWorld(World):
         for name, data in LOCATION_TABLE.items()
         if data.code is not None
     }
+
+    # with open("hastelocations.txt", "w") as f:
+    #         print(location_name_to_id, file=f)
+
+    # with open("donkitems.txt", "w") as f:
+    #     print(item_name_to_id, file=f)
 
     # item_name_groups: ClassVar[dict[str, set[str]]] = item_name_groups
 
@@ -112,8 +118,8 @@ class HasteWorld(World):
         res = set()
         abilities = ["Wraith's Hourglass Purchase","Heir's Javelin Purchase","Sage's Cowl Purchase"]
         for location_name in abilities:
-            if location_name[0] in LOCATION_TABLE:
-                res.add(location_name[0])
+            if location_name in LOCATION_TABLE:
+                res.add(location_name)
         return res
 
     location_name_groups = {

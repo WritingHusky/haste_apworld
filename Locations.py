@@ -76,24 +76,24 @@ for i in range(1, 7):
     )
 for i in range(1, 4):
     LOCATION_TABLE[f"Captain's Sparks in Fragments Upgrade Purchase {i}"] = HasteLocationData(
-        code=34 + i, flags=HasteFlag.CaptainsUpgrade
+        code=36 + i, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 4):
     LOCATION_TABLE[f"Captain's Starting Sparks Upgrade Purchase {i}"] = HasteLocationData(
-        code=37 + i, flags=HasteFlag.CaptainsUpgrade
+        code=39 + i, flags=HasteFlag.CaptainsUpgrade
     )
 
 # Fashion Weeboh Purchase locations
 # 41-49
-LOCATION_TABLE["Costume Purchase: Crispy"] = HasteLocationData(code=41, flags=HasteFlag.Fashion, skin=1)
-LOCATION_TABLE["Costume Purchase: Little Sister"] = HasteLocationData(code=42, flags=HasteFlag.Fashion, skin=2)
-LOCATION_TABLE["Costume Purchase: Supersonic Zoe"] = HasteLocationData(code=43, flags=HasteFlag.Fashion, skin=3)
-LOCATION_TABLE["Costume Purchase: Zoe the Shadow"] = HasteLocationData(code=44, flags=HasteFlag.Fashion, skin=4)
-LOCATION_TABLE["Costume Purchase: Totally Accurate Zoe"] = HasteLocationData(code=45, flags=HasteFlag.Fashion, skin=5)
-LOCATION_TABLE["Costume Purchase: Flopsy"] = HasteLocationData(code=46, flags=HasteFlag.Fashion, skin=6)
-LOCATION_TABLE["Costume Purchase: Twisted Flopsy"] = HasteLocationData(code=47, flags=HasteFlag.Fashion, skin=7)
-LOCATION_TABLE["Costume Purchase: Weeboh"] = HasteLocationData(code=48, flags=HasteFlag.Fashion, skin=10)
-LOCATION_TABLE["Costume Purchase: Zoe 64"] = HasteLocationData(code=49, flags=HasteFlag.Fashion, skin=64)
+LOCATION_TABLE["Costume Purchase: Crispy"] = HasteLocationData(code=43, flags=HasteFlag.Fashion, skin=1)
+LOCATION_TABLE["Costume Purchase: Little Sister"] = HasteLocationData(code=44, flags=HasteFlag.Fashion, skin=2)
+LOCATION_TABLE["Costume Purchase: Supersonic Zoe"] = HasteLocationData(code=45, flags=HasteFlag.Fashion, skin=3)
+LOCATION_TABLE["Costume Purchase: Zoe the Shadow"] = HasteLocationData(code=46, flags=HasteFlag.Fashion, skin=4)
+LOCATION_TABLE["Costume Purchase: Totally Accurate Zoe"] = HasteLocationData(code=47, flags=HasteFlag.Fashion, skin=5)
+LOCATION_TABLE["Costume Purchase: Flopsy"] = HasteLocationData(code=48, flags=HasteFlag.Fashion, skin=6)
+LOCATION_TABLE["Costume Purchase: Twisted Flopsy"] = HasteLocationData(code=49, flags=HasteFlag.Fashion, skin=7)
+LOCATION_TABLE["Costume Purchase: Weeboh"] = HasteLocationData(code=50, flags=HasteFlag.Fashion, skin=10)
+LOCATION_TABLE["Costume Purchase: Zoe 64"] = HasteLocationData(code=51, flags=HasteFlag.Fashion, skin=64)
 
 # global shop locations
 # IDs 101-200
@@ -122,7 +122,7 @@ for j in range(1, 51):
 for i in range(1,11):
     for j in range(1, 26):
         LOCATION_TABLE[f"Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
-            code=450 + (i-1)*25 + j, flags=HasteFlag.PerShardFragment, shard=i
+            code=500 + (i-1)*25 + j, flags=HasteFlag.PerShardFragment, shard=i
         )
 
 def none_or_within_shard(goal, rpvl, shard) -> bool:
