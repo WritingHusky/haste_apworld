@@ -44,7 +44,7 @@ class HasteWeb(WebWorld):
             "English",
             "setup_en.md",
             "setup/en",
-            ["WritingHusky"],
+            ["JXJacob", "WritingHusky"],
         )
     ]
     theme = "grass"

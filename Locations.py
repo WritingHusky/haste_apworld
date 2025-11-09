@@ -147,7 +147,8 @@ def create_locations(world, regions):
                 if world.options.weeboh_purchases == 1:
                     if (data.skin == 1 or data.skin == 7 or data.skin == 2 or data.skin == 3):
                         continue
-                    elif data.skin == 10:
+                if world.options.weeboh_purchases == 1 or world.options.weeboh_purchases == 2:
+                    if data.skin == 10:
                         # adding Weeboh to Shard 5 to piggyback speed calcs, but if Shard 5 doesn't exist, then don't add it
                         if (not world.options.remove_post_victory_locations or world.options.shard_goal >= 5): location = HasteLocation(world.player, location_name, regions["Shard 5"], data)
                         else: continue
