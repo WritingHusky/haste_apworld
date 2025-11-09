@@ -1,14 +1,18 @@
 /build/target/*
 /Docs/Notes.md
 
+/tests
+
 /build/host.yaml
 /build/custom_worlds
+/custom_worlds
 
 # Testing Files
 thing.py 
 scripts.txt
 /tests/logs.log
 fuzzParser.py
+host.yaml
 
 .vscode
 

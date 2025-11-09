@@ -64,7 +64,7 @@ class HasteWorld(World):
     options: HasteOptions
 
     game: ClassVar[str] = "Haste"
-    version = "0.3.1"
+    version = "0.3.2"
     topology_present: bool = True
 
     item_name_to_id: ClassVar[dict[str, int]] = {
@@ -198,6 +198,40 @@ class HasteWorld(World):
         """
         Setup things ready for generation.
         """
+        # imcompatible settings calculations
+
+        # forbid extra progression items if neither filler check options are enabled
+        if (self.options.speed_upgrade or self.options.npc_shuffle) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
+            raise OptionError("In order to enable Speed Upgrades or Shuffled NPCs, you must enable either Shopsanity or Fragmentsanity")
+
+        if (self.options.shard_goal == 1) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
+            raise OptionError("In order to have a Shard Goal of 1, you must enable either Shopsanity or Fragmentsanity")
+
+        # do a more precise count, just to make ABSOLUTELY sure there's enough room
+        running_locs = (self.options.shard_goal-1) if self.options.remove_post_victory_locations else 9
+        available_shards = running_locs + 1
+        running_locs += 3 # add the abilities afterwards
+        running_items = 12 + (6 if self.options.speed_upgrade else 0)
+        if (self.options.npc_shuffle):
+            running_items += 5
+            if not self.options.weeboh_purchases > 0: running_items -= 1
+
+        if (self.options.fragmentsanity == 1): running_locs += available_shards * self.options.pershard_fragmentsanity_quantity
+        elif (self.options.fragmentsanity == 2): running_locs += self.options.global_fragmentsanity_quantity
+
+        if (self.options.shopsanity == 1): running_locs += available_shards * self.options.pershard_shopsanity_quantity
+        elif (self.options.shopsanity == 2): running_locs += self.options.global_shopsanity_quantity
+
+        if (self.options.weeboh_purchases > 0):
+            running_locs += 5 if self.options.weeboh_purchases == 1 else 9
+            if available_shards < 7: running_locs -= 1 # remove flopsy
+            if available_shards < 5: running_locs -= 1 # remove weeboh
+
+        # captain's upgrades are not considered, as they add just as many useful items as locations
+
+        # print(f"items: {running_items} locs: {running_locs}")
+        if running_items > running_locs:
+            raise OptionError(f"Insufficient locations ({running_locs}) to fit required items ({running_items}). Please enable settings that add more locations.")
 
     def create_regions(self) -> None:
         """

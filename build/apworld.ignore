@@ -1,5 +1,7 @@
 .git*
 __pycache__
+.vscode
+custom_worlds
 build
 LICENSE.md
 README.md

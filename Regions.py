@@ -31,7 +31,7 @@ def create_regions(world) -> Dict[str, Region]:
 
     # create initial menu region first
     menu_region = Region(world.origin_region_name, player, world.multiworld)
-    world.multiworld.regions.append(menu_region)
+    #world.multiworld.regions.append(menu_region)
     regions["Menu"] = menu_region
 
     # make regions for the 10 shards, each requiring the X-1 number of progressive shards, and each connecting to the menu
@@ -52,14 +52,14 @@ def create_regions(world) -> Dict[str, Region]:
         #subregions for shops, unlocking at SHOP_SEGMENTING-purchase intervals
         if (not(world.options.shopsanity == 2 and i > 1)):
             for j in range(1,floor(100/SHOP_SEGMENTING)):
-                if (j <= 1 + floor(shoplimit/SHOP_SEGMENTING)):
+                if (j < 1 + floor(shoplimit/SHOP_SEGMENTING)):
                     shop_region = Region(f"Shard {i} Shop {j}", player, world.multiworld)
                     connect(player, f"Shard {i} Shop Region {j} Entrance", shard_region, shop_region, lambda state, vali=i, valj=j: state.has(f"Shard{vali}ShopRegion{valj}Unlock", player))
                     regions[f"Shard {i} Shop {j}"] = shop_region
 
         if (not(world.options.fragmentsanity == 2 and i > 1)):
             for j in range(1, floor(50/FRAGMENT_SEGMENTING)):
-                if (j <= 1 + floor(fraglimit/FRAGMENT_SEGMENTING)):
+                if (j < 1 + floor(fraglimit/FRAGMENT_SEGMENTING)):
                     fragment_region = Region(f"Shard {i} Fragmentsanity {j}", player, world.multiworld)
                     connect(player, f"Shard {i} Fragmentsanity Region {j} Entrance", regions["Shard 1"], fragment_region, lambda state, vali=i, valj=j: state.has(f"Shard{vali}Fragmentsanity{valj}Unlock", player))
                     regions[f"Shard {i} Fragmentsanity {j}"] = fragment_region
