@@ -24,6 +24,7 @@ from .Items import (
     HasteItem,
     HasteItemData,
     item_factory,
+    parse_perm_quantity
 )
 from .Locations import LOCATION_TABLE, HasteLocation, HasteFlag, HasteLocationData
 from .options import haste_option_groups, HasteOptions
@@ -64,8 +65,10 @@ class HasteWorld(World):
     options: HasteOptions
 
     game: ClassVar[str] = "Haste"
-    version = "0.3.2"
+    version = "0.4.0"
     topology_present: bool = True
+
+    perm_item_dict: dict[str, int] = {}
 
     item_name_to_id: ClassVar[dict[str, int]] = {
         name: HasteItem.get_apid(data.code)
@@ -198,11 +201,16 @@ class HasteWorld(World):
         """
         Setup things ready for generation.
         """
+        # parse permanent item quantities
+        if (self.options.permanent_items > 0):
+            for name, value in self.options.permanent_item_quantities.items():
+                self.perm_item_dict[name] = parse_perm_quantity(value, self.random)
+
         # imcompatible settings calculations
 
         # forbid extra progression items if neither filler check options are enabled
-        if (self.options.speed_upgrade or self.options.npc_shuffle) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
-            raise OptionError("In order to enable Speed Upgrades or Shuffled NPCs, you must enable either Shopsanity or Fragmentsanity")
+        if (self.options.speed_upgrade or self.options.npc_shuffle or self.options.permanent_items) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
+            raise OptionError("In order to enable Speed Upgrades, Shuffled NPCs, or Permanent Items, you must enable either Shopsanity or Fragmentsanity")
 
         if (self.options.shard_goal == 1) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
             raise OptionError("In order to have a Shard Goal of 1, you must enable either Shopsanity or Fragmentsanity")
@@ -210,11 +218,16 @@ class HasteWorld(World):
         # do a more precise count, just to make ABSOLUTELY sure there's enough room
         running_locs = (self.options.shard_goal-1) if self.options.remove_post_victory_locations else 9
         available_shards = running_locs + 1
-        running_locs += 3 # add the abilities afterwards
-        running_items = 12 + (6 if self.options.speed_upgrade else 0)
+        running_locs += 3 # add the ability puchases afterwards
+        running_items = max(9 if not self.options.remove_post_victory_locations else self.options.shard_goal - 1, 1) + self.options.extra_shard_items + (3 if self.options.starting_ability > 0 else 4) + (6 if self.options.speed_upgrade else 0)
         if (self.options.npc_shuffle):
             running_items += 5
             if not self.options.weeboh_purchases > 0: running_items -= 1
+
+        # adds all permanent items to count
+        if (self.options.permanent_items > 0):
+            for name, num in self.perm_item_dict.items():
+                running_items += num
 
         if (self.options.fragmentsanity == 1): running_locs += available_shards * self.options.pershard_fragmentsanity_quantity
         elif (self.options.fragmentsanity == 2): running_locs += self.options.global_fragmentsanity_quantity
@@ -333,57 +346,76 @@ class HasteWorld(World):
         assert len(self.useful_pool) == 0
         assert len(self.filler_pool) == 0
 
-        # Use the same weights for filler items used in the base randomizer.
-        filler_consumables = [
-            "Anti-Spark 10 bundle",
-            "Anti-Spark 100 bundle",
-            "Anti-Spark 250 bundle",
-            "Anti-Spark 500 bundle",
-            "Anti-Spark 750 bundle",
-            "Anti-Spark 1k bundle",
+        # sparks are the default filler at 100% filler, and each other trap subtracts from it
+        spark_weight =  100 - self.options.disaster_trap_weight - self.options.landing_trap_weight
+        if spark_weight < 0: spark_weight = 0
+
+        round1_weights = [
+            self.options.disaster_trap_weight,
+            self.options.landing_trap_weight,
+            spark_weight
         ]
-        if (self.options.antispark_filler == 0):
-            filler_weights = [
-                35, # 10
-                20, # 100
-                2,  # 250
-                2,  # 500
-                1,  # 750
-                1,  # 1k
-            ]
-        elif (self.options.antispark_filler == 1):
-            filler_weights = [
-                15, # 10
-                10, # 100
-                5,  # 250
-                2,  # 500
-                2,  # 750
-                1,  # 1k
-            ]
-        elif (self.options.antispark_filler == 2):
-            filler_weights = [
-                10, # 10
-                5,  # 100
-                5,  # 250
-                2,  # 500
-                2,  # 750
-                2,  # 1k
-            ]
+        round1_items = [
+            "Disaster Trap",
+            "Landing Downgrade Trap",
+            "Anti-Spark"
+        ]
+
+        round1 = self.multiworld.random.choices(round1_items, weights=round1_weights, k=1)[0]
+        # if the first selection is a trap, return the trap name as-is, else do a second round of weights to decide/return the quality of the anti-spark bundle
+        if round1 != "Anti-Spark":
+            return round1
         else:
-            filler_weights = [
-                5,  #10
-                5,  # 100
-                5,  # 250
-                3,  # 500
-                3,  # 750
-                3,  # 1k
+            filler_consumables = [
+                "Anti-Spark 10 bundle",
+                "Anti-Spark 100 bundle",
+                "Anti-Spark 250 bundle",
+                "Anti-Spark 500 bundle",
+                "Anti-Spark 750 bundle",
+                "Anti-Spark 1k bundle",
             ]
-        assert len(filler_consumables) == len(
-            filler_weights
-        ), f"{len(filler_consumables)=}, {len(filler_weights)=}"
-        return self.multiworld.random.choices(
-            filler_consumables, weights=filler_weights, k=1
-        )[0]
+            if (self.options.antispark_filler == 0):
+                filler_weights = [
+                    35, # 10
+                    20, # 100
+                    2,  # 250
+                    2,  # 500
+                    1,  # 750
+                    1,  # 1k
+                ]
+            elif (self.options.antispark_filler == 1):
+                filler_weights = [
+                    15, # 10
+                    10, # 100
+                    5,  # 250
+                    2,  # 500
+                    2,  # 750
+                    1,  # 1k
+                ]
+            elif (self.options.antispark_filler == 2):
+                filler_weights = [
+                    10, # 10
+                    5,  # 100
+                    5,  # 250
+                    2,  # 500
+                    2,  # 750
+                    2,  # 1k
+                ]
+            else:
+                filler_weights = [
+                    5,  #10
+                    5,  # 100
+                    5,  # 250
+                    3,  # 500
+                    3,  # 750
+                    3,  # 1k
+                ]
+            assert len(filler_consumables) == len(
+                filler_weights
+            ), f"{len(filler_consumables)=}, {len(filler_weights)=}"
+            return self.multiworld.random.choices(
+                filler_consumables, weights=filler_weights, k=1
+            )[0]
 
     def get_pre_fill_items(self) -> list[Item]:
         """
@@ -412,6 +444,8 @@ class HasteWorld(World):
             "ForceReload": self.options.force_reload.value,
             "Shard Goal": self.options.shard_goal.value,
             "Shard Unlock Order": self.options.shard_unlock_order.value,
+            "Remove Post-Victory Locaitons": self.options.remove_post_victory_locations.value,
+            "Extra Shard Items": self.options.extra_shard_items.value,
             "Shopsanity": self.options.shopsanity.value,
             "Per-Shard Shopsanity Quantity": self.options.pershard_shopsanity_quantity.value,
             "Global Shopsanity Quantity": self.options.global_shopsanity_quantity.value,
@@ -426,10 +460,14 @@ class HasteWorld(World):
             "Captain's Upgrades": self.options.captains_upgrades.value,
             "Fashion Weeboh's Purchases": self.options.weeboh_purchases.value,
             "Speed Upgrades": self.options.speed_upgrade.value,
+            "Starting Ability": self.options.starting_ability.value,
+            "Permanent Items": self.options.permanent_items.value, # thank god the mod doesnt need the exact quantities or i'd die
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,
             "Default Outfit Hat": self.options.default_outfit_hat.value,
             "Anti-Spark Filler": self.options.antispark_filler.value,
+            "Disaster Trap Weight": self.options.disaster_trap_weight.value,
+            "Landing Downgrade Trap Weight": self.options.landing_trap_weight.value,
             "Unlock All Items": self.options.unlock_all_items.value
         }
 

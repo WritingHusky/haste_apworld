@@ -17,21 +17,24 @@ def create_regions(world) -> Dict[str, Region]:
             elif shard <= 4:
                 return state.has("Progressive Speed Upgrade", player, 1)
             elif shard <= 6:
-                return state.has("Progressive Speed Upgrade", player, 2)
+                return state.has("Progressive Speed Upgrade", player, 2) and has_an_ability(state)
             elif shard <= 8:
-                return state.has("Progressive Speed Upgrade", player, 3)
+                return state.has("Progressive Speed Upgrade", player, 3) and has_an_ability(state)
             else:
-                return state.has("Progressive Speed Upgrade", player, 4)
+                return state.has("Progressive Speed Upgrade", player, 4) and has_an_ability(state)
         else:
+            if shard >= 5:
+                return has_an_ability(state)
             return True
 
+    def has_an_ability(state: CollectionState) -> bool:
+        return world.options.starting_ability > 0 or state.has("Boost Board", player, 1) or state.has("Sage's Cowl", player, 1) or state.has("Heir's Javelin", player, 1) or state.has("Wraith's Hourglass", player, 1)
 
     regions: Dict[str, Region] = {}
     player = world.player
 
-    # create initial menu region first
+    # reference initial menu region first
     menu_region = Region(world.origin_region_name, player, world.multiworld)
-    #world.multiworld.regions.append(menu_region)
     regions["Menu"] = menu_region
 
     # make regions for the 10 shards, each requiring the X-1 number of progressive shards, and each connecting to the menu

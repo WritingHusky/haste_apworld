@@ -39,10 +39,16 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                 else adjusted_classification
             )
 
-            # Can do fancy stuff here
+            # the more rules I add to this, the more I think it could probably be formatted better
+            # especially since most items in the table have a base quantity of 0 at this point and it doesn't make sense in this format anymore
 
             additional_items = 0
-            if data.type == "NPC" and world.options.npc_shuffle == 1:
+            if data.type == "Shard":
+                if world.options.remove_post_victory_locations:
+                    additional_items = max(world.options.shard_goal - 1 + world.options.extra_shard_items, 1)
+                else:
+                    additional_items = 9 + world.options.extra_shard_items
+            elif data.type == "NPC" and world.options.npc_shuffle == 1:
                 # add NPCs into the pool
                 additional_items = 1
                 if world.options.captains_upgrades != 1 and item == "The Captain":
@@ -68,7 +74,42 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                         additional_items = 3
                     case "Starting Sparks Upgrade":
                         additional_items = 3
+            elif data.type == "Ability":
+                # remove the ability you start with but keep the rest
+                match item:
+                    case "Courier's Board":
+                        if (world.options.starting_ability == 1): additional_items = -1
+                    case "Sage's Cowl":
+                        if (world.options.starting_ability == 2): additional_items = -1
+                    case "Heir's Javelin":
+                        if (world.options.starting_ability == 3): additional_items = -1
+                    case "Wraith's Hourglass":
+                        if (world.options.starting_ability == 4): additional_items = -1
+            elif data.type == "PermItem" and world.options.permanent_items > 0:
+                match item:
+                    case "Permanent Common Speed Item":
+                        additional_items = world.perm_item_dict["common_speed"]
+                    case "Permanent Common Support Item":
+                        additional_items = world.perm_item_dict["common_support"]
+                    case "Permanent Common Health Item":
+                        additional_items = world.perm_item_dict["common_health"]
+                    case "Permanent Rare Speed Item":
+                        additional_items = world.perm_item_dict["rare_speed"]
+                    case "Permanent Rare Support Item":
+                        additional_items = world.perm_item_dict["rare_support"]
+                    case "Permanent Rare Health Item":
+                        additional_items = world.perm_item_dict["rare_health"]
+                    case "Permanent Epic Speed Item":
+                        additional_items = world.perm_item_dict["epic_speed"]
+                    case "Permanent Epic Support Item":
+                        additional_items = world.perm_item_dict["epic_support"]
+                    case "Permanent Epic Health Item":
+                        additional_items = world.perm_item_dict["epic_health"]
+                    case "Permanent Legendary Item":
+                        additional_items = world.perm_item_dict["legendary"]
+            
 
+            if (data.quantity + additional_items <= 0): continue
 
             if classification & IC.progression:
                 progression_pool.extend([item] * (data.quantity + additional_items))

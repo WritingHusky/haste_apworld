@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-
 from Options import (
     Choice,
+    OptionDict,
+    OptionError,
     DeathLink,
     OptionGroup,
     PerGameCommonOptions,
@@ -10,7 +11,9 @@ from Options import (
     DefaultOnToggle,
     Range,
 )
-
+from worlds.AutoWorld import World
+from BaseClasses import PlandoOptions
+import numbers
 
 # Logic Settings
 class ForceReload(Toggle):
@@ -78,7 +81,7 @@ class ShopsanitySeperateRate(Range):
 
 class ShardGoal(Range):
     """
-    Determines which shard will be the one that contains your victory condition.
+    Determines which Shard will be the one that contains your victory condition.
     """
 
     display_name = "Shard Goal"
@@ -96,11 +99,19 @@ class ShardUnlockOrder(Choice):
     option_bosses = 1
     default = option_bosses
 
+class ExtraShardItems(Range):
+    """Determines how many extra Progressive Shards are added into the pool in addition to the ones required to reach your Shard Goal."""
+
+    display_name = "Extra Progressive Shards"
+    range_start = 0
+    range_end = 20
+    default = 0
+
 
 class RemovePostVictoryLocations(DefaultOnToggle):
     """
-    Removes any locations in shards that happen after the goal set in Shard Goal.
-    ex: if Shard Goal is set to 7, this will remove any locations in shards 8, 9, and 10
+    Removes any locations in shards that happen after the goal set in Shard Goal, as well as the Progressive Shard items that would otherwise unlock those Shards.
+    ex: if Shard Goal is set to 7, this will have 6 Progressive Shards in the pool and will remove any locations in shards 8, 9, and 10
     """
     
     display_name = "Remove Post-Victory Locations"
@@ -170,6 +181,120 @@ class LinearFragmentsanityRate(Range):
     range_end = 10
     default = 1
 
+class StartingAbility(Choice):
+    """
+    Determines what ability you start with, with the remaining abilities being added as items in the pool.
+    Logically, you are expected to have an ability in order to do checks in Shard 5 and beyond.
+    """
+    display_name = "Starting Ability"
+    option_none = 0
+    option_couriers_board = 1
+    option_wraiths_hourglass = 2
+    option_heirs_javelin = 3
+    option_sages_cowl = 4
+    default = option_couriers_board
+
+class PermanentItems(Choice):
+    """
+    Determines whether or not permanent items are shuffled into the pool.
+    Permanent items will be chosen randomly from their corresponding category at the start of a fragment.
+    """
+
+    display_name = "Permanent Items"
+    option_off = 0
+    option_on = 1
+    option_no_active_items = 2
+    default = option_off
+
+
+class PermanentItemQuantity(OptionDict):
+    """
+    Determines how many of each Permanent Item are added.
+    Items are broken up based on Rarity and Category, with the exception of Legendary Items which are their own pool.
+    Some items have multiple effects and will thus be present in multiple categories.
+
+    Items are categoriezed as such:
+    - Speed: Any item that grants Boost, Speed, spawns a Boost Ring, or grants a special movement option
+    - Support: Any item grants Energy, Sparks, Luck, Cooldown reduction, Item retriggers, or Perfect landings
+    - Health: Any item that grants Healing, increases Max Health, or grants Invulnerability
+
+    Valid Keys:
+    - "common_speed"
+    - "common_support"
+    - "common_health"
+    - "rare_speed"
+    - "rare_support"
+    - "rare_health"
+    - "epic_speed"
+    - "epic_support"
+    - "epic_health"
+    - "legendary"
+
+    Valid Values:
+    - a number from 0 to 10 for the key type
+    - "random", which will pick a random valid value for you
+    - a range in the form "x-y", which will pick a random valid value between x and y
+    """
+
+    min = 0
+    max_values_dict: dict[str, int] = {
+        "common_speed": 10,
+        "common_support": 10,
+        "common_health": 10,
+        "rare_speed": 10,
+        "rare_support": 10,
+        "rare_health": 10,
+        "epic_speed": 10,
+        "epic_support": 10,
+        "epic_health": 10,
+        "legendary": 10,
+    }
+
+    # shamelessly stolen verify function from Donkey Kong 64's AP
+    def verify(self, world: type[World], player_name: str, plando_options: PlandoOptions) -> None:
+        """Verify Goal Quantity."""
+        super(PermanentItemQuantity, self).verify(world, player_name, plando_options)
+
+        for key in self.value.keys():
+            if key not in self.max_values_dict.keys():
+                raise OptionError(f"{key} is not a valid key for goal_quantity.")
+
+        accumulated_errors = []
+
+        for key, value in self.value.items():
+            print(f"Checking {key}: {value}")
+            max = self.max_values_dict[key]
+            if isinstance(value, numbers.Integral):
+                value = int(value)
+                if value > max:
+                    accumulated_errors.append(f"{key}: {value} is higher than maximum allowed value {max}")
+                elif value < self.min:
+                    accumulated_errors.append(f"{key}: {value} is lower than minimum allowed value {self.min}")
+            else:
+                if value == "random":
+                    continue
+                split = value.split("-")
+                if len(split) != 2:
+                    accumulated_errors.append(f'{key}: {value} is not an integer or range, nor is it "random".')
+                else:
+                    for bound in split:
+                        try:
+                            bound = int(bound)
+                        except (ValueError, TypeError):
+                            accumulated_errors.append(f'{key}: {value} is not an integer or range, nor is it "random".')
+                            continue
+                        if bound > max:
+                            accumulated_errors.append(f"{key}: Upper edge of range {bound} is higher than maximum allowed value {max}")
+                        elif bound < self.min:
+                            accumulated_errors.append(f"{key}: Lower edge of range {bound} is lower than minimum allowed value {self.min}")
+        print("\n".join(accumulated_errors))
+        if accumulated_errors:
+            raise OptionError("Found errors with option goal_quantity:\n" + "\n".join(accumulated_errors))
+        
+    display_name = "Permanent Item Quantities"
+    default = {"common_speed": 3, "common_support": 3, "common_health": 2, "rare_speed": 1, "rare_support": 1, "rare_health": 1, "epic_speed": 1, "epic_support": 1, "epic_health": 1, "legendary": 1}
+
+
 class NPCShuffle(Toggle):
     """
     Shuffles Daro, Niada, Wraith, The Captain, and Fashion Weeboh; requiring you to find them before they can be talked to in the hub world.
@@ -238,7 +363,7 @@ class PermanentSpeedUpgrades(Toggle):
         Shards 9-10: 4 speed upgrades
     """
 
-    display_name = "Permanent Speed Upgrades"
+    display_name = "Progressive Speed Upgrades"
     default = False
 
 class DefaultOutfitBody(Choice):
@@ -280,6 +405,30 @@ class DefaultOutfitHat(Choice):
     option_zoe_64 = 64
     default = option_default
 
+class DisasterTrapWeight(Range):
+    """
+    Determines the percentage of ALL FILLER that will be converted into Disaster Traps.
+    Disaster Traps will add the Disaster Shard Level 1 effects (lava flowers & health loss on low speed) to the current fragment.
+    The trap will persist until either the fragment is cleared or Zoe dies, whichever happens first.
+    """
+
+    display_name = "Disaster Trap Weight"
+    range_start = 0
+    range_end = 100
+    default = 1
+
+class LandingDowngradeTrapWeight(Range):
+    """
+    Determines the percentage of ALL FILLER that will be converted into Landing Downgrade Traps.
+    Landing Downgrade Traps will "downgrade" any landing performed (Perfect -> Good, Good -> Ok, Ok -> Bad).
+    The trap will persist until either the fragment is cleared or Zoe dies, whichever happens first.
+    """
+
+    display_name = "Landing Downgrade Trap Weight"
+    range_start = 0
+    range_end = 100
+    default = 1
+
 
 class UnlockAllItems(Toggle):
     """
@@ -301,6 +450,7 @@ class HasteOptions(PerGameCommonOptions):
     shard_goal: ShardGoal
     shard_unlock_order: ShardUnlockOrder
     remove_post_victory_locations: RemovePostVictoryLocations
+    extra_shard_items: ExtraShardItems
     shopsanity: Shopsanity
     pershard_shopsanity_quantity: PerShardShopQuantity
     global_shopsanity_quantity: GlobalShopQuantity
@@ -311,12 +461,17 @@ class HasteOptions(PerGameCommonOptions):
     pershard_fragmentsanity_quantity: PerShardFragmentQuantity
     global_fragmentsanity_quantity: GlobalFragmentQuantity
     fragmentsanity_linear_rate: LinearFragmentsanityRate
+    starting_ability: StartingAbility
+    permanent_items: PermanentItems
+    permanent_item_quantities: PermanentItemQuantity
     npc_shuffle: NPCShuffle
     captains_upgrades: CaptainsUpgrades
     weeboh_purchases: FashionWeebohPurchases
     speed_upgrade: PermanentSpeedUpgrades
     force_reload: ForceReload
     antispark_filler: AntisparkFiller
+    disaster_trap_weight: DisasterTrapWeight
+    landing_trap_weight: LandingDowngradeTrapWeight
     unlock_all_items: UnlockAllItems
     default_outfit_body: DefaultOutfitBody
     default_outfit_hat: DefaultOutfitHat
@@ -324,9 +479,50 @@ class HasteOptions(PerGameCommonOptions):
 
 haste_option_groups: list[OptionGroup] = [
     OptionGroup(
+        "Goal Settings",
+        [
+            ShardGoal,
+            ShardUnlockOrder,
+            RemovePostVictoryLocations,
+            ExtraShardItems
+        ],
+        start_collapsed=False,
+    ),
+    OptionGroup(
+        "Location Settings",
+        [
+            Shopsanity,
+            ShopsanitySeperate,
+            ShopsanitySeperateRate,
+            PerShardShopQuantity,
+            GlobalShopQuantity,
+            Fragmentsanity,
+            FragmentsanityDistribution,
+            LinearFragmentsanityRate,
+            PerShardFragmentQuantity,
+            GlobalFragmentQuantity
+        ],
+        start_collapsed=False,
+    ),
+    OptionGroup(
+        "Item Settings",
+        [
+            StartingAbility,
+            PermanentItems,
+            PermanentItemQuantity,
+            PermanentSpeedUpgrades,
+            NPCShuffle,
+            CaptainsUpgrades,
+            FashionWeebohPurchases
+        ],
+        start_collapsed=False,
+    ),
+    OptionGroup(
         "QoL Settings",
         [
             AntisparkFiller,
+            DisasterTrapWeight,
+            LandingDowngradeTrapWeight,
             UnlockAllItems,
             ForceReload,
         ],

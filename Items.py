@@ -1,5 +1,6 @@
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, NamedTuple, Optional, Union
+from typing import TYPE_CHECKING, NamedTuple, Optional, Union, Any
+from random import Random
 
 from BaseClasses import Item, Item
 from BaseClasses import ItemClassification as IC
@@ -91,11 +92,27 @@ def item_factory(
 
     return ret[0] if singleton else ret
 
+def parse_perm_quantity(option_value: str, random: Random) -> int:
+    """Calculates bound of value for Permanent Item."""
+    # function almost entirely stolen from Donkey Kong 64's AP implementation
+
+    try:
+        # try to just interpret as an int
+        quantity = int(option_value)
+        assert 0 <= quantity <= 10 
+        return quantity
+    except (TypeError, ValueError):
+        # else it's the strings
+        assert option_value == "random" or len(option_value.split("-")) == 2
+        upper_bound = (10 if option_value == "random" else int(option_value.split("-")[1])) + 1
+        lower_bound = 1 if option_value == "random" else int(option_value.split("-")[0])
+        return random.randrange(lower_bound, upper_bound)
+
 
 VERY_USEFUL = IC.progression | IC.useful
 ITEM_TABLE: dict[str, HasteItemData] = {
     "A New Future": HasteItemData("Victory", IC.progression, 0, 0),
-    "Progressive Shard": HasteItemData("Shard", IC.progression, 1, 9),
+    "Progressive Shard": HasteItemData("Shard", IC.progression, 1, 0),
     "Shard Shop Filler Item": HasteItemData("Filler", IC.filler, 2, 0),
     "Wraith's Hourglass": HasteItemData("Ability", IC.progression, 3, 1),
     "Heir's Javelin": HasteItemData("Ability", IC.progression, 4, 1),
@@ -118,6 +135,19 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "Item Rarity Upgrade": HasteItemData("Upgrade", IC.useful, 21, 0),
     "Sparks in Fragments Upgrade": HasteItemData("Upgrade", IC.useful, 22, 0),
     "Starting Sparks Upgrade": HasteItemData("Upgrade", IC.useful, 23, 0),
+    "Courier's Board": HasteItemData("Ability", IC.progression, 24, 1),
+    "Disaster Trap": HasteItemData("Trap", IC.trap, 25, 0),
+    "Landing Downgrade Trap": HasteItemData("Trap", IC.trap, 26, 0),
+    "Permanent Common Speed Item": HasteItemData("PermItem", IC.useful, 40, 0),
+    "Permanent Common Healing Item": HasteItemData("PermItem", IC.useful, 41, 0),
+    "Permanent Common Support Item": HasteItemData("PermItem", IC.useful, 42, 0),
+    "Permanent Rare Speed Item": HasteItemData("PermItem", IC.useful, 43, 0),
+    "Permanent Rare Healing Item": HasteItemData("PermItem", IC.useful, 44, 0),
+    "Permanent Rare Support Item": HasteItemData("PermItem", IC.useful, 45, 0),
+    "Permanent Epic Speed Item": HasteItemData("PermItem", IC.useful, 46, 0),
+    "Permanent Epic Healing Item": HasteItemData("PermItem", IC.useful, 47, 0),
+    "Permanent Epic Support Item": HasteItemData("PermItem", IC.useful, 48, 0),
+    "Permanent Legendary Item": HasteItemData("PermItem", IC.useful, 49, 0),
     # TODO: put fashion here
 }
 

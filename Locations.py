@@ -58,7 +58,7 @@ for i in range(1, 11):
     )
 
 # Captain's Upgrade locations
-# IDs 20-40
+# IDs 20-42
 for i in range(1, 5):
     LOCATION_TABLE[f"Captain's Max Health Upgrade Purchase {i}"] = HasteLocationData(
         code=19 + i, flags=HasteFlag.CaptainsUpgrade
@@ -84,7 +84,7 @@ for i in range(1, 4):
     )
 
 # Fashion Weeboh Purchase locations
-# 41-49
+# 43-51
 LOCATION_TABLE["Costume Purchase: Crispy"] = HasteLocationData(code=43, flags=HasteFlag.Fashion, skin=1)
 LOCATION_TABLE["Costume Purchase: Little Sister"] = HasteLocationData(code=44, flags=HasteFlag.Fashion, skin=2)
 LOCATION_TABLE["Costume Purchase: Supersonic Zoe"] = HasteLocationData(code=45, flags=HasteFlag.Fashion, skin=3)
