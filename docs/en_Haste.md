@@ -8,11 +8,13 @@ This mod will also set all story flags and several meta-progression flags and is
 ## What are the Items in this APWorld?
 
 - Progressive Shard: Unlocks the next Shard
-- Ability (Cowl, Javelin, Hourglass): Grants the player that ability
+- Ability (Board, Cowl, Javelin, Hourglass): Grants the player that ability
 - NPC (Daro, Niada, Wraith, The Captain, Fashion Weeboh): Unlocks that NPC to appear to in the Hub
 - Captain's Upgrade (Health, Lives, Energy, Rarity, Starting Sparks, Sparks-in-Shard): Grants the player that permanent stat upgrade
 - Permanent Speed Upgrade: Grants +10% base speed (Zoe's base speed is reduced to 60% at the start of the game) up to 120%
+- Persistent Items: Grants an in-game item at the start of a Shard; [grouped by rarity & function](https://github.com/WritingHusky/haste_apworld/blob/main/docs/ItemCategories.md)
 - Anti-Spark Bundle: Grants you an amount of Anti-Sparks
+- Traps: Disrupts your gameplay for one fragment
 
 ## What location are in the APWorld?
 

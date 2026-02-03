@@ -16,20 +16,22 @@ In brief, the following settings are currently available:
 - Fashion Weeboh Purchases: Checks on costume purchases
 - Captain's Upgrades: Checks on upgrade purchases; upgrades as items in the pool
 - NPC Shuffle: Hub NPCs as items in the pool
+- Starting Ability Shuffle: Changes the starting ability to any of the four options, or none at all
 - Speed Upgrades: Reduces base speed to 60%, items that increase base speed up to 120% in the pool
+- Persistent Items: In-game Haste items (grouped by rarity & function) in the pool
 - Default Costume: Sets hat and body costume independently
 - Unlock All Items: Unlocks all mid-run items
 - Anti-Spark Filler: Determines how generous the filler items are for granting Anti-Sparks
+- Traps: Debuffs that activate at the start of a Fragment and last until the player dies or completes that Fragment
+  - Disaster: Adds the Disaster Shard Level 1 effects (lava flowers & health loss on low speed)
+  - Landing Downgrade: Downgrades any landing performed (Perfect -> Good, Good -> Ok, Ok -> Bad)
 - Deathlink
 
 
 ### Future Planned Settings
 In brief, the following settings and mod features are planned to be (**but not guaranteed to be**) implemented at some point in the future. This list is unordered in terms of priority and some features may take longer to implement than others.
-- Starting Ability Shuffle
-- Permanent Items
-- Progressive Landing Upgrades
-- Disaster Traps
 - Taglink
+- More trap types
 - Always fight the final boss during your Shard Goal's boss encounter, even if the Goal isn't Shard 10
 - Skipping Sanity checks that have already been collected by other players finishing
 - Text input support for in-game client (to remove reliance on multiple windows)

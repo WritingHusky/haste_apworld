@@ -62,8 +62,8 @@ It is recommended that you open a text client along side the game, as the chat l
 1. If you haven't already subscribe to the [Archipelago Randomizer Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3462307025) on Steam
 2. Start Haste on Steam
 3. When the main menu appears go to Settings
-4. Choose an new / empty save (So you don't override old saves)
-5. In the Archipelago tab enable the Archipelago mod
+4. In the General tab, choose an **new / empty save** (You cannot use a vanilla save or a save from a previous AP)
+5. In the Archipelago tab, enable the Archipelago mod
 6. Fill out the data to connect to the server (Server name, port, username, password)
 7. Start the game
 

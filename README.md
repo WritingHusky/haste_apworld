@@ -6,8 +6,8 @@ See the [setup guide](https://github.com/WritingHusky/haste_apworld/blob/main/do
 
 ## What does randomization do to this game?
 
-Shards are locked behind an unlock item. Abilities are shuffled into the item pool. Various other options exist to customize what is available in the APWorld.
-This mod will also set all story flags and several meta-progression flags and is therefore **not** recommended to be used with non-AP savefiles.
+Shards are locked behind an unlock item. Abilities are shuffled into the item pool. Various other options exist to customize what is available in the APWorld.\
+This mod will also set all story flags and several meta-progression flags and is therefore **not** able to be played on non-AP savefiles, and the user will need to play on fresh savefiles for each AP seed.
 
 ## What are the Items in this APWorld?
 
@@ -16,7 +16,9 @@ This mod will also set all story flags and several meta-progression flags and is
 - NPC (Daro, Niada, Wraith, The Captain, Fashion Weeboh): Unlocks that NPC to appear to in the Hub
 - Captain's Upgrade (Health, Lives, Energy, Rarity, Starting Sparks, Sparks-in-Shard): Grants the player that permanent stat upgrade
 - Permanent Speed Upgrade: Grants +10% base speed (Zoe's base speed is reduced to 60% at the start of the game) up to 120%
+- Persistent Items: Grants an in-game item at the start of a Shard; [grouped by rarity & function](https://github.com/WritingHusky/haste_apworld/blob/main/docs/ItemCategories.md)
 - Anti-Spark Bundle: Grants you an amount of Anti-Sparks
+- Traps: Disrupts your gameplay for one fragment
 
 ## What location are in the APWorld?
 
