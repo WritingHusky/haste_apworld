@@ -132,7 +132,7 @@ class Fragmentsanity(Choice):
 
 class FragmentsanityDistribution(Choice):
     """
-    Determines how fragmentsanity checks are distributed
+    Determines how Fragmentsanity checks are distributed
     Linear: Checks are given out every X checks as determined by linear_fragmentsanity_rate
     Balanced Triangular: Checks are given out following a halved triangular distribution, capped at 10 fragments between checks
         Check 10: 30 clears -- Check 20: 110 clears -- Check 30: 210 clears -- Check 40: 310 clears -- check 50: 410 clears
@@ -194,22 +194,23 @@ class StartingAbility(Choice):
     option_sages_cowl = 4
     default = option_couriers_board
 
-class PermanentItems(Choice):
+class PersistentItems(Choice):
     """
-    Determines whether or not permanent items are shuffled into the pool.
-    Permanent items will be chosen randomly from their corresponding category at the start of a fragment.
+    Determines whether or not Persistent Items are shuffled into the pool.
+    Persistent items will be chosen randomly from their corresponding category at the start of a Shard and .
+    It is recommended that you enable "Unlock All Items" to increase the variety of items seen during a run.
     """
 
-    display_name = "Permanent Items"
+    display_name = "Persistent Items"
     option_off = 0
     option_on = 1
     option_no_active_items = 2
     default = option_off
 
 
-class PermanentItemQuantity(OptionDict):
+class PersistentItemQuantity(OptionDict):
     """
-    Determines how many of each Permanent Item are added.
+    Determines how many of each Persistent Item are added.
     Items are broken up based on Rarity and Category, with the exception of Legendary Items which are their own pool.
     Some items have multiple effects and will thus be present in multiple categories.
 
@@ -253,7 +254,7 @@ class PermanentItemQuantity(OptionDict):
     # shamelessly stolen verify function from Donkey Kong 64's AP
     def verify(self, world: type[World], player_name: str, plando_options: PlandoOptions) -> None:
         """Verify Goal Quantity."""
-        super(PermanentItemQuantity, self).verify(world, player_name, plando_options)
+        super(PersistentItemQuantity, self).verify(world, player_name, plando_options)
 
         for key in self.value.keys():
             if key not in self.max_values_dict.keys():
@@ -291,8 +292,8 @@ class PermanentItemQuantity(OptionDict):
         if accumulated_errors:
             raise OptionError("Found errors with option goal_quantity:\n" + "\n".join(accumulated_errors))
         
-    display_name = "Permanent Item Quantities"
-    default = {"common_speed": 3, "common_support": 3, "common_health": 2, "rare_speed": 1, "rare_support": 1, "rare_health": 1, "epic_speed": 1, "epic_support": 1, "epic_health": 1, "legendary": 1}
+    display_name = "Persistent Item Quantities"
+    default = {"common_speed": 2, "common_support": 2, "common_health": 2, "rare_speed": 2, "rare_support": 2, "rare_health": 2, "epic_speed": 1, "epic_support": 1, "epic_health": 1, "legendary": 1}
 
 
 class NPCShuffle(Toggle):
@@ -436,6 +437,14 @@ class UnlockAllItems(Toggle):
     """
 
     display_name = "Unlock All Items"
+
+# class SRankBonus(Toggle):
+#     """
+#     When playing Fragmentsanity, any S-Ranks achieved will count as 2 clears instead of 1.
+#     Any excess clears do NOT carry over to the next Fragmentsanity check.
+#     """
+
+#     display_name = "S-Rank Bonus Fragmentsanity Clear"
     
 @dataclass
 class HasteOptions(PerGameCommonOptions):
@@ -462,8 +471,8 @@ class HasteOptions(PerGameCommonOptions):
     global_fragmentsanity_quantity: GlobalFragmentQuantity
     fragmentsanity_linear_rate: LinearFragmentsanityRate
     starting_ability: StartingAbility
-    permanent_items: PermanentItems
-    permanent_item_quantities: PermanentItemQuantity
+    permanent_items: PersistentItems
+    permanent_item_quantities: PersistentItemQuantity
     npc_shuffle: NPCShuffle
     captains_upgrades: CaptainsUpgrades
     weeboh_purchases: FashionWeebohPurchases
@@ -473,6 +482,7 @@ class HasteOptions(PerGameCommonOptions):
     disaster_trap_weight: DisasterTrapWeight
     landing_trap_weight: LandingDowngradeTrapWeight
     unlock_all_items: UnlockAllItems
+    # s_rank_bonus: SRankBonus
     default_outfit_body: DefaultOutfitBody
     default_outfit_hat: DefaultOutfitHat
 
@@ -500,7 +510,8 @@ haste_option_groups: list[OptionGroup] = [
             FragmentsanityDistribution,
             LinearFragmentsanityRate,
             PerShardFragmentQuantity,
-            GlobalFragmentQuantity
+            GlobalFragmentQuantity,
+            # SRankBonus
         ],
         start_collapsed=False,
     ),
@@ -508,9 +519,9 @@ haste_option_groups: list[OptionGroup] = [
         "Item Settings",
         [
             StartingAbility,
-            PermanentItems,
-            PermanentItemQuantity,
             PermanentSpeedUpgrades,
+            PersistentItems,
+            PersistentItemQuantity,
             NPCShuffle,
             CaptainsUpgrades,
             FashionWeebohPurchases
@@ -518,11 +529,17 @@ haste_option_groups: list[OptionGroup] = [
         start_collapsed=False,
     ),
     OptionGroup(
-        "QoL Settings",
+        "Filler Item Settings",
         [
             AntisparkFiller,
             DisasterTrapWeight,
             LandingDowngradeTrapWeight,
+        ],
+        start_collapsed=True,
+    ),
+    OptionGroup(
+        "QoL Settings",
+        [
             UnlockAllItems,
             ForceReload,
         ],

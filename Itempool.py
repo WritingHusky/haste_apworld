@@ -87,25 +87,25 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                         if (world.options.starting_ability == 4): additional_items = -1
             elif data.type == "PermItem" and world.options.permanent_items > 0:
                 match item:
-                    case "Permanent Common Speed Item":
+                    case "Persistent Common Speed Item":
                         additional_items = world.perm_item_dict["common_speed"]
-                    case "Permanent Common Support Item":
+                    case "Persistent Common Support Item":
                         additional_items = world.perm_item_dict["common_support"]
-                    case "Permanent Common Health Item":
+                    case "Persistent Common Health Item":
                         additional_items = world.perm_item_dict["common_health"]
-                    case "Permanent Rare Speed Item":
+                    case "Persistent Rare Speed Item":
                         additional_items = world.perm_item_dict["rare_speed"]
-                    case "Permanent Rare Support Item":
+                    case "Persistent Rare Support Item":
                         additional_items = world.perm_item_dict["rare_support"]
-                    case "Permanent Rare Health Item":
+                    case "Persistent Rare Health Item":
                         additional_items = world.perm_item_dict["rare_health"]
-                    case "Permanent Epic Speed Item":
+                    case "Persistent Epic Speed Item":
                         additional_items = world.perm_item_dict["epic_speed"]
-                    case "Permanent Epic Support Item":
+                    case "Persistent Epic Support Item":
                         additional_items = world.perm_item_dict["epic_support"]
-                    case "Permanent Epic Health Item":
+                    case "Persistent Epic Health Item":
                         additional_items = world.perm_item_dict["epic_health"]
-                    case "Permanent Legendary Item":
+                    case "Persistent Legendary Item":
                         additional_items = world.perm_item_dict["legendary"]
             
 

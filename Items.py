@@ -93,7 +93,7 @@ def item_factory(
     return ret[0] if singleton else ret
 
 def parse_perm_quantity(option_value: str, random: Random) -> int:
-    """Calculates bound of value for Permanent Item."""
+    """Calculates bound of value for Persistent Item."""
     # function almost entirely stolen from Donkey Kong 64's AP implementation
 
     try:
@@ -138,16 +138,16 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "Courier's Board": HasteItemData("Ability", IC.progression, 24, 1),
     "Disaster Trap": HasteItemData("Trap", IC.trap, 25, 0),
     "Landing Downgrade Trap": HasteItemData("Trap", IC.trap, 26, 0),
-    "Permanent Common Speed Item": HasteItemData("PermItem", IC.useful, 40, 0),
-    "Permanent Common Healing Item": HasteItemData("PermItem", IC.useful, 41, 0),
-    "Permanent Common Support Item": HasteItemData("PermItem", IC.useful, 42, 0),
-    "Permanent Rare Speed Item": HasteItemData("PermItem", IC.useful, 43, 0),
-    "Permanent Rare Healing Item": HasteItemData("PermItem", IC.useful, 44, 0),
-    "Permanent Rare Support Item": HasteItemData("PermItem", IC.useful, 45, 0),
-    "Permanent Epic Speed Item": HasteItemData("PermItem", IC.useful, 46, 0),
-    "Permanent Epic Healing Item": HasteItemData("PermItem", IC.useful, 47, 0),
-    "Permanent Epic Support Item": HasteItemData("PermItem", IC.useful, 48, 0),
-    "Permanent Legendary Item": HasteItemData("PermItem", IC.useful, 49, 0),
+    "Persistent Common Speed Item": HasteItemData("PermItem", IC.useful, 40, 0),
+    "Persistent Common Health Item": HasteItemData("PermItem", IC.useful, 41, 0),
+    "Persistent Common Support Item": HasteItemData("PermItem", IC.useful, 42, 0),
+    "Persistent Rare Speed Item": HasteItemData("PermItem", IC.useful, 43, 0),
+    "Persistent Rare Health Item": HasteItemData("PermItem", IC.useful, 44, 0),
+    "Persistent Rare Support Item": HasteItemData("PermItem", IC.useful, 45, 0),
+    "Persistent Epic Speed Item": HasteItemData("PermItem", IC.useful, 46, 0),
+    "Persistent Epic Health Item": HasteItemData("PermItem", IC.useful, 47, 0),
+    "Persistent Epic Support Item": HasteItemData("PermItem", IC.useful, 48, 0),
+    "Persistent Legendary Item": HasteItemData("PermItem", IC.useful, 49, 0),
     # TODO: put fashion here
 }
 

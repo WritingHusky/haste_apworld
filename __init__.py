@@ -92,7 +92,7 @@ class HasteWorld(World):
     def get_shard_locations(shardnum) -> str:
         res = set()
         for location_name in LOCATION_TABLE.items():
-            if location_name[0].startswith(f"Shard {shardnum}"):
+            if location_name[0].startswith(f"Shard {shardnum} "):
                 res.add(location_name[0])
         return res
     
@@ -210,7 +210,7 @@ class HasteWorld(World):
 
         # forbid extra progression items if neither filler check options are enabled
         if (self.options.speed_upgrade or self.options.npc_shuffle or self.options.permanent_items) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
-            raise OptionError("In order to enable Speed Upgrades, Shuffled NPCs, or Permanent Items, you must enable either Shopsanity or Fragmentsanity")
+            raise OptionError("In order to enable Speed Upgrades, Shuffled NPCs, or Persistent Items, you must enable either Shopsanity or Fragmentsanity")
 
         if (self.options.shard_goal == 1) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
             raise OptionError("In order to have a Shard Goal of 1, you must enable either Shopsanity or Fragmentsanity")
@@ -461,14 +461,15 @@ class HasteWorld(World):
             "Fashion Weeboh's Purchases": self.options.weeboh_purchases.value,
             "Speed Upgrades": self.options.speed_upgrade.value,
             "Starting Ability": self.options.starting_ability.value,
-            "Permanent Items": self.options.permanent_items.value, # thank god the mod doesnt need the exact quantities or i'd die
+            "Persistent Items": self.options.permanent_items.value, # thank god the mod doesnt need the exact quantities or i'd die
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,
             "Default Outfit Hat": self.options.default_outfit_hat.value,
             "Anti-Spark Filler": self.options.antispark_filler.value,
             "Disaster Trap Weight": self.options.disaster_trap_weight.value,
             "Landing Downgrade Trap Weight": self.options.landing_trap_weight.value,
-            "Unlock All Items": self.options.unlock_all_items.value
+            "Unlock All Items": self.options.unlock_all_items.value,
+            # "S-Rank Bonus": self.options.s_rank_bonus.value
         }
 
         return slot_data
