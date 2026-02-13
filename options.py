@@ -100,7 +100,7 @@ class ShardUnlockOrder(Choice):
     default = option_bosses
 
 class ExtraShardItems(Range):
-    """Determines how many extra Progressive Shards are added into the pool in addition to the ones required to reach your Shard Goal."""
+    """Determines how many extra Progressive Shards are added into the item pool in addition to the ones required to reach your Shard Goal."""
 
     display_name = "Extra Progressive Shards"
     range_start = 0
@@ -111,7 +111,7 @@ class ExtraShardItems(Range):
 class RemovePostVictoryLocations(DefaultOnToggle):
     """
     Removes any locations in shards that happen after the goal set in Shard Goal, as well as the Progressive Shard items that would otherwise unlock those Shards.
-    ex: if Shard Goal is set to 7, this will have 6 Progressive Shards in the pool and will remove any locations in shards 8, 9, and 10
+    ex: if Shard Goal is set to 7, this will have 6 Progressive Shards in the item pool and will remove any locations in shards 8, 9, and 10
     """
     
     display_name = "Remove Post-Victory Locations"
@@ -183,7 +183,7 @@ class LinearFragmentsanityRate(Range):
 
 class StartingAbility(Choice):
     """
-    Determines what ability you start with, with the remaining abilities being added as items in the pool.
+    Determines what ability you start with, with the remaining abilities being added into the item pool.
     Logically, you are expected to have an ability in order to do checks in Shard 5 and beyond.
     """
     display_name = "Starting Ability"
@@ -196,7 +196,7 @@ class StartingAbility(Choice):
 
 class PersistentItems(Choice):
     """
-    Determines whether or not Persistent Items are shuffled into the pool.
+    Determines whether or not Persistent Items are shuffled into the item pool.
     Persistent items will be chosen randomly from their corresponding category at the start of a Shard and .
     It is recommended that you enable "Unlock All Items" to increase the variety of items seen during a run.
     """
@@ -210,8 +210,8 @@ class PersistentItems(Choice):
 
 class PersistentItemQuantity(OptionDict):
     """
-    Determines how many of each Persistent Item are added.
-    Items are broken up based on Rarity and Category, with the exception of Legendary Items which are their own pool.
+    Determines how many of each Persistent Item are added into the item pool.
+    Items are broken up based on Rarity and Category, with the exception of Legendary Items which are their own group.
     Some items have multiple effects and will thus be present in multiple categories.
 
     Items are categoriezed as such:
@@ -298,7 +298,8 @@ class PersistentItemQuantity(OptionDict):
 
 class NPCShuffle(Toggle):
     """
-    Shuffles Daro, Niada, Wraith, The Captain, and Fashion Weeboh; requiring you to find them before they can be talked to in the hub world.
+    Shuffles Daro, Niada, Wraith, The Captain, and Fashion Weeboh into the item pool; requiring you to find them before they can be talked to in the hub world.
+    This will not affect the ability to find them in the rest/campfire fragments, as they only provide flavour text
     """
 
     display_name = "Hub NPCs"
@@ -306,7 +307,7 @@ class NPCShuffle(Toggle):
 
 class CaptainsUpgrades(Toggle):
     """
-    Shuffles The Captain's permanent upgrades, and adds their respective purchases from him in the hub as checks.
+    Shuffles The Captain's permanent upgrades into the item pool, and adds their respective purchases from him in the hub as checks.
     All purchases will require 33,250 Anti-Sparks total.
     """
 
@@ -315,7 +316,7 @@ class CaptainsUpgrades(Toggle):
 
 class FashionWeebohPurchases(Choice):
     """
-    Shuffles Fashion Weeboh's costume purchases as checks. Currently does NOT add the costumes themselves as items into the pool.
+    Shuffles Fashion Weeboh's costume purchases as checks. Currently does NOT add the costumes themselves as items into the item pool.
     All purchases will require 16,500 Anti-Sparks total for Vanilla, or 22,700 for Vanilla Plus or All Unlocks.
 
     Vanilla: Costume purchases are only available as per their vanilla requirements:
@@ -337,7 +338,7 @@ class FashionWeebohPurchases(Choice):
 
 class AntisparkFiller(Choice):
     """
-    Determines the average value of the Anti-Spark Bundle filler items added into the pool.
+    Determines the average value of the Anti-Spark Bundle filler items added into the item pool.
 
     Sparse: Approximately 9,200 Anti-Sparks per 100 filler items
     Standard: Approximately 16,800 Anti-Sparks per 100 filler items
@@ -354,7 +355,7 @@ class AntisparkFiller(Choice):
 
 class PermanentSpeedUpgrades(Toggle):
     """
-    Reduces Zoe's base run speed to 60%, and adds 6 Speed Upgrades that increase her base run speed by 10% each (totalling 120% run speed with all 6 upgrades)
+    Reduces Zoe's base run speed to 60%, and adds 6 Speed Upgrades into the item pool that increase her base run speed by 10% each (totalling 120% run speed with all 6 upgrades)
     Zoe's TOTAL speed includes more than just her BASE run speed; so liberal use of Boost-increasing items, abilities, and good landings will be needed to compensate for this initial reduction
     Shards will require a certain number of speed upgrades to logically complete:
         Shards 1-2: No speed upgrades
