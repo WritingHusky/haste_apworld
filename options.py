@@ -299,7 +299,7 @@ class PersistentItemQuantity(OptionDict):
 class NPCShuffle(Toggle):
     """
     Shuffles Daro, Niada, Wraith, The Captain, and Fashion Weeboh into the item pool; requiring you to find them before they can be talked to in the hub world.
-    This will not affect the ability to find them in the rest/campfire fragments, as they only provide flavour text
+    This will not affect the ability to find them in the rest/campfire fragments, as those encounters only provide flavour text
     """
 
     display_name = "Hub NPCs"
@@ -472,8 +472,8 @@ class HasteOptions(PerGameCommonOptions):
     global_fragmentsanity_quantity: GlobalFragmentQuantity
     fragmentsanity_linear_rate: LinearFragmentsanityRate
     starting_ability: StartingAbility
-    permanent_items: PersistentItems
-    permanent_item_quantities: PersistentItemQuantity
+    persistent_items: PersistentItems
+    persistent_item_quantities: PersistentItemQuantity
     npc_shuffle: NPCShuffle
     captains_upgrades: CaptainsUpgrades
     weeboh_purchases: FashionWeebohPurchases

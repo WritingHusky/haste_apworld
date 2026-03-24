@@ -201,15 +201,15 @@ class HasteWorld(World):
         """
         Setup things ready for generation.
         """
-        # parse permanent item quantities
-        if (self.options.permanent_items > 0):
-            for name, value in self.options.permanent_item_quantities.items():
+        # parse persistent item quantities
+        if (self.options.persistent_items > 0):
+            for name, value in self.options.persistent_item_quantities.items():
                 self.perm_item_dict[name] = parse_perm_quantity(value, self.random)
 
         # imcompatible settings calculations
 
         # forbid extra progression items if neither filler check options are enabled
-        if (self.options.speed_upgrade or self.options.npc_shuffle or self.options.permanent_items) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
+        if (self.options.speed_upgrade or self.options.npc_shuffle or self.options.persistent_items) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
             raise OptionError("In order to enable Speed Upgrades, Shuffled NPCs, or Persistent Items, you must enable either Shopsanity or Fragmentsanity")
 
         if (self.options.shard_goal == 1) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
@@ -224,8 +224,8 @@ class HasteWorld(World):
             running_items += 5
             if not self.options.weeboh_purchases > 0: running_items -= 1
 
-        # adds all permanent items to count
-        if (self.options.permanent_items > 0):
+        # adds all persistent items to count
+        if (self.options.persistent_items > 0):
             for name, num in self.perm_item_dict.items():
                 running_items += num
 
@@ -461,7 +461,7 @@ class HasteWorld(World):
             "Fashion Weeboh's Purchases": self.options.weeboh_purchases.value,
             "Speed Upgrades": self.options.speed_upgrade.value,
             "Starting Ability": self.options.starting_ability.value,
-            "Persistent Items": self.options.permanent_items.value, # thank god the mod doesnt need the exact quantities or i'd die
+            "Persistent Items": self.options.persistent_items.value, # thank god the mod doesnt need the exact quantities or i'd die
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,
             "Default Outfit Hat": self.options.default_outfit_hat.value,
