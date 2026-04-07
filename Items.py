@@ -197,7 +197,7 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "Momentum Recalibrator": HasteItemData("ItemUnlock", IC.useful, 96, 0),
     "Mortar and Pestle": HasteItemData("ItemUnlock", IC.useful, 97, 0),
     "Mysterious Spring": HasteItemData("ItemUnlock", IC.useful, 98, 0),
-    "N-Dimensional-lead Clover": HasteItemData("ItemUnlock", IC.useful, 99, 0),
+    "N-Dimensional-leaf Clover": HasteItemData("ItemUnlock", IC.useful, 99, 0),
     "Otherworldly Contact": HasteItemData("ItemUnlock", IC.useful, 100, 0),
     "Overclocked Medical Drone": HasteItemData("ItemUnlock", IC.useful, 101, 0),
     "Overcomplicated Coin": HasteItemData("ItemUnlock", IC.useful, 102, 0),
