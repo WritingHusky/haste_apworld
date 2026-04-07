@@ -197,11 +197,26 @@ class StartingAbility(Choice):
 class PersistentItems(Choice):
     """
     Determines whether or not Persistent Items are shuffled into the pool.
-    Persistent items will be chosen randomly from their corresponding category at the start of a Shard and .
+    Persistent items will be chosen randomly from their corresponding category at the start of a Shard.
     It is recommended that you enable "Unlock All Items" to increase the variety of items seen during a run.
     """
 
     display_name = "Persistent Items"
+    option_off = 0
+    option_on = 1
+    option_no_active_items = 2
+    default = option_off
+
+
+class ItemUnlockMode(Choice):
+    """
+    Determines whether or not item unlocks are shuffled into the pool.
+    These items are locked at the start of the run and are unlocked as Archipelago checks are collected.
+
+    It is recommended that you enable "Unlock All Items" if you are shuffling item unlocks to avoid confusion with the vanilla unlocks, as this setting overwrites those unlocks in favor of AP unlocks.
+    """
+
+    display_name = "Item Unlocks"
     option_off = 0
     option_on = 1
     option_no_active_items = 2
@@ -473,6 +488,7 @@ class HasteOptions(PerGameCommonOptions):
     starting_ability: StartingAbility
     permanent_items: PersistentItems
     permanent_item_quantities: PersistentItemQuantity
+    item_unlock_mode: ItemUnlockMode
     npc_shuffle: NPCShuffle
     captains_upgrades: CaptainsUpgrades
     weeboh_purchases: FashionWeebohPurchases
@@ -522,6 +538,7 @@ haste_option_groups: list[OptionGroup] = [
             PermanentSpeedUpgrades,
             PersistentItems,
             PersistentItemQuantity,
+            ItemUnlockMode,
             NPCShuffle,
             CaptainsUpgrades,
             FashionWeebohPurchases

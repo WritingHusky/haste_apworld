@@ -3,6 +3,139 @@ from worlds.AutoWorld import World
 from .Items import ITEM_TABLE, item_factory
 from BaseClasses import ItemClassification as IC, LocationProgressType
 
+ITEM_UNLOCK_ITEMS = [
+    "Adrenaline",
+    "Aromatic Herbs",
+    "Atomic Timepiece",
+    "BOOSTR POG",
+    "Big Pumpkin",
+    "Big Spark Magnet",
+    "Big Squash",
+    "Bitter Herbs",
+    "Blood Engine",
+    "Boost Remote",
+    "Bootleg Pattern",
+    "Brittle Breastplate",
+    "Charge Boots",
+    "Cherry on Top",
+    "Clown Shoes",
+    "Dangerous Investment Scheme",
+    "Delayed Emergency Device",
+    "Distance-Based Health Insurance",
+    "Dynamo Treadmill",
+    "Emergency Shoes",
+    "Energy Funnel",
+    "Energy Lash",
+    "Experimental Autopilot",
+    "Experimental Thrusters",
+    "Extreme Herbs",
+    "Flashback",
+    "Fragile Confidence",
+    "Fragile Taco",
+    "Friendly Looking Star",
+    "General Relativity",
+    "Golden Necklace",
+    "Greed Machine",
+    "Growth Potential",
+    "Grunt's Helmet",
+    "Heart Shaped Mirror",
+    "Heir's Determination",
+    "High Risk Investment",
+    "Impact Activated Healing Drone",
+    "Impulse Actived Stabilizer",
+    "Instant Compensation Machine",
+    "Intangibility",
+    "Interest",
+    "Jackpot",
+    "Karma",
+    "Leadership Pipe",
+    "Low Grade Timeline Swapper",
+    "Momentum Recalibrator",
+    "Mortar and Pestle",
+    "Mysterious Spring",
+    "N-Dimensional-leaf Clover",
+    "Otherworldly Contact",
+    "Overclocked Medical Drone",
+    "Overcomplicated Coin",
+    "Overwound Pocketwatch",
+    "Painful Coil",
+    "Pathfinder",
+    "Performance Based Health Insurance",
+    "Perpetual Motion Machine",
+    "Personal Gravity Enhancer",
+    "Personal Matter Stabilizer",
+    "Planar Reconfiguration",
+    "Plutonium Coin",
+    "Pocket Snack",
+    "Portable Harvester",
+    "Protective Medallion",
+    "Pungent Herbs",
+    "Quick Taco",
+    "Recyclable Rocket",
+    "Reheated Soup",
+    "Replenishing Vial",
+    "Restorative Maneuver",
+    "Ring Materializer",
+    "Risk and Reward",
+    "Rocket Boots",
+    "Secret Technique Instructions",
+    "Shimmering Condenser",
+    "Shiny Anchor Pin",
+    "Shortcut",
+    "Spark Dasher",
+    "Spark Furnace",
+    "Spark Plug",
+    "Spark Powered Propeller",
+    "Speedy Recovery",
+    "Standard Redirector",
+    "Steady Investment",
+    "Steel Hat Lining",
+    "Tight Schedule",
+    "Time Dilation Thing",
+    "Timeline Attractor",
+    "Timeline Recalibrator",
+    "Timeline Refactor",
+    "Timeline Shifter",
+    "Transition Slingshot",
+    "Velocity Powered Syringe",
+    "Vitamins",
+    "Void Charger",
+    "Void Compressor",
+    "Well Earned Confidence",
+    "Wingspan",
+]
+
+ACTIVE_ITEM_UNLOCK_ITEMS = {
+    "Blood Engine",
+    "Boost Remote",
+    "Energy Lash",
+    "Experimental Autopilot",
+    "Mysterious Spring",
+    "Otherworldly Contact",
+    "Personal Gravity Enhancer",
+    "Personal Matter Stabilizer",
+    "Portable Harvester",
+    "Recyclable Rocket",
+    "Replenishing Vial",
+    "Rocket Boots",
+    "Spark Dasher",
+    "Standard Redirector",
+    "Steel Hat Lining",
+    "Time Dilation Thing",
+    "Timeline Shifter",
+}
+
+
+def choose_item_unlocks(world: "World") -> list[str]:
+    if world.options.item_unlock_mode == 0:
+        return []
+
+    return [
+        item_name
+        for item_name in ITEM_UNLOCK_ITEMS
+        if world.options.item_unlock_mode != 2 or item_name not in ACTIVE_ITEM_UNLOCK_ITEMS
+    ]
+
 
 def generate_itempool(world: "World") -> None:
     multiworld = world.multiworld
@@ -85,29 +218,12 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                         if (world.options.starting_ability == 3): additional_items = -1
                     case "Wraith's Hourglass":
                         if (world.options.starting_ability == 4): additional_items = -1
-            elif data.type == "PermItem" and world.options.permanent_items > 0:
-                match item:
-                    case "Persistent Common Speed Item":
-                        additional_items = world.perm_item_dict["common_speed"]
-                    case "Persistent Common Support Item":
-                        additional_items = world.perm_item_dict["common_support"]
-                    case "Persistent Common Health Item":
-                        additional_items = world.perm_item_dict["common_health"]
-                    case "Persistent Rare Speed Item":
-                        additional_items = world.perm_item_dict["rare_speed"]
-                    case "Persistent Rare Support Item":
-                        additional_items = world.perm_item_dict["rare_support"]
-                    case "Persistent Rare Health Item":
-                        additional_items = world.perm_item_dict["rare_health"]
-                    case "Persistent Epic Speed Item":
-                        additional_items = world.perm_item_dict["epic_speed"]
-                    case "Persistent Epic Support Item":
-                        additional_items = world.perm_item_dict["epic_support"]
-                    case "Persistent Epic Health Item":
-                        additional_items = world.perm_item_dict["epic_health"]
-                    case "Persistent Legendary Item":
-                        additional_items = world.perm_item_dict["legendary"]
-            
+            elif data.type == "PermItem":
+                # Persistent items are selected by the game mod; placeholder pool entries should not be directly added here.
+                additional_items = 0
+            elif data.type == "ItemUnlock":
+                # Item unlocks are selected separately by choose_item_unlocks().
+                additional_items = 0
 
             if (data.quantity + additional_items <= 0): continue
 
@@ -144,6 +260,10 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
     # world.progression_pool = progression_pool
     pool.extend(progression_pool)
     num_items_left_to_place -= len(progression_pool)
+
+    item_unlocks = choose_item_unlocks(world)
+
+    useful_pool.extend(item_unlocks)
 
     world.multiworld.random.shuffle(useful_pool)
     world.multiworld.random.shuffle(filler_pool)

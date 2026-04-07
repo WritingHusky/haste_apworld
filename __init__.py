@@ -16,7 +16,7 @@ from BaseClasses import (
 from BaseClasses import ItemClassification as IC
 from BaseClasses import Tutorial
 from Options import OptionError, Toggle
-from .Itempool import generate_itempool
+from .Itempool import generate_itempool, ITEM_UNLOCK_ITEMS, ACTIVE_ITEM_UNLOCK_ITEMS
 from .location_rules import set_location_access_rules
 from worlds.AutoWorld import WebWorld, World
 from .Items import (
@@ -228,6 +228,12 @@ class HasteWorld(World):
         if (self.options.permanent_items > 0):
             for name, num in self.perm_item_dict.items():
                 running_items += num
+
+        if (self.options.item_unlock_mode > 0):
+            unlocked_count = len(ITEM_UNLOCK_ITEMS)
+            if self.options.item_unlock_mode == 2:
+                unlocked_count -= len(ACTIVE_ITEM_UNLOCK_ITEMS)
+            running_items += unlocked_count
 
         if (self.options.fragmentsanity == 1): running_locs += available_shards * self.options.pershard_fragmentsanity_quantity
         elif (self.options.fragmentsanity == 2): running_locs += self.options.global_fragmentsanity_quantity
@@ -462,6 +468,7 @@ class HasteWorld(World):
             "Speed Upgrades": self.options.speed_upgrade.value,
             "Starting Ability": self.options.starting_ability.value,
             "Persistent Items": self.options.permanent_items.value, # thank god the mod doesnt need the exact quantities or i'd die
+            "Item Unlocks": self.options.item_unlock_mode.value,
             "Remove Post-Victory Locations": self.options.remove_post_victory_locations.value,
             "Default Outfit Body": self.options.default_outfit_body.value,
             "Default Outfit Hat": self.options.default_outfit_hat.value,
