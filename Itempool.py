@@ -219,7 +219,6 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                     case "Wraith's Hourglass":
                         if (world.options.starting_ability == 4): additional_items = -1
             elif data.type == "PermItem":
-                # Persistent items are selected by the game mod; placeholder pool entries should not be directly added here.
                 additional_items = 0
             elif data.type == "ItemUnlock":
                 # Item unlocks are selected separately by choose_item_unlocks().
