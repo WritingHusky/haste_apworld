@@ -44,6 +44,23 @@ class HasteLocation(Location):
         return base_id + code
 
 
+SHARD_LENGTHS = [
+    13, # Shard 1
+    14, # Shard 2
+    15, # Shard 3
+    16, # Shard 4
+    17, # Shard 5
+    18, # Shard 6
+    19, # Shard 7
+    20, # Shard 8
+    21, # Shard 9
+    26, # Shard 10
+    29, # Disaster Shard 1
+    33, # Disaster Shard 2
+    33, # Disaster Shard 3
+    33, # Disaster Shard 4
+]
+
 LOCATION_TABLE = {
     "Wraith's Hourglass Purchase": HasteLocationData(code=1, flags=HasteFlag.Always),
     "Heir's Javelin Purchase": HasteLocationData(code=2, flags=HasteFlag.Always),
@@ -117,13 +134,44 @@ for j in range(1, 51):
         code=450 + j, flags=HasteFlag.GlobalFragment, shard=1
     )
 
-# per-shard shop locations
-# IDs 451-700
-for i in range(1,11):
+# # per-shard fragment locations
+# # IDs 501-750
+# for i in range(1,11):
+#     for j in range(1, 26):
+#         LOCATION_TABLE[f"Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
+#             code=500 + (i-1)*25 + j, flags=HasteFlag.PerShardFragment, shard=i
+#         )
+
+# disaster shard locations
+# shops
+# IDs 751-850
+for i in range(1,5):
     for j in range(1, 26):
-        LOCATION_TABLE[f"Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
-            code=500 + (i-1)*25 + j, flags=HasteFlag.PerShardFragment, shard=i
+        LOCATION_TABLE[f"Disaster Shard {i} Shop Item {j:02}"] = HasteLocationData(
+            code=750 + (i-1)*25 + j, flags=HasteFlag.PerShardShop, shard=i+10
         )
+# # fragments
+# # IDs 851-975
+# for i in range(1,5):
+#     for j in range(1, 26):
+#         LOCATION_TABLE[f"Disaster Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
+#             code=850 + (i-1)*25 + j, flags=HasteFlag.PerShardFragment, shard=i+10
+#         )
+
+# TODO: check this works, and also lower the magic number to like 400 or something
+magicnumber = 1000
+for i in range(1,15):
+    for j in range(1, (3*SHARD_LENGTHS[i-1])+1):
+        if i > 10:
+            LOCATION_TABLE[f"Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
+                code=magicnumber, flags=HasteFlag.PerShardFragment, shard=i
+            )
+        else:
+            LOCATION_TABLE[f"Disaster Shard {i-10} Fragment Clear {j:02}"] = HasteLocationData(
+                code=magicnumber, flags=HasteFlag.PerShardFragment, shard=i
+            )
+        magicnumber+=1
+
 
 def none_or_within_shard(goal, rpvl, shard) -> bool:
     if shard is None: return True

@@ -85,7 +85,7 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                         if (world.options.starting_ability == 3): additional_items = -1
                     case "Wraith's Hourglass":
                         if (world.options.starting_ability == 4): additional_items = -1
-            elif data.type == "PermItem" and world.options.permanent_items > 0:
+            elif data.type == "PermItem" and world.options.persistent_items > 0:
                 match item:
                     case "Persistent Common Speed Item":
                         additional_items = world.perm_item_dict["common_speed"]

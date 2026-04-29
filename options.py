@@ -82,11 +82,12 @@ class ShopsanitySeperateRate(Range):
 class ShardGoal(Range):
     """
     Determines which Shard will be the one that contains your victory condition.
+    Shard Goals of 11-14 will set the goal to Disaster Shards 1-4.
     """
 
     display_name = "Shard Goal"
     range_start = 1
-    range_end = 10
+    range_end = 14
     default = 10
 
 class ShardUnlockOrder(Choice):
@@ -100,7 +101,9 @@ class ShardUnlockOrder(Choice):
     default = option_bosses
 
 class ExtraShardItems(Range):
-    """Determines how many extra Progressive Shards are added into the item pool in addition to the ones required to reach your Shard Goal."""
+    """
+    Determines how many extra Progressive Shards are added into the item pool in addition to the ones required to reach your Shard Goal.
+    """
 
     display_name = "Extra Progressive Shards"
     range_start = 0
@@ -150,16 +153,39 @@ class FragmentsanityDistribution(Choice):
     option_triangular = 4
     default = option_linear
 
-class PerShardFragmentQuantity(Range):
+class PerShardFragmentScaling(Choice):
     """
-    Determines how many checks are tied to fragment clears for each available Shard.
+    Determines whether Per-Shard Fragmentsaity checks are scaled statically or dynamically.
+    Static: All Shards will have the same number of Fragmentsanity checks.
+    Dynamic: The number of Fragmentsanity checks in each Shard is determined by the length of said Shard (later Shards are longer).
     """
 
-    display_name = "Per-Shard Fragmentsanity Quantity"
+    display_name = "Fragmentsanity Scaling"
+    option_static = 1
+    option_dynamic = 2
+    default = option_static
+
+class PerShardFragmentQuantity(Range):
+    """
+    For Static Per-Shard Fragmentsanity, determines how many checks are tied to Fragment clears for each available Shard.
+    """
+
+    display_name = "Per-Shard Static Fragmentsanity Quantity"
     range_start = 1
     range_end = 25
     default = 15
 
+class PerShardFragmentDynamicQuantity(Range):
+    """
+    For Dynamic Per-Shard Fragmentsanity, determines the percentage used for how many checks are tied to Fragment clears in each Shard, scaled to the length of said shard (rounded down).
+    When choosing a percentage, remember that Shops, Rest Areas, and some events do NOT contribute to Fragmentsanity progress.
+    ex: Shards 3 & 8 have a length of 15 & 20 Fragments, respectively. A scale of 80% will have 12 Fragmentsanity checks in Shard 3, and 16 checks in Shard 8.
+    """
+
+    display_name = "Per-Shard Dynamic Fragmentsanity Quantity"
+    range_start = 1
+    range_end = 300
+    default = 80
 
 class GlobalFragmentQuantity(Range):
     """
@@ -312,7 +338,7 @@ class CaptainsUpgrades(Toggle):
     """
 
     display_name = "Captain's Upgrades"
-    default = False
+    default = True
 
 class FashionWeebohPurchases(Choice):
     """

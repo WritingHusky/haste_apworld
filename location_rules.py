@@ -63,9 +63,14 @@ def set_location_access_rules(world: "World"):
         # per-shard
         for i in range(1,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 11):
             for j in range(1, world.options.pershard_shopsanity_quantity+1):
-                set_rule_if_exists(
-                    f"Shard {i} Shop Item {j:02}", lambda state: (True)
-                )
+                if i > 10:
+                    set_rule_if_exists(
+                        f"Disaster Shard {i-10} Shop Item {j:02}", lambda state: (True)
+                    )
+                else:
+                    set_rule_if_exists(
+                        f"Shard {i} Shop Item {j:02}", lambda state: (True)
+                    )
     elif world.options.shopsanity == 2:
         # global
         for j in range(1, world.options.global_shopsanity_quantity+1):
@@ -79,9 +84,14 @@ def set_location_access_rules(world: "World"):
         # per-shard fragment clears
         for i in range(1,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 11):
             for j in range(1, world.options.pershard_fragmentsanity_quantity+1):
-                set_rule_if_exists(
-                    f"Shard {i} Fragment Clear {j:02}", lambda state: (True)
-                )
+                if i > 10:
+                    set_rule_if_exists(
+                        f"Disaster Shard {i-10} Fragment Clear {j:02}", lambda state: (True)
+                    )
+                else:
+                    set_rule_if_exists(
+                        f"Shard {i} Fragment Clear {j:02}", lambda state: (True)
+                    )
     elif world.options.fragmentsanity == 2:
         # global fragment clears
         for j in range(1, world.options.global_fragmentsanity_quantity+1):
