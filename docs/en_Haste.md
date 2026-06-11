@@ -42,7 +42,7 @@ The goal of Haste is to beat the boss of the configured Shard Goal (default is S
 
 ## When the player receives an item, what happens?
 
-The item will immediately come into effect.
+The item will come into effect once it is safe to process them. If the game is loading or the player is in a menu, the game will hold onto any incoming items before processing them to prevent bugs.
 
 If `Force Reload` is enabled and you are in the Hub, getting a Progressive Shard or NPC will reload the Hub to update. This may cause issues if you are talking to an NPC when this reload happens. Otherwise, you will need to exit and re-enter the Hub for the hub to update.
 
