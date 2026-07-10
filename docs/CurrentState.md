@@ -18,7 +18,7 @@ In brief, the following settings are currently available:
 - NPC Shuffle: Hub NPCs as items in the pool
 - Starting Ability Shuffle: Changes the starting ability to any of the four options, or none at all
 - Speed Upgrades: Reduces base speed to 60%, items that increase base speed up to 120% in the pool
-- Persistent Items: In-game Haste items (grouped by rarity & function) in the pool
+- Persistent Items: In-game Haste items [(grouped by rarity & function)](https://github.com/WritingHusky/haste_apworld/blob/main/docs/ItemCategories.md) in the pool
 - Default Costume: Sets hat and body costume independently
 - Unlock All Items: Unlocks all mid-run items
 - Anti-Spark Filler: Determines how generous the filler items are for granting Anti-Sparks
