@@ -148,6 +148,7 @@ ITEM_TABLE: dict[str, HasteItemData] = {
     "Persistent Epic Health Item": HasteItemData("PermItem", IC.useful, 47, 0),
     "Persistent Epic Support Item": HasteItemData("PermItem", IC.useful, 48, 0),
     "Persistent Legendary Item": HasteItemData("PermItem", IC.useful, 49, 0),
+    "Progressive Global Shop Pack": HasteItemData("ShopBlocker", IC.progression, 50, 0),
     # TODO: put fashion here
 }
 

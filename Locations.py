@@ -116,53 +116,27 @@ LOCATION_TABLE["Costume Purchase: Zoe 64"] = HasteLocationData(code=51, flags=Ha
 # IDs 101-200
 for j in range(1, 101):
     LOCATION_TABLE[f"Global Shop Item {j:03}"] = HasteLocationData(
-        code=100 + j, flags=HasteFlag.GlobalShop, shard=1
+        code=100 + j, flags=HasteFlag.GlobalShop, shard=99
     )
 
-# per-shard shop locations
-# IDs 201-450
-for i in range(1,11):
-    for j in range(1, 26):
-        LOCATION_TABLE[f"Shard {i} Shop Item {j:02}"] = HasteLocationData(
-            code=200 + (i-1)*25 + j, flags=HasteFlag.PerShardShop, shard=i
-        )
 
 # global fragment locations
 # IDs 451-500
 for j in range(1, 51):
     LOCATION_TABLE[f"Global Fragment Clear {j:02}"] = HasteLocationData(
-        code=450 + j, flags=HasteFlag.GlobalFragment, shard=1
+        code=450 + j, flags=HasteFlag.GlobalFragment, shard=99
     )
 
-# # per-shard fragment locations
-# # IDs 501-750
-# for i in range(1,11):
-#     for j in range(1, 26):
-#         LOCATION_TABLE[f"Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
-#             code=500 + (i-1)*25 + j, flags=HasteFlag.PerShardFragment, shard=i
-#         )
-
-# disaster shard locations
-# shops
-# IDs 751-850
-for i in range(1,5):
-    for j in range(1, 26):
-        LOCATION_TABLE[f"Disaster Shard {i} Shop Item {j:02}"] = HasteLocationData(
-            code=750 + (i-1)*25 + j, flags=HasteFlag.PerShardShop, shard=i+10
-        )
-# # fragments
-# # IDs 851-975
-# for i in range(1,5):
-#     for j in range(1, 26):
-#         LOCATION_TABLE[f"Disaster Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
-#             code=850 + (i-1)*25 + j, flags=HasteFlag.PerShardFragment, shard=i+10
-#         )
+for i in range(1, 5):
+    LOCATION_TABLE[f"Disaster Shard {i} Boss"] = HasteLocationData(
+        code=500 + i, flags=HasteFlag.Boss, shard=i+10
+    )
 
 # TODO: check this works, and also lower the magic number to like 400 or something
 magicnumber = 1000
 for i in range(1,15):
-    for j in range(1, (3*SHARD_LENGTHS[i-1])+1):
-        if i > 10:
+    for j in range(1, (2*SHARD_LENGTHS[i-1])+1):
+        if i <= 10:
             LOCATION_TABLE[f"Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
                 code=magicnumber, flags=HasteFlag.PerShardFragment, shard=i
             )
@@ -172,18 +146,30 @@ for i in range(1,15):
             )
         magicnumber+=1
 
+    for j in range(1, (SHARD_LENGTHS[i-1])+1):
+        if i <= 10:
+            LOCATION_TABLE[f"Shard {i} Shop Item {j:02}"] = HasteLocationData(
+                code=magicnumber, flags=HasteFlag.PerShardShop, shard=i
+            )
+        else:
+            LOCATION_TABLE[f"Disaster Shard {i-10} Shop Item {j:02}"] = HasteLocationData(
+                code=magicnumber, flags=HasteFlag.PerShardShop, shard=i
+            )
+        magicnumber+=1
 
-def none_or_within_shard(goal, rpvl, shard) -> bool:
+
+def none_or_within_shard(goal, start, rpvl, shard) -> bool:
     if shard is None: return True
+    if shard == 99: return True
     if rpvl:
-        return (shard <= goal)
+        return (start <= shard <= goal)
     return True
 
 def create_locations(world, regions):
 
 
     for location_name, data in LOCATION_TABLE.items():
-        if none_or_within_shard(world.options.shard_goal, world.options.remove_post_victory_locations, data.shard):
+        if none_or_within_shard(world.options.shard_goal, world.options.starting_shard, world.options.remove_post_victory_locations, data.shard):
             if data.flags == HasteFlag.Always or (data.flags == HasteFlag.CaptainsUpgrade and world.options.captains_upgrades == 1):
                 location = HasteLocation(world.player, location_name, regions["Menu"], data)
                 regions["Menu"].locations.append(location)
@@ -216,7 +202,14 @@ def create_locations(world, regions):
                 else:
                     shardnum = 1
                 shopnum = int(location_name.split()[-1])
-                shoplim = world.options.pershard_shopsanity_quantity if data.flags == HasteFlag.PerShardShop else world.options.global_shopsanity_quantity
+                if data.flags == HasteFlag.PerShardShop:
+                    # check the scaling
+                    if world.options.pershard_shopsanity_scaling == 1:
+                        shoplim = world.options.pershard_shopsanity_quantity
+                    else:
+                        shoplim = int(((world.options.pershard_shopsanity_dynamic_quantity)/100)*(SHARD_LENGTHS[data.shard-1]//2))
+                else:
+                    shoplim = world.options.global_shopsanity_quantity
                 if shopnum <= shoplim:
                     #print(f"shopnum = {shopnum}")
                     # the real item location
@@ -249,7 +242,14 @@ def create_locations(world, regions):
                 else:
                     shardnum = 1
                 fragnum = int(location_name.split()[-1])
-                fraglim = world.options.pershard_fragmentsanity_quantity if data.flags == HasteFlag.PerShardFragment else world.options.global_fragmentsanity_quantity
+                if data.flags == HasteFlag.PerShardFragment:
+                    # check the scaling
+                    if world.options.pershard_fragmentsanity_scaling == 1:
+                        fraglim = world.options.pershard_fragmentsanity_quantity
+                    else:
+                        fraglim = int(((world.options.pershard_fragmentsanity_dynamic_quantity)/100)*(SHARD_LENGTHS[data.shard-1]))
+                else:
+                    fraglim = world.options.global_fragmentsanity_quantity
                 if fragnum <= fraglim:
                     #print(f"fragnum = {fragnum}")
                     # the real item location

@@ -2,7 +2,7 @@ from typing import Callable
 from BaseClasses import CollectionState
 from worlds.AutoWorld import World
 from worlds.generic.Rules import set_rule
-from .Locations import LOCATION_TABLE
+from .Locations import LOCATION_TABLE, SHARD_LENGTHS
 
 
 def set_location_access_rules(world: "World"):
@@ -45,6 +45,25 @@ def set_location_access_rules(world: "World"):
             case _:
                 # you shouldnt be here
                 return True
+    
+    def has_purchasable_shards(state: CollectionState, purchasenum) -> bool:
+        # calculate How Many Progressive Shards Are There (HMPSAT) in the game, then use it as a cap when trying to calculate the shard buffers
+        HMPSAT = ((world.options.shard_goal) if world.options.remove_post_victory_locations else 13) - world.options.starting_shard
+        # also, since the buffers are there to give the player time to do get antisparks, it is calced from the ADDITIONAL shards gained, and ignores starting shards
+        match purchasenum:
+            case 1 | 2:
+                return state.has("Progressive Shard", player, min(world.options.starting_shard, HMPSAT))
+            case 3 | 4:
+                return state.has("Progressive Shard", player, min(world.options.starting_shard + 2, HMPSAT))
+            case 5:
+                return state.has("Progressive Shard", player, min(world.options.starting_shard + 4, HMPSAT))
+            case 6:
+                return state.has("Progressive Shard", player, min(world.options.starting_shard + 7, HMPSAT))
+            case _:
+                # you shouldnt be here
+                return True
+            
+
 
     player = world.player
 
@@ -52,17 +71,21 @@ def set_location_access_rules(world: "World"):
         "A New Future", player
     )
 
-    set_rule_if_exists("Shard 1 Boss", lambda state: (True))
-
-    for i in range (2,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 11):
-        set_rule_if_exists(
-            f"Shard {i} Boss", lambda state, val=i: state.has("Progressive Shard", player, val-1)
-        )
+    for i in range (world.options.starting_shard,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 15):
+        if i > 10:
+            set_rule_if_exists(
+                f"Disaster Shard {i-10} Boss", lambda state, val=i: state.has("Progressive Shard", player, val-1)
+            )
+        else:
+            set_rule_if_exists(
+                f"Shard {i} Boss", lambda state, val=i: state.has("Progressive Shard", player, val-1)
+            )
 
     if world.options.shopsanity == 1:
         # per-shard
-        for i in range(1,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 11):
-            for j in range(1, world.options.pershard_shopsanity_quantity+1):
+        for i in range(world.options.starting_shard,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 15):
+            limit = world.options.pershard_shopsanity_quantity if world.options.pershard_shopsanity_scaling == 1 else int(((world.options.pershard_shopsanity_dynamic_quantity)/100)*(SHARD_LENGTHS[i-1]//2))
+            for j in range(1, limit+1):
                 if i > 10:
                     set_rule_if_exists(
                         f"Disaster Shard {i-10} Shop Item {j:02}", lambda state: (True)
@@ -82,8 +105,9 @@ def set_location_access_rules(world: "World"):
 
     if world.options.fragmentsanity == 1:
         # per-shard fragment clears
-        for i in range(1,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 11):
-            for j in range(1, world.options.pershard_fragmentsanity_quantity+1):
+        for i in range(world.options.starting_shard,world.options.shard_goal + 1 if world.options.remove_post_victory_locations else 15):
+            limit = world.options.pershard_fragmentsanity_quantity if world.options.pershard_fragmentsanity_scaling == 1 else int(((world.options.pershard_fragmentsanity_dynamic_quantity)/100)*SHARD_LENGTHS[i-1])
+            for j in range(1, limit+1):
                 if i > 10:
                     set_rule_if_exists(
                         f"Disaster Shard {i-10} Fragment Clear {j:02}", lambda state: (True)
@@ -102,38 +126,38 @@ def set_location_access_rules(world: "World"):
     if world.options.captains_upgrades == 1:
         # i feel like this could be simplified but idc
         for i in range(1, 5):
-            set_rule_if_exists(f"Captain's Max Health Upgrade Purchase {i}", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
-        set_rule_if_exists("Captain's Max Lives Upgrade Purchase", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
+            set_rule_if_exists(f"Captain's Max Health Upgrade Purchase {i}", lambda state, vali=i : has_purchasable_shards(state, vali) and has_NPC(state, "The Captain"))
+        set_rule_if_exists("Captain's Max Lives Upgrade Purchase", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "The Captain"))
         for i in range(1, 5):
-            set_rule_if_exists(f"Captain's Max Energy Upgrade Purchase {i}", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
+            set_rule_if_exists(f"Captain's Max Energy Upgrade Purchase {i}", lambda state, vali=i : has_purchasable_shards(state, vali) and has_NPC(state, "The Captain"))
         for i in range(1, 7):
-            set_rule_if_exists(f"Captain's Item Rarity Upgrade Purchase {i}", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
+            set_rule_if_exists(f"Captain's Item Rarity Upgrade Purchase {i}", lambda state, vali=i : has_purchasable_shards(state, vali) and has_NPC(state, "The Captain"))
         for i in range(1, 4):
-            set_rule_if_exists(f"Captain's Sparks in Fragments Upgrade Purchase {i}", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
+            set_rule_if_exists(f"Captain's Sparks in Fragments Upgrade Purchase {i}", lambda state, vali=i : has_purchasable_shards(state, vali) and has_NPC(state, "The Captain"))
         for i in range(1, 4):
-            set_rule_if_exists(f"Captain's Starting Sparks Upgrade Purchase {i}", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "The Captain"))
+            set_rule_if_exists(f"Captain's Starting Sparks Upgrade Purchase {i}", lambda state, vali=i : has_purchasable_shards(state, vali) and has_NPC(state, "The Captain"))
 
     if world.options.weeboh_purchases >= 1:
         # i feel like this could be simplified but idc
         if world.options.weeboh_purchases >= 2:
             # Cripsy/Clown/Green/Blue are unobtainable in the scope of AP with vanilla fashion unlocks
-            set_rule_if_exists("Costume Purchase: Crispy", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-            set_rule_if_exists("Costume Purchase: Twisted Flopsy", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-            set_rule_if_exists("Costume Purchase: Little Sister", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-            set_rule_if_exists("Costume Purchase: Supersonic Zoe", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-        set_rule_if_exists("Costume Purchase: Zoe the Shadow", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-        set_rule_if_exists("Costume Purchase: Zoe 64", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh"))
-        set_rule_if_exists("Costume Purchase: Totally Accurate Zoe", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 5))
-        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 7 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Flopsy", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 6))
-        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 5 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Weeboh", lambda state : state.has("Progressive Shard", player, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 10))
+            set_rule_if_exists("Costume Purchase: Crispy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
+            set_rule_if_exists("Costume Purchase: Twisted Flopsy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
+            set_rule_if_exists("Costume Purchase: Little Sister", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
+            set_rule_if_exists("Costume Purchase: Supersonic Zoe", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
+        set_rule_if_exists("Costume Purchase: Zoe the Shadow", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
+        set_rule_if_exists("Costume Purchase: Zoe 64", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
+        set_rule_if_exists("Costume Purchase: Totally Accurate Zoe", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 5))
+        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 7 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Flopsy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 6))
+        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 5 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Weeboh", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 10))
 
 
     set_rule_if_exists(
-        "Wraith's Hourglass Purchase", lambda state: state.has("Progressive Shard", player, 1) and has_NPC(state, "Wraith")
+        "Wraith's Hourglass Purchase", lambda state: has_purchasable_shards(state, 1) and has_NPC(state, "Wraith")
     )
     set_rule_if_exists(
-        "Heir's Javelin Purchase", lambda state: state.has("Progressive Shard", player, 1) and has_NPC(state, "Niada")
+        "Heir's Javelin Purchase", lambda state: has_purchasable_shards(state, 1) and has_NPC(state, "Niada")
     )
     set_rule_if_exists(
-        "Sage's Cowl Purchase", lambda state: state.has("Progressive Shard", player, 1) and has_NPC(state, "Daro")
+        "Sage's Cowl Purchase", lambda state: has_purchasable_shards(state, 1) and has_NPC(state, "Daro")
     )

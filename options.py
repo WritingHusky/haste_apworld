@@ -38,21 +38,45 @@ class Shopsanity(Choice):
     option_global = 2
     default = option_per_shard
 
+class PerShardShopScaling(Choice):
+    """
+    Determines whether Per-Shard Shopsanity checks are scaled statically or dynamically.
+    Static: All Shards will have the same number of Shopsanity checks.
+    Dynamic: The number of Shopsanity checks in each Shard is determined by the length of said Shard (later Shards are longer).
+    """
+
+    display_name = "Per-Shard Shopsanity Scaling"
+    option_static = 1
+    option_dynamic = 2
+    default = option_static
 
 class PerShardShopQuantity(Range):
     """
-    Determines how many checks are tied to shop purchases for each available Shard.
+    For Static Per-Shard Shopsanity, determines how many checks are tied to shop purchases for each available Shard.
     """
 
-    display_name = "Per-Shard Shopsanity Quantity"
+    display_name = "Per-Shard Static Shopsanity Quantity"
     range_start = 1
     range_end = 25
     default = 8
 
+class PerShardShopDynamicQuantity(Range):
+    """
+    For Dynamic Per-Shard Shopsanity, determines the percentage used for how many checks are tied to Shop purchases in each Shard, scaled to HALF of the length of said shard (rounded down).
+    When choosing a percentage, remember that you can change the price of items from the in-game Difficulty menu.
+    If you do not want to revisit a Shard, keep this value below 100%.
+    ex: Shards 3 & 8 have a length of 15 & 20 Fragments, respectively. A value of 80% will have 5 Shopsanity checks in Shard 3, and 8 checks in Shard 8.
+    """
+
+    display_name = "Per-Shard Dynamic Shopsanity Quantity"
+    range_start = 1
+    range_end = 200
+    default = 80
+
 
 class GlobalShopQuantity(Range):
     """
-    Determines how many checks are tied to any shop purchase.
+    Determines how many checks are tied to Global shop purchases.
     """
 
     display_name = "Global Shopsanity Quantity"
@@ -60,15 +84,32 @@ class GlobalShopQuantity(Range):
     range_end = 100
     default = 50
 
-class ShopsanitySeperate(DefaultOnToggle):
+class GlobalShopPacks(Toggle):
     """
-    For Shopsanity, Archipelago Items will be seperate from normal Haste items bought in shops, purchasing them will send a check.
+    If Global Shopsanity is enabled, this setting will add "Progressive Global Shop Packs" items into the pool that will unlocker later Global Shop checks.
+    Each Unlocker item will unlock 15 Global Shop purchases (or less for the final chunk, if your Global Shop Quantity does not divide evenly by 15).
+    """
+    display_name = "Global Shopsanity Packs"
+
+class GlobalShopPackBuffer(Range):
+    """
+    Determines how many extra Global Shop Unlocker are added into the item pool in addition to the ones required to reach all of your Global Shop checks.
+    """
+
+    display_name = "Extra Global Shopsanity Packs"
+    range_start = 0
+    range_end = 10
+    default = 0
+
+class ShopsanitySeparate(DefaultOnToggle):
+    """
+    For Shopsanity, Archipelago Items will be separate from normal Haste items bought in shops; only purchasing the dedicated AP Shop Item will send a check.
     If disabled, a check is sent when any item is purchased and dedicated Archipelago Items will not appear in shops.
     """
 
-    display_name = "Shopsanity Items"
+    display_name = "Separate Shopsanity Items"
 
-class ShopsanitySeperateRate(Range):
+class ShopsanitySeparateRate(Range):
     """
     Determines the odds of a shop item being an Archipelago Item as a percentage. Each shop slot is calculated independently. 
     ex: If this value is set to 30, there will be a 30% chance that a single shop item will be an Archipelago Item, and a combined 65% that there will be at least one AP item in a shop.
@@ -89,6 +130,17 @@ class ShardGoal(Range):
     range_start = 1
     range_end = 14
     default = 10
+
+class StartingShard(Range):
+    """
+    Determines which Shard will be the one that contains your first checks.
+    Shards prior to your starting shard will NOT have any checks in them, and the total number of Progressive Shards will be reduced to match the skipped Shards.
+    """
+
+    display_name = "Starting Shard"
+    range_start = 1
+    range_end = 14
+    default = 1
 
 class ShardUnlockOrder(Choice):
     """
@@ -160,7 +212,7 @@ class PerShardFragmentScaling(Choice):
     Dynamic: The number of Fragmentsanity checks in each Shard is determined by the length of said Shard (later Shards are longer).
     """
 
-    display_name = "Fragmentsanity Scaling"
+    display_name = "Per-Shard Fragmentsanity Scaling"
     option_static = 1
     option_dynamic = 2
     default = option_static
@@ -179,17 +231,18 @@ class PerShardFragmentDynamicQuantity(Range):
     """
     For Dynamic Per-Shard Fragmentsanity, determines the percentage used for how many checks are tied to Fragment clears in each Shard, scaled to the length of said shard (rounded down).
     When choosing a percentage, remember that Shops, Rest Areas, and some events do NOT contribute to Fragmentsanity progress.
-    ex: Shards 3 & 8 have a length of 15 & 20 Fragments, respectively. A scale of 80% will have 12 Fragmentsanity checks in Shard 3, and 16 checks in Shard 8.
+    If you do not want to revisit a Shard, keep this value below 100%.
+    ex: Shards 3 & 8 have a length of 15 & 20 Fragments, respectively. A value of 80% will have 12 Fragmentsanity checks in Shard 3, and 16 checks in Shard 8.
     """
 
     display_name = "Per-Shard Dynamic Fragmentsanity Quantity"
     range_start = 1
-    range_end = 300
+    range_end = 200
     default = 80
 
 class GlobalFragmentQuantity(Range):
     """
-    Determines how many checks are tied to any fragment clears.
+    Determines how many checks are tied to global fragment clears.
     """
 
     display_name = "Global Fragmentsanity Quantity"
@@ -465,6 +518,20 @@ class UnlockAllItems(Toggle):
 
     display_name = "Unlock All Items"
 
+class RefundUnnecessaryPurchases(DefaultOnToggle):
+    """
+    When attempting to purchase a separate AP Shop Item that would not send a check, you will be refunded your Sparks.
+    """
+
+    display_name = "Refund Unnecessary Purchases"
+
+class RemoveAPShopItemsWhenDone(DefaultOnToggle):
+    """
+    When playing with Separate AP Shop Items, once you have exceeded all Shop Purchases for that region (or cannot make a purchase due to lacking sufficient Global Shop Packs), AP Shop Items will no longer appear.
+    """
+
+    display_name = "Remove Separate AP Shop Items When Done"
+
 # class SRankBonus(Toggle):
 #     """
 #     When playing Fragmentsanity, any S-Ranks achieved will count as 2 clears instead of 1.
@@ -484,17 +551,24 @@ class HasteOptions(PerGameCommonOptions):
 
     # Logic Settings
     shard_goal: ShardGoal
+    starting_shard: StartingShard
     shard_unlock_order: ShardUnlockOrder
     remove_post_victory_locations: RemovePostVictoryLocations
     extra_shard_items: ExtraShardItems
     shopsanity: Shopsanity
+    pershard_shopsanity_scaling: PerShardShopScaling
     pershard_shopsanity_quantity: PerShardShopQuantity
+    persahrd_shopsanity_dynamic_quantity: PerShardShopDynamicQuantity
     global_shopsanity_quantity: GlobalShopQuantity
-    shopsanity_seperate: ShopsanitySeperate
-    shopsanity_seperate_rate: ShopsanitySeperateRate
+    global_shopsanity_blockers: GlobalShopPacks
+    global_shopsanity_blocker_buffer: GlobalShopPackBuffer
+    shopsanity_separate: ShopsanitySeparate
+    shopsanity_separate_rate: ShopsanitySeparateRate
     fragmentsanity: Fragmentsanity
     fragmentsanity_distribution: FragmentsanityDistribution
+    pershard_fragmentsanity_scaling: PerShardFragmentScaling
     pershard_fragmentsanity_quantity: PerShardFragmentQuantity
+    pershard_fragmentsanity_dynamic_quantity: PerShardFragmentDynamicQuantity
     global_fragmentsanity_quantity: GlobalFragmentQuantity
     fragmentsanity_linear_rate: LinearFragmentsanityRate
     starting_ability: StartingAbility
@@ -509,6 +583,8 @@ class HasteOptions(PerGameCommonOptions):
     disaster_trap_weight: DisasterTrapWeight
     landing_trap_weight: LandingDowngradeTrapWeight
     unlock_all_items: UnlockAllItems
+    refund_purchases: RefundUnnecessaryPurchases
+    remove_when_done: RemoveAPShopItemsWhenDone
     # s_rank_bonus: SRankBonus
     default_outfit_body: DefaultOutfitBody
     default_outfit_hat: DefaultOutfitHat
@@ -519,6 +595,7 @@ haste_option_groups: list[OptionGroup] = [
         "Goal Settings",
         [
             ShardGoal,
+            StartingShard,
             ShardUnlockOrder,
             RemovePostVictoryLocations,
             ExtraShardItems
@@ -526,17 +603,29 @@ haste_option_groups: list[OptionGroup] = [
         start_collapsed=False,
     ),
     OptionGroup(
-        "Location Settings",
+        "Shopsanity Settings",
         [
             Shopsanity,
-            ShopsanitySeperate,
-            ShopsanitySeperateRate,
+            ShopsanitySeparate,
+            ShopsanitySeparateRate,
+            PerShardShopScaling,
             PerShardShopQuantity,
+            PerShardShopDynamicQuantity,
             GlobalShopQuantity,
+            GlobalShopPacks,
+            GlobalShopPackBuffer
+        ],
+        start_collapsed=False,
+    ),
+    OptionGroup(
+        "Fragmentsanity Settings",
+        [
             Fragmentsanity,
             FragmentsanityDistribution,
             LinearFragmentsanityRate,
+            PerShardFragmentScaling,
             PerShardFragmentQuantity,
+            PerShardFragmentDynamicQuantity,
             GlobalFragmentQuantity,
             # SRankBonus
         ],
@@ -569,6 +658,8 @@ haste_option_groups: list[OptionGroup] = [
         [
             UnlockAllItems,
             ForceReload,
+            RefundUnnecessaryPurchases,
+            RemoveAPShopItemsWhenDone
         ],
         start_collapsed=True,
     ),

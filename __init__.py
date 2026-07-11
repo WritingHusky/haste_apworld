@@ -26,7 +26,7 @@ from .Items import (
     item_factory,
     parse_perm_quantity
 )
-from .Locations import LOCATION_TABLE, HasteLocation, HasteFlag, HasteLocationData
+from .Locations import LOCATION_TABLE, HasteLocation, HasteFlag, HasteLocationData, SHARD_LENGTHS
 from .options import haste_option_groups, HasteOptions
 from .Regions import create_regions
 
@@ -82,7 +82,8 @@ class HasteWorld(World):
     }
 
     # with open("hastelocations.txt", "w") as f:
-    #         print(location_name_to_id, file=f)
+    #     for line in location_name_to_id:
+    #         print(line, file=f)
 
     # with open("donkitems.txt", "w") as f:
     #     print(item_name_to_id, file=f)
@@ -93,6 +94,13 @@ class HasteWorld(World):
         res = set()
         for location_name in LOCATION_TABLE.items():
             if location_name[0].startswith(f"Shard {shardnum} "):
+                res.add(location_name[0])
+        return res
+
+    def get_disaster_shard_locations(shardnum) -> str:
+        res = set()
+        for location_name in LOCATION_TABLE.items():
+            if location_name[0].startswith(f"Disaster Shard {shardnum} "):
                 res.add(location_name[0])
         return res
     
@@ -136,6 +144,10 @@ class HasteWorld(World):
         "Shard 8": get_shard_locations(8),
         "Shard 9": get_shard_locations(9),
         "Shard 10": get_shard_locations(10),
+        "Disaster Shard 1": get_disaster_shard_locations(1),
+        "Disaster Shard 2": get_disaster_shard_locations(2),
+        "Disaster Shard 3": get_disaster_shard_locations(3),
+        "Disaster Shard 4": get_disaster_shard_locations(4),
         "Global Locations": get_global_locations(),
         "Captain's Purchases": get_captain_locations(),
         "Costume Purchases": get_costume_locations(),
@@ -208,6 +220,10 @@ class HasteWorld(World):
 
         # imcompatible settings calculations
 
+        # the goal cannot be before the start
+        if (self.options.starting_shard > self.options.shard_goal):
+            raise OptionError("Shard Goal cannot be lower than the Starting Shard")
+
         # forbid extra progression items if neither filler check options are enabled
         if (self.options.speed_upgrade or self.options.npc_shuffle or self.options.persistent_items) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
             raise OptionError("In order to enable Speed Upgrades, Shuffled NPCs, or Persistent Items, you must enable either Shopsanity or Fragmentsanity")
@@ -216,10 +232,10 @@ class HasteWorld(World):
             raise OptionError("In order to have a Shard Goal of 1, you must enable either Shopsanity or Fragmentsanity")
 
         # do a more precise count, just to make ABSOLUTELY sure there's enough room
-        running_locs = (self.options.shard_goal-1) if self.options.remove_post_victory_locations else 9
+        running_locs = ((self.options.shard_goal-1) if self.options.remove_post_victory_locations else 13) - (1 - self.options.starting_shard)
         available_shards = running_locs + 1
         running_locs += 3 # add the ability puchases afterwards
-        running_items = max(9 if not self.options.remove_post_victory_locations else self.options.shard_goal - 1, 1) + self.options.extra_shard_items + (3 if self.options.starting_ability > 0 else 4) + (6 if self.options.speed_upgrade else 0)
+        running_items = max(13 if not self.options.remove_post_victory_locations else self.options.shard_goal - 1, 1) + self.options.extra_shard_items + (3 if self.options.starting_ability > 0 else 4) + (6 if self.options.speed_upgrade else 0)
         if (self.options.npc_shuffle):
             running_items += 5
             if not self.options.weeboh_purchases > 0: running_items -= 1
@@ -229,10 +245,23 @@ class HasteWorld(World):
             for name, num in self.perm_item_dict.items():
                 running_items += num
 
-        if (self.options.fragmentsanity == 1): running_locs += available_shards * self.options.pershard_fragmentsanity_quantity
+        if (self.options.global_shopsanity_blockers > 0 and self.options.shopsanity == 2):
+            running_items += ((self.options.global_shopsanity_quantity - 1)//15) + self.options.global_shopsanity_blocker_buffer
+
+        if (self.options.fragmentsanity == 1):
+            if self.options.pershard_fragmentsanity_scaling == 1:
+                running_locs += available_shards * self.options.pershard_fragmentsanity_quantity
+            else:
+                for i in range(self.options.starting_shard, self.options.shard_goal if self.options.remove_post_victory_locations else 15):
+                    running_locs += SHARD_LENGTHS[i-1]*(self.options.pershard_fragmentsanity_dynamic_quantity/100)
         elif (self.options.fragmentsanity == 2): running_locs += self.options.global_fragmentsanity_quantity
 
-        if (self.options.shopsanity == 1): running_locs += available_shards * self.options.pershard_shopsanity_quantity
+        if (self.options.shopsanity == 1):
+            if self.options.pershard_fragmentsanity_scaling == 1:
+                running_locs += available_shards * self.options.pershard_shopsanity_quantity
+            else:
+                for i in range(self.options.starting_shard, self.options.shard_goal if self.options.remove_post_victory_locations else 15):
+                    running_locs += (SHARD_LENGTHS[i-1]//2)*(self.options.pershard_shopsanity_dynamic_quantity/100)
         elif (self.options.shopsanity == 2): running_locs += self.options.global_shopsanity_quantity
 
         if (self.options.weeboh_purchases > 0):
@@ -258,7 +287,7 @@ class HasteWorld(World):
         Locations.create_locations(self, regions)
         self.multiworld.regions.extend(regions.values())
 
-        self.get_location(f"Shard {self.options.shard_goal} Boss").place_locked_item(
+        self.get_location(f"Shard {self.options.shard_goal} Boss" if self.options.shard_goal <=10 else f"Disaster Shard {self.options.shard_goal - 10} Boss").place_locked_item(
             HasteItem(
                 "A New Future",
                 self.player,
@@ -443,18 +472,24 @@ class HasteWorld(World):
             "DeathLink": self.options.death_link.value,
             "ForceReload": self.options.force_reload.value,
             "Shard Goal": self.options.shard_goal.value,
+            "Starting Shard": self.options.starting_shard.value,
             "Shard Unlock Order": self.options.shard_unlock_order.value,
             "Remove Post-Victory Locaitons": self.options.remove_post_victory_locations.value,
             "Extra Shard Items": self.options.extra_shard_items.value,
             "Shopsanity": self.options.shopsanity.value,
             "Per-Shard Shopsanity Quantity": self.options.pershard_shopsanity_quantity.value,
+            "Per-Shard Shopsanity Dynamic Quantity": self.options.persahrd_shopsanity_dynamic_quantity.value,
+            "Per-Shard Shopsanity Scaling": self.options.pershard_fragmentsanity_scaling.value,
             "Global Shopsanity Quantity": self.options.global_shopsanity_quantity.value,
-            "Shopsanity Seperate": self.options.shopsanity_seperate.value,
-            "Shopsanity Seperate Rate": self.options.shopsanity_seperate_rate.value,
+            "Global Shopsanity Blockers": self.options.global_shopsanity_blockers.value,
+            "Shopsanity Separate": self.options.shopsanity_separate.value,
+            "Shopsanity Separate Rate": self.options.shopsanity_separate_rate.value,
             "Fragmentsanity": self.options.fragmentsanity.value,
             "Fragmentsanity Distribution": self.options.fragmentsanity_distribution.value,
             "Per-Shard Fragmentsanity Quantity": self.options.pershard_fragmentsanity_quantity.value,
             "Global Fragmentsanity Quantity": self.options.global_fragmentsanity_quantity.value,
+            "Per-Shard Fragmentsanity Dynamic Quantity": self.options.pershard_fragmentsanity_dynamic_quantity.value,
+            "Per-Shard Fragmentsanity Scaling": self.options.pershard_fragmentsanity_scaling.value,
             "Linear Fragmentsanity Rate": self.options.fragmentsanity_linear_rate.value,
             "NPC Shuffle": self.options.npc_shuffle.value,
             "Captain's Upgrades": self.options.captains_upgrades.value,
@@ -469,6 +504,8 @@ class HasteWorld(World):
             "Disaster Trap Weight": self.options.disaster_trap_weight.value,
             "Landing Downgrade Trap Weight": self.options.landing_trap_weight.value,
             "Unlock All Items": self.options.unlock_all_items.value,
+            "Refund Unnecessary Purchases": self.options.refund_purchases,
+            "Remove Shop Items When Done": self.options.remove_when_done
             # "S-Rank Bonus": self.options.s_rank_bonus.value
         }
 

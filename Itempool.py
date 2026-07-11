@@ -3,6 +3,7 @@ from worlds.AutoWorld import World
 from .Items import ITEM_TABLE, item_factory
 from BaseClasses import ItemClassification as IC, LocationProgressType
 
+import copy
 
 def generate_itempool(world: "World") -> None:
     multiworld = world.multiworld
@@ -48,6 +49,11 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                     additional_items = max(world.options.shard_goal - 1 + world.options.extra_shard_items, 1)
                 else:
                     additional_items = 9 + world.options.extra_shard_items
+                if world.options.starting_shard > 1:
+                    additional_items -= world.options.starting_shard - 1
+                    # precollect the missing starting shards
+                    for _ in range(world.options.starting_shard - 1):
+                        precollected_items.append(copy.copy(item))
             elif data.type == "NPC" and world.options.npc_shuffle == 1:
                 # add NPCs into the pool
                 additional_items = 1
@@ -107,6 +113,8 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                         additional_items = world.perm_item_dict["epic_health"]
                     case "Persistent Legendary Item":
                         additional_items = world.perm_item_dict["legendary"]
+            elif data.type == "ShopBlocker" and world.options.global_shopsanity_blockers > 0 and world.options.shopsanity == 2:
+                additional_items = ((world.options.global_shopsanity_quantity - 1) // 15) + world.options.global_shopsanity_blocker_buffer
             
 
             if (data.quantity + additional_items <= 0): continue
