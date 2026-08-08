@@ -69,7 +69,7 @@ class PerShardShopDynamicQuantity(Range):
     """
 
     display_name = "Per-Shard Dynamic Shopsanity Quantity"
-    range_start = 1
+    range_start = 20
     range_end = 200
     default = 80
 
@@ -135,6 +135,7 @@ class StartingShard(Range):
     """
     Determines which Shard will be the one that contains your first checks.
     Shards prior to your starting shard will NOT have any checks in them, and the total number of Progressive Shards will be reduced to match the skipped Shards.
+    You will also be given enough Progressive Speed Upgrades to perform checks in your starting Shard, if enabled.
     """
 
     display_name = "Starting Shard"
@@ -236,7 +237,7 @@ class PerShardFragmentDynamicQuantity(Range):
     """
 
     display_name = "Per-Shard Dynamic Fragmentsanity Quantity"
-    range_start = 1
+    range_start = 20
     range_end = 200
     default = 80
 
@@ -342,7 +343,7 @@ class PersistentItemQuantity(OptionDict):
         accumulated_errors = []
 
         for key, value in self.value.items():
-            print(f"Checking {key}: {value}")
+            # print(f"Checking {key}: {value}")
             max = self.max_values_dict[key]
             if isinstance(value, numbers.Integral):
                 value = int(value)
@@ -396,16 +397,17 @@ class CaptainsUpgrades(Toggle):
 class FashionWeebohPurchases(Choice):
     """
     Shuffles Fashion Weeboh's costume purchases as checks. Currently does NOT add the costumes themselves as items into the item pool.
-    All purchases will require 16,500 Anti-Sparks total for Vanilla, or 22,700 for Vanilla Plus or All Unlocks.
+    All purchases will require 22,500 Anti-Sparks total for Vanilla, or 22,700 for Vanilla Plus or All Unlocks.
 
     Vanilla: Costume purchases are only available as per their vanilla requirements:
         Little Sister and Supersonic Zoe: Unlocked by default and do not need to be purchased
         Zoe the Shadow and Zoe 64: Available as soon as the Fashion Weeboh is available
         Weeboh: Unlocks after unlocking Shard 5
         Flopsy: Unlocks after unlocking Shard 7
+        Crispy: Unlocks after unlocking Disaster Shard 1
+        Twisted Flopsy: Unlocks after unlocking Disaster Shard 2
         Totally Accurate Zoe: Unlocks after obtaining all Abilities
-        Crispy and Twisted Flopsy: Unobtainable due to their post-game unlock requirements, which are not yet implemented in AP
-    Vanilla Plus: The same conditions as above, plus Crispy, Twisted Flopsy, Little Sister, and Supersonic Zoe's purchases are available as soon as the Fashion Weeboh is available.
+    Vanilla Plus: The same conditions as above, plus Little Sister and Supersonic Zoe's purchases are available as soon as the Fashion Weeboh is available.
     All Unlocks: All costume purchases are available as soon as the Fashion Weeboh is available
     """
 
@@ -532,6 +534,25 @@ class RemoveAPShopItemsWhenDone(DefaultOnToggle):
 
     display_name = "Remove Separate AP Shop Items When Done"
 
+class ScoutLocations(DefaultOnToggle):
+    """
+    Enables all hub purchases to send hints upon opening their respective NPC's dialogue.
+    This setting can be overridden at any time via the in-game options menu.
+    """
+
+    display_name = "ScoutHubLocations"
+
+class BaseDisasterLevel(Range):
+    """
+    Adds the corresponding Disaster Shard effects to ALL Shards (does not stack with the vanilla Disaster Shards' effects)
+    This feature is presented WITHOUT any logic. It is NOT recommended to enable this alongside Progressive Speed Upgrades.
+    DO NOT ENABLE UNLESS YOU KNOW WHAT YOU ARE DOING.
+    """
+    display_name = "Base Disaster Level"
+    range_start = 0
+    range_end = 4
+    default = 0
+
 # class SRankBonus(Toggle):
 #     """
 #     When playing Fragmentsanity, any S-Ranks achieved will count as 2 clears instead of 1.
@@ -550,15 +571,15 @@ class HasteOptions(PerGameCommonOptions):
     death_link: DeathLink
 
     # Logic Settings
-    shard_goal: ShardGoal
     starting_shard: StartingShard
+    shard_goal: ShardGoal
     shard_unlock_order: ShardUnlockOrder
     remove_post_victory_locations: RemovePostVictoryLocations
     extra_shard_items: ExtraShardItems
     shopsanity: Shopsanity
     pershard_shopsanity_scaling: PerShardShopScaling
     pershard_shopsanity_quantity: PerShardShopQuantity
-    persahrd_shopsanity_dynamic_quantity: PerShardShopDynamicQuantity
+    pershard_shopsanity_dynamic_quantity: PerShardShopDynamicQuantity
     global_shopsanity_quantity: GlobalShopQuantity
     global_shopsanity_blockers: GlobalShopPacks
     global_shopsanity_blocker_buffer: GlobalShopPackBuffer
@@ -585,6 +606,8 @@ class HasteOptions(PerGameCommonOptions):
     unlock_all_items: UnlockAllItems
     refund_purchases: RefundUnnecessaryPurchases
     remove_when_done: RemoveAPShopItemsWhenDone
+    scout_locations: ScoutLocations
+    global_disaster_level: BaseDisasterLevel
     # s_rank_bonus: SRankBonus
     default_outfit_body: DefaultOutfitBody
     default_outfit_hat: DefaultOutfitHat
@@ -594,11 +617,11 @@ haste_option_groups: list[OptionGroup] = [
     OptionGroup(
         "Goal Settings",
         [
-            ShardGoal,
             StartingShard,
+            ShardGoal,
+            ExtraShardItems,
             ShardUnlockOrder,
-            RemovePostVictoryLocations,
-            ExtraShardItems
+            RemovePostVictoryLocations
         ],
         start_collapsed=False,
     ),
@@ -659,7 +682,8 @@ haste_option_groups: list[OptionGroup] = [
             UnlockAllItems,
             ForceReload,
             RefundUnnecessaryPurchases,
-            RemoveAPShopItemsWhenDone
+            RemoveAPShopItemsWhenDone,
+            ScoutLocations
         ],
         start_collapsed=True,
     ),
@@ -670,5 +694,12 @@ haste_option_groups: list[OptionGroup] = [
             DefaultOutfitHat
         ],
         start_collapsed=True,
-    )
+    ),
+    OptionGroup(
+        "Other Settings",
+        [
+            BaseDisasterLevel
+        ],
+        start_collapsed=True,
+    ),
 ]

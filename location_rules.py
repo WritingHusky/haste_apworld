@@ -28,8 +28,12 @@ def set_location_access_rules(world: "World"):
                 return state.has("Progressive Shard", player, 4)
             elif skin == 6:
                 return state.has("Progressive Shard", player, 6)
+            elif skin == 1:
+                return state.has("Progressive Shard", player, 10)
+            elif skin == 7:
+                return state.has("Progressive Shard", player, 11)
             elif skin == 5:
-                return has_ability(state, " Board") and has_ability(state, "Sage's Cowl") and has_ability(state, "Heir's Javelin") and has_ability(state, "Wraith's Hourglass")
+                return has_ability(state, "Courier's Board") and has_ability(state, "Sage's Cowl") and has_ability(state, "Heir's Javelin") and has_ability(state, "Wraith's Hourglass")
         return True
 
     def has_ability(state: CollectionState, ability) -> bool:
@@ -37,28 +41,32 @@ def set_location_access_rules(world: "World"):
             case "Courier's Board":
                 return (world.options.starting_ability == 1) or state.has("Courier's Board", player, 1)
             case "Sage's Cowl":
-                return (world.options.starting_ability == 2) or state.has("Sage's Cowl", player, 1)
+                return (world.options.starting_ability == 4) or state.has("Sage's Cowl", player, 1)
             case "Heir's Javelin":
                 return (world.options.starting_ability == 3) or state.has("Heir's Javelin", player, 1)
             case "Wraith's Hourglass":
-                return (world.options.starting_ability == 4) or state.has("Wraith's Hourglass", player, 1)
+                return (world.options.starting_ability == 2) or state.has("Wraith's Hourglass", player, 1)
             case _:
                 # you shouldnt be here
                 return True
     
     def has_purchasable_shards(state: CollectionState, purchasenum) -> bool:
         # calculate How Many Progressive Shards Are There (HMPSAT) in the game, then use it as a cap when trying to calculate the shard buffers
-        HMPSAT = ((world.options.shard_goal) if world.options.remove_post_victory_locations else 13) - world.options.starting_shard
+        HMPSAT = ((world.options.shard_goal) if world.options.remove_post_victory_locations else 14) - world.options.starting_shard
+        # remove 1 shard from the calcs because 1 buffer is assumed for all calcs anyway
+        if (HMPSAT > 0): HMPSAT -= 1
+        # if there is literally no available prog shards to gain, just assume its true
+        if (HMPSAT == 0): return True
         # also, since the buffers are there to give the player time to do get antisparks, it is calced from the ADDITIONAL shards gained, and ignores starting shards
         match purchasenum:
             case 1 | 2:
-                return state.has("Progressive Shard", player, min(world.options.starting_shard, HMPSAT))
+                return state.has("Progressive Shard", player, world.options.starting_shard)
             case 3 | 4:
-                return state.has("Progressive Shard", player, min(world.options.starting_shard + 2, HMPSAT))
+                return state.has("Progressive Shard", player, world.options.starting_shard + min(2, HMPSAT))
             case 5:
-                return state.has("Progressive Shard", player, min(world.options.starting_shard + 4, HMPSAT))
+                return state.has("Progressive Shard", player, world.options.starting_shard + min(4, HMPSAT))
             case 6:
-                return state.has("Progressive Shard", player, min(world.options.starting_shard + 7, HMPSAT))
+                return state.has("Progressive Shard", player, world.options.starting_shard + min(7, HMPSAT))
             case _:
                 # you shouldnt be here
                 return True
@@ -140,9 +148,7 @@ def set_location_access_rules(world: "World"):
     if world.options.weeboh_purchases >= 1:
         # i feel like this could be simplified but idc
         if world.options.weeboh_purchases >= 2:
-            # Cripsy/Clown/Green/Blue are unobtainable in the scope of AP with vanilla fashion unlocks
-            set_rule_if_exists("Costume Purchase: Crispy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
-            set_rule_if_exists("Costume Purchase: Twisted Flopsy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
+            # Green/Blue are unobtainable in the scope of AP with vanilla fashion unlocks
             set_rule_if_exists("Costume Purchase: Little Sister", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
             set_rule_if_exists("Costume Purchase: Supersonic Zoe", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
         set_rule_if_exists("Costume Purchase: Zoe the Shadow", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
@@ -150,6 +156,8 @@ def set_location_access_rules(world: "World"):
         set_rule_if_exists("Costume Purchase: Totally Accurate Zoe", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 5))
         if not world.options.remove_post_victory_locations or world.options.shard_goal >= 7 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Flopsy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 6))
         if not world.options.remove_post_victory_locations or world.options.shard_goal >= 5 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Weeboh", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 10))
+        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 11 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Crispy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 1))
+        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 12 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Twisted Flopsy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 7))
 
 
     set_rule_if_exists(

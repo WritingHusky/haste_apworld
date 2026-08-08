@@ -65,7 +65,7 @@ class HasteWorld(World):
     options: HasteOptions
 
     game: ClassVar[str] = "Haste"
-    version = "0.4.0"
+    version = "0.5.0"
     topology_present: bool = True
 
     perm_item_dict: dict[str, int] = {}
@@ -228,50 +228,108 @@ class HasteWorld(World):
         if (self.options.speed_upgrade or self.options.npc_shuffle or self.options.persistent_items) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
             raise OptionError("In order to enable Speed Upgrades, Shuffled NPCs, or Persistent Items, you must enable either Shopsanity or Fragmentsanity")
 
-        if (self.options.shard_goal == 1) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
-            raise OptionError("In order to have a Shard Goal of 1, you must enable either Shopsanity or Fragmentsanity")
+        if (self.options.shard_goal == self.options.starting_shard):
+            if (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
+                raise OptionError("In order to have a Shard Goal equal to your Starting Shard, you must enable either Shopsanity or Fragmentsanity")
+
+        worry_about_speed = False
+        worry_about_ablity = False
+        if (self.options.starting_shard % 2 == 0 and self.options.starting_shard < 9 and not self.options.remove_post_victory_locations):
+            # even-numbered starting shards with RPVL will need to worry about having enough mid-shard locations to fit both a Shard and a Speed Upgrade
+            worry_about_speed = True
+            if (self.options.starting_shard == 4 and self.options.starting_ability == 0):
+                # shard 4 specifically also has issues where it'll need an ability to reach Shard 5
+                worry_about_ablity = True
+
+        if (self.options.starting_ability == 0 and self.options.starting_shard > 4):
+            raise OptionError("In order to have a Starting Shard greater than 4, you must start with an ability")
 
         # do a more precise count, just to make ABSOLUTELY sure there's enough room
-        running_locs = ((self.options.shard_goal-1) if self.options.remove_post_victory_locations else 13) - (1 - self.options.starting_shard)
+        running_locs = ((self.options.shard_goal) if self.options.remove_post_victory_locations else 14) - (self.options.starting_shard)
         available_shards = running_locs + 1
         running_locs += 3 # add the ability puchases afterwards
-        running_items = max(13 if not self.options.remove_post_victory_locations else self.options.shard_goal - 1, 1) + self.options.extra_shard_items + (3 if self.options.starting_ability > 0 else 4) + (6 if self.options.speed_upgrade else 0)
+        running_items = max(14 if not self.options.remove_post_victory_locations else self.options.shard_goal, 1) + self.options.extra_shard_items - self.options.starting_shard
+        # print(f"INIT1   items: {running_items} locs: {running_locs}")
+        running_items += 3 if self.options.starting_ability > 0 else 4 # 3 abilities in the pool if you start with one, otherwise 4
         if (self.options.npc_shuffle):
             running_items += 5
             if not self.options.weeboh_purchases > 0: running_items -= 1
+
+        # print(f"INIT2   items: {running_items} locs: {running_locs}")
+
+        if (self.options.speed_upgrade):
+            running_items += 6
+            if (self.options.starting_shard > 2): running_items -= 1
+            if (self.options.starting_shard > 4): running_items -= 1
+            if (self.options.starting_shard > 6): running_items -= 1
+            if (self.options.starting_shard > 8): running_items -= 1
+        else:
+            worry_about_speed = False
+
+        # print(f"SPEED   items: {running_items} locs: {running_locs}")
 
         # adds all persistent items to count
         if (self.options.persistent_items > 0):
             for name, num in self.perm_item_dict.items():
                 running_items += num
+        
+        # print(f"PERSI   items: {running_items} locs: {running_locs}")
 
         if (self.options.global_shopsanity_blockers > 0 and self.options.shopsanity == 2):
             running_items += ((self.options.global_shopsanity_quantity - 1)//15) + self.options.global_shopsanity_blocker_buffer
 
+        worried_sphere_0 = 0
+
         if (self.options.fragmentsanity == 1):
             if self.options.pershard_fragmentsanity_scaling == 1:
+                worried_sphere_0 += self.options.pershard_fragmentsanity_quantity
                 running_locs += available_shards * self.options.pershard_fragmentsanity_quantity
+                # print(f"FRAGA   items: {running_items} locs: {running_locs}")
             else:
-                for i in range(self.options.starting_shard, self.options.shard_goal if self.options.remove_post_victory_locations else 15):
-                    running_locs += SHARD_LENGTHS[i-1]*(self.options.pershard_fragmentsanity_dynamic_quantity/100)
-        elif (self.options.fragmentsanity == 2): running_locs += self.options.global_fragmentsanity_quantity
+                for i in range(self.options.starting_shard, self.options.shard_goal+1 if self.options.remove_post_victory_locations else 15):
+                    if (i == self.options.starting_shard): worried_sphere_0 += (int)(SHARD_LENGTHS[i-1]*(self.options.pershard_fragmentsanity_dynamic_quantity/100))
+                    running_locs += (int)(SHARD_LENGTHS[i-1]*(self.options.pershard_fragmentsanity_dynamic_quantity/100))
+                    # print(f"FRAG{i}   items: {running_items} locs: {running_locs}")
+        elif (self.options.fragmentsanity == 2): 
+            worried_sphere_0 += self.options.global_fragmentsanity_quantity
+            running_locs += self.options.global_fragmentsanity_quantity
+            # print(f"FRAGG   items: {running_items} locs: {running_locs}")
 
         if (self.options.shopsanity == 1):
-            if self.options.pershard_fragmentsanity_scaling == 1:
+            if self.options.pershard_shopsanity_scaling == 1:
+                worried_sphere_0 += self.options.pershard_shopsanity_quantity
                 running_locs += available_shards * self.options.pershard_shopsanity_quantity
+                # print(f"SHOPA   items: {running_items} locs: {running_locs}")
             else:
-                for i in range(self.options.starting_shard, self.options.shard_goal if self.options.remove_post_victory_locations else 15):
-                    running_locs += (SHARD_LENGTHS[i-1]//2)*(self.options.pershard_shopsanity_dynamic_quantity/100)
-        elif (self.options.shopsanity == 2): running_locs += self.options.global_shopsanity_quantity
+                for i in range(self.options.starting_shard, self.options.shard_goal+1 if self.options.remove_post_victory_locations else 15):
+                    if (i == self.options.starting_shard): worried_sphere_0 += (int)((SHARD_LENGTHS[i-1]//2)*(self.options.pershard_shopsanity_dynamic_quantity/100))
+                    running_locs += (int)((SHARD_LENGTHS[i-1]//2)*(self.options.pershard_shopsanity_dynamic_quantity/100))
+                    # print(f"SHOP{i}   items: {running_items} locs: {running_locs}")
+        elif (self.options.shopsanity == 2):
+            worried_sphere_0 += self.options.global_shopsanity_quantity
+            running_locs += self.options.global_shopsanity_quantity
+            # print(f"SHOPG   items: {running_items} locs: {running_locs}")
+
+        reqLocs = 3 if worry_about_ablity and worry_about_speed else 2
+        # print(f"s: {worry_about_speed} a {worry_about_ablity}")
+        # print(f"w: {worried_sphere_0} r: {reqLocs}")
+        # you could hypothetically get the god-route of non-NPC shuffle + Shard on check 1 and then buy the items, but omg please just choose less restrictive settings
+        if ((worry_about_speed or worry_about_ablity) and worried_sphere_0 < reqLocs):
+            raise OptionError(f"Insufficient sphere 0 locations to fit both a Progressive Shard{'' if self.options.starting_shard != 4 else ', an Ability,'} and a Speed Upgrade. Please enable settings that add more locations.")
 
         if (self.options.weeboh_purchases > 0):
-            running_locs += 5 if self.options.weeboh_purchases == 1 else 9
-            if available_shards < 7: running_locs -= 1 # remove flopsy
-            if available_shards < 5: running_locs -= 1 # remove weeboh
+            if (self.options.weeboh_purchases == 1):
+                running_locs += 7
+            elif (self.options.weeboh_purchases >= 2):
+                running_locs += 9
+            if self.options.shard_goal < 5 or not self.options.remove_post_victory_locations: running_locs -= 1 # remove weeboh
+            if self.options.shard_goal < 7 or not self.options.remove_post_victory_locations: running_locs -= 1 # remove flopsy
+            if self.options.shard_goal < 11 or not self.options.remove_post_victory_locations: running_locs -= 1 # remove cripsy
+            if self.options.shard_goal < 12 or not self.options.remove_post_victory_locations: running_locs -= 1 # remove twisted flopsy
 
         # captain's upgrades are not considered, as they add just as many useful items as locations
 
-        # print(f"items: {running_items} locs: {running_locs}")
+        # print(f"FINAL   items: {running_items} locs: {running_locs}")
         if running_items > running_locs:
             raise OptionError(f"Insufficient locations ({running_locs}) to fit required items ({running_items}). Please enable settings that add more locations.")
 
@@ -478,7 +536,7 @@ class HasteWorld(World):
             "Extra Shard Items": self.options.extra_shard_items.value,
             "Shopsanity": self.options.shopsanity.value,
             "Per-Shard Shopsanity Quantity": self.options.pershard_shopsanity_quantity.value,
-            "Per-Shard Shopsanity Dynamic Quantity": self.options.persahrd_shopsanity_dynamic_quantity.value,
+            "Per-Shard Shopsanity Dynamic Quantity": self.options.pershard_shopsanity_dynamic_quantity.value,
             "Per-Shard Shopsanity Scaling": self.options.pershard_fragmentsanity_scaling.value,
             "Global Shopsanity Quantity": self.options.global_shopsanity_quantity.value,
             "Global Shopsanity Blockers": self.options.global_shopsanity_blockers.value,
@@ -504,8 +562,10 @@ class HasteWorld(World):
             "Disaster Trap Weight": self.options.disaster_trap_weight.value,
             "Landing Downgrade Trap Weight": self.options.landing_trap_weight.value,
             "Unlock All Items": self.options.unlock_all_items.value,
-            "Refund Unnecessary Purchases": self.options.refund_purchases,
-            "Remove Shop Items When Done": self.options.remove_when_done
+            "Refund Unnecessary Purchases": self.options.refund_purchases.value,
+            "Remove Shop Items When Done": self.options.remove_when_done.value,
+            "Scout Locations": self.options.scout_locations.value,
+            "Global Disaster Level": self.options.global_disaster_level.value
             # "S-Rank Bonus": self.options.s_rank_bonus.value
         }
 

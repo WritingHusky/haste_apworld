@@ -48,7 +48,7 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                 if world.options.remove_post_victory_locations:
                     additional_items = max(world.options.shard_goal - 1 + world.options.extra_shard_items, 1)
                 else:
-                    additional_items = 9 + world.options.extra_shard_items
+                    additional_items = 13 + world.options.extra_shard_items
                 if world.options.starting_shard > 1:
                     additional_items -= world.options.starting_shard - 1
                     # precollect the missing starting shards
@@ -60,12 +60,20 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                 if world.options.captains_upgrades != 1 and item == "The Captain":
                     # make Captain non-progression if he doesnt have checks
                     classification = IC.useful
-                if world.options.weeboh_purchases != 1 and item == "Fashion Weeboh":
+                if world.options.weeboh_purchases == 0 and item == "Fashion Weeboh":
                     # make Fashion Weeboh non-progression if they dont have checks
                     classification = IC.filler
             elif data.type == "Speed" and world.options.speed_upgrade == 1:
-                # add 6 speed upgrades into the pool
+                # add up to 6 speed upgrades into the pool
                 additional_items = 6
+                # depending on the starting shard, remove a corresponding amount of upgrades from pool and into precollected
+                if (world.options.starting_shard > 2): additional_items -= 1
+                if (world.options.starting_shard > 4): additional_items -= 1
+                if (world.options.starting_shard > 6): additional_items -= 1
+                if (world.options.starting_shard > 8): additional_items -= 1
+                for _ in range(6 - additional_items):
+                    precollected_items.append(copy.copy(item))
+                
             elif data.type == "Upgrade" and world.options.captains_upgrades == 1:
                 match item:
                     case "Max Health Upgrade":
@@ -86,11 +94,11 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
                     case "Courier's Board":
                         if (world.options.starting_ability == 1): additional_items = -1
                     case "Sage's Cowl":
-                        if (world.options.starting_ability == 2): additional_items = -1
+                        if (world.options.starting_ability == 4): additional_items = -1
                     case "Heir's Javelin":
                         if (world.options.starting_ability == 3): additional_items = -1
                     case "Wraith's Hourglass":
-                        if (world.options.starting_ability == 4): additional_items = -1
+                        if (world.options.starting_ability == 2): additional_items = -1
             elif data.type == "PermItem" and world.options.persistent_items > 0:
                 match item:
                     case "Persistent Common Speed Item":
@@ -165,5 +173,7 @@ def get_pool_core(world: "World") -> tuple[list[str], list[str]]:
     # Place filler items ensure that the pool has the correct number of items.
     pool.extend([world.get_filler_item_name() for _ in range(num_items_left_to_place)])
     # pool.extend(filler_pool)
+
+    # print(pool)
 
     return pool, precollected_items

@@ -135,7 +135,7 @@ for i in range(1, 5):
 # TODO: check this works, and also lower the magic number to like 400 or something
 magicnumber = 1000
 for i in range(1,15):
-    for j in range(1, (2*SHARD_LENGTHS[i-1])+1):
+    for j in range(1, max(2*SHARD_LENGTHS[i-1], 25)+1):
         if i <= 10:
             LOCATION_TABLE[f"Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
                 code=magicnumber, flags=HasteFlag.PerShardFragment, shard=i
@@ -146,7 +146,7 @@ for i in range(1,15):
             )
         magicnumber+=1
 
-    for j in range(1, (SHARD_LENGTHS[i-1])+1):
+    for j in range(1, max(SHARD_LENGTHS[i-1], 25)+1):
         if i <= 10:
             LOCATION_TABLE[f"Shard {i} Shop Item {j:02}"] = HasteLocationData(
                 code=magicnumber, flags=HasteFlag.PerShardShop, shard=i
@@ -161,6 +161,7 @@ for i in range(1,15):
 def none_or_within_shard(goal, start, rpvl, shard) -> bool:
     if shard is None: return True
     if shard == 99: return True
+    if start > shard: return False
     if rpvl:
         return (start <= shard <= goal)
     return True
@@ -177,19 +178,44 @@ def create_locations(world, regions):
             # if data.flags == HasteFlag.Fashion and world.options.weeboh_purchases >= 1 and world.options.default_outfit_body != data.skin and world.options.default_outfit_hat != data.skin:
             if data.flags == HasteFlag.Fashion and world.options.weeboh_purchases >= 1:
                 location = HasteLocation(world.player, location_name, regions["Menu"], data)
-                # Crispy and Twisted Flopsy are unobtainable in the scope of AP with vanilla fashion unlocks
+                # Green and Blue are unobtainable without V+ or All Unlocks
                 if world.options.weeboh_purchases == 1:
-                    if (data.skin == 1 or data.skin == 7 or data.skin == 2 or data.skin == 3):
+                    if (data.skin == 2 or data.skin == 3):
                         continue
                 if world.options.weeboh_purchases == 1 or world.options.weeboh_purchases == 2:
                     if data.skin == 10:
                         # adding Weeboh to Shard 5 to piggyback speed calcs, but if Shard 5 doesn't exist, then don't add it
-                        if (not world.options.remove_post_victory_locations or world.options.shard_goal >= 5): location = HasteLocation(world.player, location_name, regions["Shard 5"], data)
+                        if (not world.options.remove_post_victory_locations or world.options.shard_goal >= 5): 
+                            if (world.options.starting_shard <= 5):
+                                location = HasteLocation(world.player, location_name, regions["Shard 5"], data)
+                            else:
+                                location = HasteLocation(world.player, location_name, regions[f"Shard {world.options.starting_shard.value}"], data)
                         else: continue
                     elif data.skin == 6:
                         # adding Flopsy to Shard 7 to piggyback speed calcs, but if Shard 7 doesn't exist, then don't add it
-                        if (not world.options.remove_post_victory_locations or world.options.shard_goal >= 7): location = HasteLocation(world.player, location_name, regions["Shard 7"], data)
+                        if (not world.options.remove_post_victory_locations or world.options.shard_goal >= 7):
+                            if (world.options.starting_shard <= 7):
+                                location = HasteLocation(world.player, location_name, regions["Shard 7"], data)
+                            else:
+                                location = HasteLocation(world.player, location_name, regions[f"Shard {world.options.starting_shard.value}"], data)
                         else: continue
+                    elif data.skin == 1:
+                        # adding Cripsy to Shard D1
+                        if (not world.options.remove_post_victory_locations or world.options.shard_goal >= 11):
+                            if (world.options.starting_shard <= 11):
+                                location = HasteLocation(world.player, location_name, regions["Shard 11"], data)
+                            else:
+                                location = HasteLocation(world.player, location_name, regions[f"Shard {world.options.starting_shard.value}"], data)
+                        else: continue
+                    elif data.skin == 7:
+                        # adding Twisted Flopsy to Shard D2
+                        if (not world.options.remove_post_victory_locations or world.options.shard_goal >= 12):
+                            if (world.options.starting_shard <= 12):
+                                location = HasteLocation(world.player, location_name, regions["Shard 12"], data)
+                            else:
+                                location = HasteLocation(world.player, location_name, regions[f"Shard {world.options.starting_shard.value}"], data)
+                        else: continue
+
                 regions["Menu"].locations.append(location)
 
             if data.flags == HasteFlag.Boss:

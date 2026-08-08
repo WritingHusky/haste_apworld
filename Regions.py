@@ -45,7 +45,7 @@ def create_regions(world) -> Dict[str, Region]:
             return True
 
     def has_an_ability(state: CollectionState) -> bool:
-        return world.options.starting_ability > 0 or state.has("Boost Board", player, 1) or state.has("Sage's Cowl", player, 1) or state.has("Heir's Javelin", player, 1) or state.has("Wraith's Hourglass", player, 1)
+        return world.options.starting_ability > 0 or state.has("Courier's Board", player, 1) or state.has("Sage's Cowl", player, 1) or state.has("Heir's Javelin", player, 1) or state.has("Wraith's Hourglass", player, 1)
 
     def has_required_blocker(state: CollectionState, checknum) -> bool:
         if world.options.shopsanity != 2:
@@ -109,7 +109,7 @@ def create_regions(world) -> Dict[str, Region]:
                     regions[f"Shard {i} Shop {j}"] = shop_region
 
         if (not(world.options.fragmentsanity == 2 and i > 1)):
-            for j in range(1, floor(50/FRAGMENT_SEGMENTING)):
+            for j in range(1, floor(100/FRAGMENT_SEGMENTING)):
                 if (j < 1 + floor(fraglimit/FRAGMENT_SEGMENTING)):
                     fragment_region = Region(f"Shard {i} Fragmentsanity {j}", player, world.multiworld)
                     connect(player, f"Shard {i} Fragmentsanity Region {j} Entrance", regions["Shard 1"], fragment_region, lambda state, vali=i, valj=j: state.has(f"Shard{vali}Fragmentsanity{valj}Unlock", player))
