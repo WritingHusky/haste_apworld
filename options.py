@@ -554,7 +554,7 @@ class ScoutLocations(DefaultOnToggle):
     This setting can be overridden at any time via the in-game options menu.
     """
 
-    display_name = "ScoutHubLocations"
+    display_name = "Scout Hub Locations"
 
 class BaseDisasterLevel(Range):
     """

@@ -1,8 +1,9 @@
 .git*
 __pycache__
-.vscode
-custom_worlds
-build
+.vscode/
+custom_worlds/
+build/
+.github/
 LICENSE.md
 README.md
 requirements.txt
