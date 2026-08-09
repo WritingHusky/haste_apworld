@@ -66,6 +66,8 @@ class PerShardShopDynamicQuantity(Range):
     When choosing a percentage, remember that you can change the price of items from the in-game Difficulty menu.
     If you do not want to revisit a Shard, keep this value below 100%.
     ex: Shards 3 & 8 have a length of 15 & 20 Fragments, respectively. A value of 80% will have 5 Shopsanity checks in Shard 3, and 8 checks in Shard 8.
+    
+    Each Shard's lengths can be found here: https://github.com/WritingHusky/haste_apworld/blob/main/docs/ShardLengths.md
     """
 
     display_name = "Per-Shard Dynamic Shopsanity Quantity"
@@ -234,6 +236,8 @@ class PerShardFragmentDynamicQuantity(Range):
     When choosing a percentage, remember that Shops, Rest Areas, and some events do NOT contribute to Fragmentsanity progress.
     If you do not want to revisit a Shard, keep this value below 100%.
     ex: Shards 3 & 8 have a length of 15 & 20 Fragments, respectively. A value of 80% will have 12 Fragmentsanity checks in Shard 3, and 16 checks in Shard 8.
+    
+    Each Shard's lengths can be found here: https://github.com/WritingHusky/haste_apworld/blob/main/docs/ShardLengths.md
     """
 
     display_name = "Per-Shard Dynamic Fragmentsanity Quantity"
@@ -389,6 +393,13 @@ class CaptainsUpgrades(Toggle):
     """
     Shuffles The Captain's permanent upgrades into the item pool, and adds their respective purchases from him in the hub as checks.
     All purchases will require 33,250 Anti-Sparks total.
+
+    Logically, later purchases in each upgrade line will expect (but not require) additional Progressive Shards:
+        Purchase 1-2: No additional Shards
+        Purchase 3-4: 2 additional Shards
+        Purchase 5: 4 additional Shards
+        Purchase 6: 6 additional Shards
+        EXCEPTION: The first and only 'Max Lives' Upgrade purchase expects 2 additional Shards, as it is the same price as Purchase 4 in other upgrade lines
     """
 
     display_name = "Captain's Upgrades"
@@ -397,16 +408,19 @@ class CaptainsUpgrades(Toggle):
 class FashionWeebohPurchases(Choice):
     """
     Shuffles Fashion Weeboh's costume purchases as checks. Currently does NOT add the costumes themselves as items into the item pool.
+    Any costumes unlocked after your Shard Goal (unless Remove-Post-Victory-Locations is disabled) will NOT be included in Vanilla or Vanilla Plus.
     All purchases will require 22,500 Anti-Sparks total for Vanilla, or 22,700 for Vanilla Plus or All Unlocks.
 
+    Logically, costumes that cost 3,000 Anti-Sparks will expect (but not require) 2 additional Progressive Shards to purchase, and costumes that cost 5,000 will expect 4 additional Progressive Shards
+
     Vanilla: Costume purchases are only available as per their vanilla requirements:
-        Little Sister and Supersonic Zoe: Unlocked by default and do not need to be purchased
-        Zoe the Shadow and Zoe 64: Available as soon as the Fashion Weeboh is available
-        Weeboh: Unlocks after unlocking Shard 5
-        Flopsy: Unlocks after unlocking Shard 7
-        Crispy: Unlocks after unlocking Disaster Shard 1
-        Twisted Flopsy: Unlocks after unlocking Disaster Shard 2
-        Totally Accurate Zoe: Unlocks after obtaining all Abilities
+        Little Sister (100) and Supersonic Zoe (100): Unlocked by default and do not need to be purchased
+        Zoe the Shadow (500) and Zoe 64 (5,000): Available as soon as the Fashion Weeboh is available
+        Weeboh (3,000): Unlocks after unlocking Shard 5
+        Flopsy (3,000): Unlocks after unlocking Shard 7
+        Crispy (1,000): Unlocks after unlocking Disaster Shard 1
+        Twisted Flopsy (5,000): Unlocks after unlocking Disaster Shard 2
+        Totally Accurate Zoe (5,000): Unlocks after obtaining all Abilities
     Vanilla Plus: The same conditions as above, plus Little Sister and Supersonic Zoe's purchases are available as soon as the Fashion Weeboh is available.
     All Unlocks: All costume purchases are available as soon as the Fashion Weeboh is available
     """

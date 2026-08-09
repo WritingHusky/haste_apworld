@@ -66,7 +66,7 @@ def set_location_access_rules(world: "World"):
             case 5:
                 return state.has("Progressive Shard", player, world.options.starting_shard + min(4, HMPSAT))
             case 6:
-                return state.has("Progressive Shard", player, world.options.starting_shard + min(7, HMPSAT))
+                return state.has("Progressive Shard", player, world.options.starting_shard + min(6, HMPSAT))
             case _:
                 # you shouldnt be here
                 return True
@@ -135,7 +135,7 @@ def set_location_access_rules(world: "World"):
         # i feel like this could be simplified but idc
         for i in range(1, 5):
             set_rule_if_exists(f"Captain's Max Health Upgrade Purchase {i}", lambda state, vali=i : has_purchasable_shards(state, vali) and has_NPC(state, "The Captain"))
-        set_rule_if_exists("Captain's Max Lives Upgrade Purchase", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "The Captain"))
+        set_rule_if_exists("Captain's Max Lives Upgrade Purchase", lambda state : has_purchasable_shards(state, 3) and has_NPC(state, "The Captain"))
         for i in range(1, 5):
             set_rule_if_exists(f"Captain's Max Energy Upgrade Purchase {i}", lambda state, vali=i : has_purchasable_shards(state, vali) and has_NPC(state, "The Captain"))
         for i in range(1, 7):
@@ -152,12 +152,12 @@ def set_location_access_rules(world: "World"):
             set_rule_if_exists("Costume Purchase: Little Sister", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
             set_rule_if_exists("Costume Purchase: Supersonic Zoe", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
         set_rule_if_exists("Costume Purchase: Zoe the Shadow", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
-        set_rule_if_exists("Costume Purchase: Zoe 64", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh"))
-        set_rule_if_exists("Costume Purchase: Totally Accurate Zoe", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 5))
-        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 7 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Flopsy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 6))
-        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 5 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Weeboh", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 10))
+        set_rule_if_exists("Costume Purchase: Zoe 64", lambda state : has_purchasable_shards(state, 5) and has_NPC(state, "Fashion Weeboh"))
+        set_rule_if_exists("Costume Purchase: Totally Accurate Zoe", lambda state : has_purchasable_shards(state, 5) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 5))
+        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 7 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Flopsy", lambda state : has_purchasable_shards(state, 4) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 6))
+        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 5 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Weeboh", lambda state : has_purchasable_shards(state, 4) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 10))
         if not world.options.remove_post_victory_locations or world.options.shard_goal >= 11 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Crispy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 1))
-        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 12 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Twisted Flopsy", lambda state : has_purchasable_shards(state, 1) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 7))
+        if not world.options.remove_post_victory_locations or world.options.shard_goal >= 12 or world.options.weeboh_purchases == 3: set_rule_if_exists("Costume Purchase: Twisted Flopsy", lambda state : has_purchasable_shards(state, 5) and has_NPC(state, "Fashion Weeboh") and fashion_unlock(state, 7))
 
 
     set_rule_if_exists(

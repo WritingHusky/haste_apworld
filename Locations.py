@@ -67,52 +67,56 @@ LOCATION_TABLE = {
     "Sage's Cowl Purchase": HasteLocationData(code=3, flags=HasteFlag.Always),
 }
 
-# Per Shard locations
-# IDs 10-19
+# Boss locations
+# IDs 10-24
 for i in range(1, 11):
     LOCATION_TABLE[f"Shard {i} Boss"] = HasteLocationData(
         code=9 + i, flags=HasteFlag.Boss, shard=i
     )
+for i in range(1, 5):
+    LOCATION_TABLE[f"Disaster Shard {i} Boss"] = HasteLocationData(
+        code=20 + i, flags=HasteFlag.Boss, shard=i+10
+    )
 
 # Captain's Upgrade locations
-# IDs 20-42
+# IDs 30-52
 for i in range(1, 5):
     LOCATION_TABLE[f"Captain's Max Health Upgrade Purchase {i}"] = HasteLocationData(
-        code=19 + i, flags=HasteFlag.CaptainsUpgrade
+        code=29 + i, flags=HasteFlag.CaptainsUpgrade
     )
 LOCATION_TABLE["Captain's Max Lives Upgrade Purchase"] = HasteLocationData(
-        code=24, flags=HasteFlag.CaptainsUpgrade
+        code=34, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 5):
     LOCATION_TABLE[f"Captain's Max Energy Upgrade Purchase {i}"] = HasteLocationData(
-        code=24 + i, flags=HasteFlag.CaptainsUpgrade
+        code=34 + i, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 7):
     LOCATION_TABLE[f"Captain's Item Rarity Upgrade Purchase {i}"] = HasteLocationData(
-        code=30 + i, flags=HasteFlag.CaptainsUpgrade
+        code=40 + i, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 4):
     LOCATION_TABLE[f"Captain's Sparks in Fragments Upgrade Purchase {i}"] = HasteLocationData(
-        code=36 + i, flags=HasteFlag.CaptainsUpgrade
+        code=46 + i, flags=HasteFlag.CaptainsUpgrade
     )
 for i in range(1, 4):
     LOCATION_TABLE[f"Captain's Starting Sparks Upgrade Purchase {i}"] = HasteLocationData(
-        code=39 + i, flags=HasteFlag.CaptainsUpgrade
+        code=49 + i, flags=HasteFlag.CaptainsUpgrade
     )
 
 # Fashion Weeboh Purchase locations
-# 43-51
-LOCATION_TABLE["Costume Purchase: Crispy"] = HasteLocationData(code=43, flags=HasteFlag.Fashion, skin=1)
-LOCATION_TABLE["Costume Purchase: Little Sister"] = HasteLocationData(code=44, flags=HasteFlag.Fashion, skin=2)
-LOCATION_TABLE["Costume Purchase: Supersonic Zoe"] = HasteLocationData(code=45, flags=HasteFlag.Fashion, skin=3)
-LOCATION_TABLE["Costume Purchase: Zoe the Shadow"] = HasteLocationData(code=46, flags=HasteFlag.Fashion, skin=4)
-LOCATION_TABLE["Costume Purchase: Totally Accurate Zoe"] = HasteLocationData(code=47, flags=HasteFlag.Fashion, skin=5)
-LOCATION_TABLE["Costume Purchase: Flopsy"] = HasteLocationData(code=48, flags=HasteFlag.Fashion, skin=6)
-LOCATION_TABLE["Costume Purchase: Twisted Flopsy"] = HasteLocationData(code=49, flags=HasteFlag.Fashion, skin=7)
-LOCATION_TABLE["Costume Purchase: Weeboh"] = HasteLocationData(code=50, flags=HasteFlag.Fashion, skin=10)
-LOCATION_TABLE["Costume Purchase: Zoe 64"] = HasteLocationData(code=51, flags=HasteFlag.Fashion, skin=64)
+# 53-61
+LOCATION_TABLE["Costume Purchase: Crispy"] = HasteLocationData(code=53, flags=HasteFlag.Fashion, skin=1)
+LOCATION_TABLE["Costume Purchase: Little Sister"] = HasteLocationData(code=54, flags=HasteFlag.Fashion, skin=2)
+LOCATION_TABLE["Costume Purchase: Supersonic Zoe"] = HasteLocationData(code=55, flags=HasteFlag.Fashion, skin=3)
+LOCATION_TABLE["Costume Purchase: Zoe the Shadow"] = HasteLocationData(code=56, flags=HasteFlag.Fashion, skin=4)
+LOCATION_TABLE["Costume Purchase: Totally Accurate Zoe"] = HasteLocationData(code=57, flags=HasteFlag.Fashion, skin=5)
+LOCATION_TABLE["Costume Purchase: Flopsy"] = HasteLocationData(code=58, flags=HasteFlag.Fashion, skin=6)
+LOCATION_TABLE["Costume Purchase: Twisted Flopsy"] = HasteLocationData(code=59, flags=HasteFlag.Fashion, skin=7)
+LOCATION_TABLE["Costume Purchase: Weeboh"] = HasteLocationData(code=60, flags=HasteFlag.Fashion, skin=10)
+LOCATION_TABLE["Costume Purchase: Zoe 64"] = HasteLocationData(code=61, flags=HasteFlag.Fashion, skin=64)
 
-# global shop locations
+# Global Shop locations
 # IDs 101-200
 for j in range(1, 101):
     LOCATION_TABLE[f"Global Shop Item {j:03}"] = HasteLocationData(
@@ -120,42 +124,38 @@ for j in range(1, 101):
     )
 
 
-# global fragment locations
-# IDs 451-500
+# Global Fragment locations
+# IDs 251-300
 for j in range(1, 51):
     LOCATION_TABLE[f"Global Fragment Clear {j:02}"] = HasteLocationData(
-        code=450 + j, flags=HasteFlag.GlobalFragment, shard=99
+        code=250 + j, flags=HasteFlag.GlobalFragment, shard=99
     )
 
-for i in range(1, 5):
-    LOCATION_TABLE[f"Disaster Shard {i} Boss"] = HasteLocationData(
-        code=500 + i, flags=HasteFlag.Boss, shard=i+10
-    )
-
-# TODO: check this works, and also lower the magic number to like 400 or something
-magicnumber = 1000
+# Per-Shard Fragment and Shop Locations
+# define these automatically since I cannot be assed to manually figure out these ID ranges
+startingID = 400
 for i in range(1,15):
     for j in range(1, max(2*SHARD_LENGTHS[i-1], 25)+1):
         if i <= 10:
             LOCATION_TABLE[f"Shard {i} Fragment Clear {j:02}"] = HasteLocationData(
-                code=magicnumber, flags=HasteFlag.PerShardFragment, shard=i
+                code=startingID, flags=HasteFlag.PerShardFragment, shard=i
             )
         else:
             LOCATION_TABLE[f"Disaster Shard {i-10} Fragment Clear {j:02}"] = HasteLocationData(
-                code=magicnumber, flags=HasteFlag.PerShardFragment, shard=i
+                code=startingID, flags=HasteFlag.PerShardFragment, shard=i
             )
-        magicnumber+=1
+        startingID+=1
 
     for j in range(1, max(SHARD_LENGTHS[i-1], 25)+1):
         if i <= 10:
             LOCATION_TABLE[f"Shard {i} Shop Item {j:02}"] = HasteLocationData(
-                code=magicnumber, flags=HasteFlag.PerShardShop, shard=i
+                code=startingID, flags=HasteFlag.PerShardShop, shard=i
             )
         else:
             LOCATION_TABLE[f"Disaster Shard {i-10} Shop Item {j:02}"] = HasteLocationData(
-                code=magicnumber, flags=HasteFlag.PerShardShop, shard=i
+                code=startingID, flags=HasteFlag.PerShardShop, shard=i
             )
-        magicnumber+=1
+        startingID+=1
 
 
 def none_or_within_shard(goal, start, rpvl, shard) -> bool:
