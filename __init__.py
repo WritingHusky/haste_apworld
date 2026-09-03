@@ -65,7 +65,7 @@ class HasteWorld(World):
     options: HasteOptions
 
     game: ClassVar[str] = "Haste"
-    version = "0.5.0"
+    version = "0.5.1"
     topology_present: bool = True
 
     perm_item_dict: dict[str, int] = {}
@@ -228,9 +228,14 @@ class HasteWorld(World):
         if (self.options.speed_upgrade or self.options.npc_shuffle or self.options.persistent_items) and (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
             raise OptionError("In order to enable Speed Upgrades, Shuffled NPCs, or Persistent Items, you must enable either Shopsanity or Fragmentsanity")
 
+        # one sanity needs to be enabled to have a 1-shard-lengthed seed
         if (self.options.shard_goal == self.options.starting_shard):
             if (self.options.shopsanity == 0 and self.options.fragmentsanity == 0):
                 raise OptionError("In order to have a Shard Goal equal to your Starting Shard, you must enable either Shopsanity or Fragmentsanity")
+
+        # triangular dist will make the game take a truly absurd amount of time, so limit it to Global or Static Per-Shard
+        if (self.options.fragmentsanity == 1 and self.options.fragmentsanity_distribution == 4 and self.options.pershard_fragmentsanity_scaling == 2):
+            raise OptionError("Triangular Distribution cannot be enabled with Dynamic Per-Shard scaling due to the risk of inflating the expected playtime of the seed to 20+ hours for just ONE late-game Shard (let alone multiple other Shards).\nIf you wish to play with Triangular Distribution, please switch to either Global Fragmentsanity or Static Per-Shard scaling.")
 
         worry_about_speed = False
         worry_about_ablity = False
@@ -241,6 +246,7 @@ class HasteWorld(World):
                 # shard 4 specifically also has issues where it'll need an ability to reach Shard 5
                 worry_about_ablity = True
 
+        # logic expects an ability starting in Shard 5, so one must be in the starting inventory
         if (self.options.starting_ability == 0 and self.options.starting_shard > 4):
             raise OptionError("In order to have a Starting Shard greater than 4, you must start with an ability")
 
@@ -537,7 +543,7 @@ class HasteWorld(World):
             "Shopsanity": self.options.shopsanity.value,
             "Per-Shard Shopsanity Quantity": self.options.pershard_shopsanity_quantity.value,
             "Per-Shard Shopsanity Dynamic Quantity": self.options.pershard_shopsanity_dynamic_quantity.value,
-            "Per-Shard Shopsanity Scaling": self.options.pershard_fragmentsanity_scaling.value,
+            "Per-Shard Shopsanity Scaling": self.options.pershard_shopsanity_scaling.value,
             "Global Shopsanity Quantity": self.options.global_shopsanity_quantity.value,
             "Global Shopsanity Blockers": self.options.global_shopsanity_blockers.value,
             "Shopsanity Separate": self.options.shopsanity_separate.value,
